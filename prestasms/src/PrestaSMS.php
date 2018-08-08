@@ -18,7 +18,6 @@ class PrestaSMS extends Strict implements IModule
 
     private $info = array(
         'store' => 'PrestaShop',
-        'store_version' => _BG_PRESTASMS_PS_MIN_VERSION_.'+',
         'name' => _BG_PRESTASMS_NAME_,
         'url' => 'http://www.presta-sms.com',
         'developer' => _BG_PRESTASMS_AUTHOR_,
@@ -146,6 +145,7 @@ class PrestaSMS extends Strict implements IModule
         {
             $this->plugin_data = array_merge(
                 array(
+                    'store_version' => defined('_BG_PRESTASMS_PS_MIN_VERSION_') ? (_BG_PRESTASMS_PS_MIN_VERSION_.'+') : '1.7',
                     'version' => _BG_PRESTASMS_VERSION_,
                     'application_id' => $this->settings->load('static:application_id', -1),
                     'application_product' => $this->product(),
