@@ -18,6 +18,6 @@ class AdminPrestaSmsUserProfileController extends PrestaSmsController
 
     public function renderView()
     {
-        return $this->prestaSmsView("User", "profile", true);
+        return $this->prestaSmsView("User", "profile", false);
     }
 }

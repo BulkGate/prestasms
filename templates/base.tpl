@@ -73,5 +73,5 @@
             proxy: {$proxy|prestaSmsEscapeJs},
         });
     </script>
-</div>
+    </div>
 </div>

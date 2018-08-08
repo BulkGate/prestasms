@@ -8,7 +8,7 @@ use BulkGate\PrestaSms, BulkGate\Extensions;
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
-class AdminPrestaSmsPaymentDataController extends PrestaSmsController
+class AdminPrestaSmsWalletDetailController extends PrestaSmsController
 {
     public function __construct()
     {
@@ -18,6 +18,6 @@ class AdminPrestaSmsPaymentDataController extends PrestaSmsController
 
     public function renderView()
     {
-        return $this->prestaSmsView("Payment", "data", true);
+        return $this->prestaSmsView("Wallet", "detail", true);
     }
 }

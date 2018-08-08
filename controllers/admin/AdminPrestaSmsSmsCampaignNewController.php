@@ -13,7 +13,7 @@ class AdminPrestaSmsSmsCampaignNewController extends PrestaSmsController
     public function __construct()
     {
         parent::__construct();
-        $this->meta_title = $this->_('create_campaign', 'Create Campaign');
+        $this->meta_title = $this->_('start_campaign', 'Start Campaign');
     }
 
     public function renderView()

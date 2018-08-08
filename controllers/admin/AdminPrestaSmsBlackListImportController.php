@@ -8,16 +8,16 @@ use BulkGate\PrestaSms, BulkGate\Extensions;
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
-class AdminPrestaSmsSmsSettingsProfileController extends PrestaSmsController
+class AdminPrestaSmsBlackListImportController extends PrestaSmsController
 {
     public function __construct()
     {
         parent::__construct();
-        $this->meta_title = $this->_('sender_id_settings', 'Sender ID Settings');
+        $this->meta_title = $this->_('black_list', 'Black list');
     }
 
     public function renderView()
     {
-        return $this->prestaSmsView("SmsSettings", "profile", true);
+        return $this->prestaSmsView("BlackList", "import", true);
     }
 }

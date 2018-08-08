@@ -8,16 +8,16 @@ use BulkGate\PrestaSms, BulkGate\Extensions;
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
-class AdminPrestaSmsVerifiedPhoneNumbersDefaultController extends PrestaSmsController
+class AdminPrestaSmsSmsCampaignActiveController extends PrestaSmsController
 {
     public function __construct()
     {
         parent::__construct();
-        $this->meta_title = $this->_('verified_numbers', 'Verified numbers');
+        $this->meta_title = $this->_('sms_campaign', 'Sms Campaign');
     }
 
     public function renderView()
     {
-        return $this->prestaSmsView("VerifiedPhoneNumbers", "default", true);
+        return $this->prestaSmsView("SmsCampaign", "active", false);
     }
 }
