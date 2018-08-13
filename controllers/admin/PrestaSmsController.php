@@ -118,7 +118,14 @@ abstract class PrestaSmsController extends ModuleAdminController
 
     public function ajaxProcessAuthenticate()
     {
-        Extensions\JsonResponse::send($this->ps_di->getProxy()->authenticate());
+        try
+        {
+            Extensions\JsonResponse::send($this->ps_di->getProxy()->authenticate());
+        }
+        catch (Extensions\IO\AuthenticateException $e)
+        {
+            Extensions\JsonResponse::send(array('redirect' => $this->context->link->getAdminLink('AdminPrestaSmsSignIn')));
+        }
     }
 
     protected function prestaSmsTemplate(array $data = array(), $template = 'base')

@@ -29,9 +29,18 @@ class AdminPrestaSmsModuleSettingsDefaultController extends PrestaSmsController
 
     public function ajaxProcessSave()
     {
-        if(Tools::getValue('__bulkgate', false))
+        $post = Tools::getValue('__bulkgate', false);
+
+        if($post)
         {
-            $this->ps_di->getProxy()->saveSettings(Tools::getValue('__bulkgate'));
+            $this->ps_di->getProxy()->saveSettings($post);
+
+            if(isset($post['language']))
+            {
+                $this->ps_translator->init($post['language']);
+                PrestaSms\Helpers::uninstallMenu();
+                PrestaSms\Helpers::installMenu($this->ps_translator);
+            }
         }
         Extensions\JsonResponse::send(array('redirect' => $this->context->link->getAdminLink($this->controller_name)));
     }

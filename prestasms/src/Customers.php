@@ -117,7 +117,6 @@ class Customers extends Extensions\Customers
                 $filtered = true;
             }
         }
-        file_put_contents(__DIR__.'/log.log', implode("\n", $this->db->getSqlList()));
         return array(array_unique($customers), $filtered);
     }
 }

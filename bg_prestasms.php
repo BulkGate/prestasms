@@ -63,7 +63,7 @@ class Bg_PrestaSms extends Module
     {
         $install = parent::install();
         $this->ps_settings->install();
-        $this->installMenu();
+        PrestaSms\Helpers::installMenu($this->ps_translator);
         $this->installHooks();
 
         return $install;
@@ -343,41 +343,5 @@ class Bg_PrestaSms extends Module
         {
             return false;
         }
-    }
-
-
-    public function installMenu()
-    {
-        $main = PrestaSms\Helpers::installModuleTab('PRESTASMS', $this->_('presta_sms', 'PrestaSMS'), 0,  'mail_outline');
-
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsDashboardDefault', $this->_('dashboard','Dashboard'), $main, 'desktop_windows');
-
-        $sms = PrestaSms\Helpers::installModuleTab('PRESTASMS_SMS', $this->_('sms', 'SMS'), $main, 'sms');
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsSmsCampaignNew', $this->_('start_campaign','Start Campaign'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsSmsCampaignDefault', $this->_('campaigns','Campaigns'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsInboxList', $this->_('inbox','Inbox'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsHistoryList', $this->_('history','History'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsStatisticsDefault', $this->_('statistics','Statistics'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsBlackListDefault', $this->_('black_list','Black list'), $sms);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsSmsPriceList', $this->_('price_list', 'Price list'), $sms);
-
-        $payment = PrestaSms\Helpers::installModuleTab('PRESTASMS_PAYMENTS', $this->_('payments', 'Payments'), $main, 'payment');
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsTopUp', $this->_('top_up', 'Top up'), $payment);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsPaymentList', $this->_('invoice_list', 'Invoice list'), $payment);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $this->_('billing_informations', 'Billing informations'), $payment);
-
-        $settings = PrestaSms\Helpers::installModuleTab('PRESTASMS_SETTINGS',  $this->_('settings', 'Settings'), $main, 'settings');
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsUserProfile',  $this->_('user_profile', 'User profile'), $settings);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsAdmin',  $this->_('admin_sms', 'Admin SMS'), $settings);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsCustomer',  $this->_('customer_sms', 'Customer SMS'), $settings);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsSmsSettingsDefault',  $this->_('sender_id_settings', 'Sender ID Settings'), $settings);
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsModuleSettingsDefault', $this->_('module_settings', 'Module settings'), $settings);
-
-        PrestaSms\Helpers::installModuleTab('AdminPrestaSmsAboutDefault', $this->_('about_module','About module'), $settings);
-    }
-
-    private function _($translate, $default = null)
-    {
-        return $this->ps_translator->translate($translate, $default);
     }
 }
