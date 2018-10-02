@@ -74,6 +74,7 @@ class Bg_PrestaSms extends Module
     {
         $uninstall = parent::uninstall();
         $this->ps_settings->uninstall();
+        PrestaSms\Helpers::uninstallMenu();
 
         return $uninstall;
     }

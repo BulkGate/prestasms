@@ -1,7 +1,7 @@
 <?php
 namespace BulkGate\PrestaSms;
 
-use BulkGate\Extensions;
+use BulkGate\Extensions, PrestaShopBundle;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -29,6 +29,19 @@ class Helpers extends Extensions\Strict
         $tab->save();
 
         return $tab->id;
+    }
+
+    public static function uninstallModuleTab($class)
+    {
+        $id = \Tab::getIdFromClassName($class);
+
+        if($id !== 0)
+        {
+            $tab = new \Tab($id);
+            $tab->delete();
+            return true;
+        }
+        return false;
     }
 
     public static function generateTokens()
@@ -62,14 +75,14 @@ class Helpers extends Extensions\Strict
 
         $payment = Helpers::installModuleTab('PRESTASMS_PAYMENTS', $translator->translate('payments', 'Payments'), $main, 'payment');
         Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('top_up', 'Top up'), $payment);
-        Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoice_list', 'Invoice list'), $payment);
-        Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('billing_informations', 'Billing informations'), $payment);
+        Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoices', 'Invoices'), $payment);
+        Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('payments_data', 'Payments data'), $payment);
 
         $settings = Helpers::installModuleTab('PRESTASMS_SETTINGS',  $translator->translate('settings', 'Settings'), $main, 'settings');
         Helpers::installModuleTab('AdminPrestaSmsUserProfile',  $translator->translate('user_profile', 'User profile'), $settings);
         Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsAdmin',  $translator->translate('admin_sms', 'Admin SMS'), $settings);
         Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsCustomer',  $translator->translate('customer_sms', 'Customer SMS'), $settings);
-        Helpers::installModuleTab('AdminPrestaSmsSmsSettingsDefault',  $translator->translate('sender_id_settings', 'Sender ID Settings'), $settings);
+        Helpers::installModuleTab('AdminPrestaSmsSmsSettingsDefault',  $translator->translate('sender_id_profiles', 'Sender ID Profiles'), $settings);
         Helpers::installModuleTab('AdminPrestaSmsModuleSettingsDefault', $translator->translate('module_settings', 'Module settings'), $settings);
 
         Helpers::installModuleTab('AdminPrestaSmsAboutDefault', $translator->translate('about_module','About module'), $settings);
@@ -77,7 +90,34 @@ class Helpers extends Extensions\Strict
 
     public static function uninstallMenu()
     {
-        $tabs = array();
+        Helpers::uninstallModuleTab('PRESTASMS');
+
+        Helpers::uninstallModuleTab('AdminPrestaSmsDashboardDefault');
+
+        Helpers::uninstallModuleTab('PRESTASMS_SMS');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignNew');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignDefault');
+        Helpers::uninstallModuleTab('AdminPrestaSmsInboxList');
+        Helpers::uninstallModuleTab('AdminPrestaSmsHistoryList');
+        Helpers::uninstallModuleTab('AdminPrestaSmsStatisticsDefault');
+        Helpers::uninstallModuleTab('AdminPrestaSmsBlackListDefault');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsPriceList');
+
+        Helpers::uninstallModuleTab('PRESTASMS_PAYMENTS');
+        Helpers::uninstallModuleTab('AdminPrestaSmsTopUp');
+        Helpers::uninstallModuleTab('AdminPrestaSmsPaymentList');
+        Helpers::uninstallModuleTab('AdminPrestaSmsWalletDetail');
+
+        Helpers::uninstallModuleTab('PRESTASMS_SETTINGS');
+        Helpers::uninstallModuleTab('AdminPrestaSmsUserProfile');
+        Helpers::uninstallModuleTab('AdminPrestaSmsModuleNotificationsAdmin');
+        Helpers::uninstallModuleTab('AdminPrestaSmsModuleNotificationsCustomer');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsSettingsDefault');
+        Helpers::uninstallModuleTab('AdminPrestaSmsModuleSettingsDefault');
+
+        Helpers::uninstallModuleTab('AdminPrestaSmsAboutDefault');
+
+        /*$tabs = array();
 
         $result = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `module` = \''._BG_PRESTASMS_SLUG_.'\'', true, false);
 
@@ -88,6 +128,6 @@ class Helpers extends Extensions\Strict
         }
 
         \Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('DELETE FROM `'._DB_PREFIX_.'tab_lang` WHERE `id_tab` IN ('.implode(',', $tabs).')');
-        \Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('DELETE FROM `'._DB_PREFIX_.'tab` WHERE `module` = \''._BG_PRESTASMS_SLUG_.'\'');
+        \Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('DELETE FROM `'._DB_PREFIX_.'tab` WHERE `module` = \''._BG_PRESTASMS_SLUG_.'\'');*/
     }
 }
