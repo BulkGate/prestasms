@@ -115,7 +115,7 @@ class Bg_PrestaSms extends Module
                 )));
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -130,7 +130,7 @@ class Bg_PrestaSms extends Module
                 'customer_id' => (int) $params['order']->id_customer
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -144,7 +144,7 @@ class Bg_PrestaSms extends Module
                 'store_id' => (int) $params['newCustomer']->id_shop
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -160,7 +160,7 @@ class Bg_PrestaSms extends Module
                 'store_id' => (int) $params['orderReturn']->id_shop
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -176,7 +176,7 @@ class Bg_PrestaSms extends Module
                 'filter_products' => array_keys(isset($params['qtyList']) ? $params['qtyList'] : array())
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -191,7 +191,7 @@ class Bg_PrestaSms extends Module
                 'store_id' => (int) $params['order']->id_shop
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -211,7 +211,7 @@ class Bg_PrestaSms extends Module
                 )));
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -224,7 +224,7 @@ class Bg_PrestaSms extends Module
                 'product_id' => (int) $params['product']->id,
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -240,7 +240,7 @@ class Bg_PrestaSms extends Module
                 'id_product_attribute' => isset($params['id_product_attribute']) ? (int) $params['id_product_attribute'] : null,
             )));
         }
-        return false;
+        return true;
     }
 
 
@@ -259,7 +259,7 @@ class Bg_PrestaSms extends Module
                 }
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -275,7 +275,7 @@ class Bg_PrestaSms extends Module
                 'store_id' => (int) $params['order']->id_shop
             )));
         }
-        return false;
+        return true;
     }
 
 
