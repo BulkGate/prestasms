@@ -299,7 +299,7 @@ class Bg_PrestaSms extends Module
                 )));
             }
         }
-        return false;
+        return true;
     }
 
 
