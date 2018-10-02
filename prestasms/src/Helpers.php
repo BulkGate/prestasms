@@ -74,7 +74,7 @@ class Helpers extends Extensions\Strict
         Helpers::installModuleTab('AdminPrestaSmsSmsPriceList', $translator->translate('price_list', 'Price list'), $sms);
 
         $payment = Helpers::installModuleTab('PRESTASMS_PAYMENTS', $translator->translate('payments', 'Payments'), $main, 'payment');
-        Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('top_up', 'Top up'), $payment);
+        Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('buy_credit', 'Buy credit'), $payment);
         Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoices', 'Invoices'), $payment);
         Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('payments_data', 'Payments data'), $payment);
 
@@ -116,18 +116,5 @@ class Helpers extends Extensions\Strict
         Helpers::uninstallModuleTab('AdminPrestaSmsModuleSettingsDefault');
 
         Helpers::uninstallModuleTab('AdminPrestaSmsAboutDefault');
-
-        /*$tabs = array();
-
-        $result = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `module` = \''._BG_PRESTASMS_SLUG_.'\'', true, false);
-
-        if (is_array($result)) {
-            foreach ($result as $row) {
-                $tabs[] = (int) $row['id_tab'];
-            }
-        }
-
-        \Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('DELETE FROM `'._DB_PREFIX_.'tab_lang` WHERE `id_tab` IN ('.implode(',', $tabs).')');
-        \Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('DELETE FROM `'._DB_PREFIX_.'tab` WHERE `module` = \''._BG_PRESTASMS_SLUG_.'\'');*/
     }
 }

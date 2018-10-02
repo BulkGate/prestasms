@@ -87,7 +87,7 @@ abstract class PrestaSmsController extends ModuleAdminController
 
     protected function prestaSmsView($presenter, $action, $box = false)
     {
-        $this->synchronize(true);
+        $this->synchronize();
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));

@@ -68,7 +68,6 @@
                 id: {if isset($id) && $id}{$id|prestaSmsEscapeJs}{else}input["id"]{/if},
                 key: {if isset($key) && $key}{$key|prestaSmsEscapeJs}{else}input["key"]{/if},
                 type: {if isset($type) && $type}{$type|prestaSmsEscapeJs}{else}input["type"]{/if},
-                profile_id: {if isset($profile_id) && $profile_id}{$profile_id|prestaSmsEscapeJs}{else}input["profile_id"]{/if},
             },
             proxy: {$proxy|prestaSmsEscapeJs},
         });

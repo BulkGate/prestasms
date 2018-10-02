@@ -169,10 +169,10 @@ class HookLoad extends BulkGate\Extensions\Strict implements BulkGate\Extensions
                     $p3[] = $row['product_quantity'].'x ('.$row['product_id'].')'.$row['product_name'].' '.$row['product_reference'];
                     $p4[] = $row['product_quantity'].'x '.$row['product_reference'];
 
-                    $pr1[] = $row['product_quantity'].','.$row['product_name'].','.number_format($row['product_price'], 2);
-                    $pr2[] = $row['product_quantity'].';'.$row['product_name'].';'.number_format($row['product_price'], 2);
-                    $pr3[] = $row['product_quantity'].','.$row['product_reference'].','.number_format($row['product_price'], 2);
-                    $pr4[] = $row['product_quantity'].';'.$row['product_reference'].';'.number_format($row['product_price'], 2);
+                    $pr1[] = $row['product_quantity'].','.$row['product_name'].','.$this->locale->price($row['product_price'], $variables->get('order_currency'));
+                    $pr2[] = $row['product_quantity'].';'.$row['product_name'].';'.$this->locale->price($row['product_price'], $variables->get('order_currency'));
+                    $pr3[] = $row['product_quantity'].','.$row['product_reference'].','.$this->locale->price($row['product_price'], $variables->get('order_currency'));
+                    $pr4[] = $row['product_quantity'].';'.$row['product_reference'].';'.$this->locale->price($row['product_price'], $variables->get('order_currency'));
                 }
             }
 
