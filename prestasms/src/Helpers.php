@@ -117,4 +117,31 @@ class Helpers extends Extensions\Strict
 
         Helpers::uninstallModuleTab('AdminPrestaSmsAboutDefault');
     }
+
+    public static function getOrderPhoneNumber($order_id)
+    {
+        $phone_number = null; $iso = null;
+
+        $order = new \Order($order_id);
+        $address_delivery = new \Address($order->id_address_delivery);
+
+        $phone_number = $address_delivery->phone_mobile ?: $address_delivery->phone;
+
+        $country = new \Country($address_delivery->id_country);
+
+        $iso = strtolower($country->iso_code);
+
+        if(empty(trim($phone_number)))
+        {
+            $address_invoice = new \Address($order->id_address_invoice);
+
+            $phone_number = $address_invoice->phone_mobile ?: $address_invoice->phone;
+
+            $country_invoice = new \Country($address_invoice->id_country);
+
+            $iso = strtolower($country_invoice->iso_code);
+        }
+
+        return array($phone_number, $iso);
+    }
 }

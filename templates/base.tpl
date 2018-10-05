@@ -24,7 +24,7 @@
     <div id="react-app-root">
         <div class="loader loading">
             <div class="spinner"></div>
-            <p>Loading content</p>
+            <p>{'Loading content'|prestaSmsTranslate}</p>
         </div>
     </div>
     <div id="react-language-footer"></div>

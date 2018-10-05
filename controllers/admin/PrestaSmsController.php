@@ -41,38 +41,6 @@ abstract class PrestaSmsController extends ModuleAdminController
         $this->ps_settings = $this->ps_di->getSettings();
         $this->ps_translator = $this->ps_di->getTranslator();
         $this->ps_proxy = new PrestaSms\ProxyGenerator($this->controller_name, \Tools::getAdminTokenLite($this->controller_name));
-
-        /*$order = new Order(6);
-
-        $variables = new Extensions\Hook\Variables(array(
-            'order_id' => (int) $order->id,
-            'lang_id' => (int) $order->id_lang,
-            'store_id' => (int) $order->id_shop,
-            'customer_id' => 2,
-            'order_status_id' => 1,
-            'product_id' => 1,
-            'return_id' => 1,
-            'filter_products' => [8]
-        ));
-
-        $hook = new Extensions\Hook\Hook(
-            $this->ps_di->getModule()->getUrl('/module/hook'),
-            $variables->get('lang_id', (int) $this->context->language->id),
-            $variables->get('store_id', (int) $this->context->shop->id),
-            $this->ps_di->getConnection(),
-            $this->ps_settings,
-            new PrestaSms\HookLoad($this->ps_di->getDatabase(), $this->context)
-        );
-
-        try
-        {
-            $hook->run((string) 'order_new', $variables);
-            return true;
-        }
-        catch (Extensions\IO\InvalidResultException $e)
-        {
-            return false;
-        }*/
     }
 
     public function setMedia()
@@ -92,6 +60,7 @@ abstract class PrestaSmsController extends ModuleAdminController
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
         $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtmlAttr', array('BulkGate\Extensions\Escape', 'htmlAttr'));
+        $this->context->smarty->registerPlugin('modifier', 'prestaSmsTranslate', array($this->ps_di->getTranslator(), 'translate'));
 
         return $this->prestaSmsTemplate(array(
             'application_id' => $this->ps_settings->load('static:application_id', ''),

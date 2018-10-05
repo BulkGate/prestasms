@@ -95,6 +95,7 @@ class Bg_PrestaSms extends Module
         $this->registerHook('actionEmailSendBefore');
         $this->registerHook('actionPrestaSmsSendSms');
         $this->registerHook('actionPrestaSmsExtendsVariables');
+        $this->registerHook('displayAdminOrderRight');
     }
 
 
@@ -316,6 +317,60 @@ class Bg_PrestaSms extends Module
                 ),
                 true)
         );
+    }
+
+
+    public function hookDisplayAdminOrderRight(array $params)
+    {
+        if($this->ps_settings->load("static:application_token", false))
+        {
+            if(isset($params['id_order']))
+            {
+                list($phone_number, $iso) = PrestaSms\Helpers::getOrderPhoneNumber($params['id_order']);
+            }
+            else
+            {
+                $phone_number = $iso = null;
+            }
+
+            $controller = 'AdminPrestaSmsDashboardDefault';
+
+            $this->context->controller->addCSS(array(
+                $this->ps_di->getModule()->getUrl('/dist/css/devices.min.css'),
+                $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/css/bulkgate-prestasms.css'),
+                'https://fonts.googleapis.com/icon?family=Material+Icons|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i'
+            ));
+
+            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
+            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
+            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
+            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtmlAttr', array('BulkGate\Extensions\Escape', 'htmlAttr'));
+            $this->context->smarty->registerPlugin('modifier', 'prestaSmsTranslate', array($this->ps_di->getTranslator(), 'translate'));
+
+            return $this->context->smarty->createTemplate(_BG_PRESTASMS_DIR_.'/templates/panel.tpl', null, null, array(
+                'application_id' => $this->ps_settings->load('static:application_id', ''),
+                'language' => $this->ps_settings->load('main:language', 'en'),
+                'id' => $phone_number,
+                'key' => $iso,
+                'presenter' => 'ModuleComponents',
+                'action' => 'sendSms',
+                'mode' => defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist',
+                'widget_api_url' => $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/widget-api/widget-api.js'),
+                'logo' => $this->ps_di->getModule()->getUrl('/images/products/ps.svg'),
+                'proxy' => array(),
+                'box' => true,
+                'salt' => Extensions\Compress::compress(PrestaSms\Helpers::generateTokens()),
+                'authenticate' => array(
+                    'ajax' => true,
+                    'controller' => $controller,
+                    'action' => 'authenticate',
+                    'token'  => \Tools::getAdminTokenLite($controller),
+                ),
+                'homepage' => $this->context->link->getAdminLink('AdminPrestaSmsDashboardDefault'),
+                'info' => $this->ps_di->getModule()->info()
+            ))->fetch();
+        }
+        return '';
     }
 
 
