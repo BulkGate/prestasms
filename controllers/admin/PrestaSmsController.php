@@ -104,20 +104,23 @@ abstract class PrestaSmsController extends ModuleAdminController
 
     protected function synchronize($now = false)
     {
-        $status = $this->ps_module->statusLoad(); $language = $this->ps_module->languageLoad(); $store = $this->ps_module->storeLoad();
-
-        $now = $now || $status || $language || $store;
-
-        try
+        if($this->ps_settings->load('static:application_token'))
         {
-            $this->ps_di->getSynchronize()->run($this->ps_module->getUrl('/module/settings/synchronize'), $now);
+            $status = $this->ps_module->statusLoad(); $language = $this->ps_module->languageLoad(); $store = $this->ps_module->storeLoad();
 
-            return true;
+            $now = $now || $status || $language || $store;
+
+            try
+            {
+                $this->ps_di->getSynchronize()->run($this->ps_module->getUrl('/module/settings/synchronize'), $now);
+
+                return true;
+            }
+            catch (Extensions\IO\InvalidResultException $e)
+            {
+            }
         }
-        catch (Extensions\IO\InvalidResultException $e)
-        {
-            return false;
-        }
+        return false;
     }
 
     protected function _($translate, $default = null)

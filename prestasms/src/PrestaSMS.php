@@ -69,8 +69,7 @@ class PrestaSMS extends Strict implements IModule
 
         $status_list = (array) $this->settings->load(':order_status_list', null);
 
-
-        if($status_list !== $actual)
+        if(json_encode($status_list) !== json_encode($actual))
         {
             $this->settings->set(':order_status_list', Json::encode($actual), array('type' => 'json'));
             return true;
@@ -93,7 +92,7 @@ class PrestaSMS extends Strict implements IModule
                 }
             }
 
-            if($languages !== $actual)
+            if(json_encode($languages) !== json_encode($actual))
             {
                 $this->settings->set(':languages', Json::encode($actual), array('type' => 'json'));
                 return true;
@@ -121,7 +120,7 @@ class PrestaSMS extends Strict implements IModule
 
         $stores = (array) $this->settings->load(':stores', null);
 
-        if($stores !== $actual)
+        if(json_encode($stores) !== json_encode($actual))
         {
             $this->settings->set(':stores', Json::encode($actual), array('type' => 'json'));
             return true;
