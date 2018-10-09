@@ -335,12 +335,6 @@ class Bg_PrestaSms extends Module
 
             $controller = 'AdminPrestaSmsDashboardDefault';
 
-            $this->context->controller->addCSS(array(
-                $this->ps_di->getModule()->getUrl('/dist/css/devices.min.css'),
-                $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/css/bulkgate-prestasms.css'),
-                'https://fonts.googleapis.com/icon?family=Material+Icons|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i'
-            ));
-
             $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
             $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
             $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
@@ -358,7 +352,6 @@ class Bg_PrestaSms extends Module
                 'widget_api_url' => $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/widget-api/widget-api.js'),
                 'logo' => $this->ps_di->getModule()->getUrl('/images/products/ps.svg'),
                 'proxy' => array(),
-                'box' => true,
                 'salt' => Extensions\Compress::compress(PrestaSms\Helpers::generateTokens()),
                 'authenticate' => array(
                     'ajax' => true,

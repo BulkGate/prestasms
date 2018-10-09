@@ -8,7 +8,6 @@
             <p>{'Loading content'|prestaSmsTranslate}</p>
         </div>
         <script type="application/javascript">
-
             var _bg_client_config = {
                 url: {
                     authenticationService : 'ajax-tab.php',
