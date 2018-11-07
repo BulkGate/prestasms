@@ -29,7 +29,7 @@ class Bg_PrestaSms extends Module
         $this->author_uri = _BG_PRESTASMS_AUTHOR_URL_;
         $this->ps_versions_compliancy = [
             'min' => _BG_PRESTASMS_PS_MIN_VERSION_,
-            'max' => _PS_VERSION_,
+            'max' => '1.6.999.999',
         ];
 
         parent::__construct();
