@@ -1,0 +1,13 @@
+
+.icon-PRESTASMS {
+    text-align: center;
+    width: 1.28571em;
+}
+
+.icon-PRESTASMS:hover {
+    text-align: center;
+}
+
+.icon-PRESTASMS:before {
+    content: "\f003";
+}

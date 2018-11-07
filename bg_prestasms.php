@@ -3,8 +3,6 @@
 if (!defined('_PS_VERSION_'))
     exit;
 
-use BulkGate\PrestaSms, BulkGate\Extensions;
-
 require_once __DIR__.'/prestasms/src/init.php';
 
 /**
@@ -13,13 +11,13 @@ require_once __DIR__.'/prestasms/src/init.php';
  */
 class Bg_PrestaSms extends Module
 {
-    /** @var PrestaSms\DIContainer */
+    /** @var \BulkGate\PrestaSms\DIContainer */
     private $ps_di;
 
-    /** @var Extensions\Settings */
+    /** @var \BulkGate\Extensions\Settings */
     private $ps_settings;
 
-    /** @var Extensions\Translator */
+    /** @var \BulkGate\Extensions\Translator */
     private $ps_translator;
 
     public function __construct()
@@ -36,7 +34,7 @@ class Bg_PrestaSms extends Module
 
         parent::__construct();
 
-        $this->ps_di = new PrestaSms\DIContainer(\Db::getInstance());
+        $this->ps_di = new \BulkGate\PrestaSms\DIContainer(\Db::getInstance());
         $this->ps_settings = $this->ps_di->getSettings();
         $this->ps_translator = $this->ps_di->getTranslator();
 
@@ -63,7 +61,7 @@ class Bg_PrestaSms extends Module
     {
         $install = parent::install();
         $this->ps_settings->install();
-        PrestaSms\Helpers::installMenu($this->ps_translator);
+        \BulkGate\PrestaSms\Helpers::installMenu($this->ps_translator);
         $this->installHooks();
 
         return $install;
@@ -74,7 +72,7 @@ class Bg_PrestaSms extends Module
     {
         $uninstall = parent::uninstall();
         $this->ps_settings->uninstall();
-        PrestaSms\Helpers::uninstallMenu();
+        \BulkGate\PrestaSms\Helpers::uninstallMenu();
 
         return $uninstall;
     }
@@ -96,6 +94,18 @@ class Bg_PrestaSms extends Module
         $this->registerHook('actionPrestaSmsSendSms');
         $this->registerHook('actionPrestaSmsExtendsVariables');
         $this->registerHook('displayAdminOrderRight');
+        $this->registerHook('displayBackOfficeHeader');
+    }
+
+
+    public function hookDisplayBackOfficeHeader()
+    {
+        /** @var Controller $controller */
+        $controller = $this->context->controller;
+        if($controller instanceof Controller && $this instanceof ModuleCore)
+        {
+            $controller->addCSS($this->getPathUri().'css/menu.css');
+        }
     }
 
 
@@ -107,7 +117,7 @@ class Bg_PrestaSms extends Module
 
             if($order->id !== null)
             {
-                return $this->runHook('order_status_change_'.$params['newOrderStatus']->id, new Extensions\Hook\Variables(array(
+                return $this->runHook('order_status_change_'.$params['newOrderStatus']->id, new \BulkGate\Extensions\Hook\Variables(array(
                     'order_status_id' => $params['newOrderStatus']->id,
                     'order_id' => (int) $order->id,
                     'lang_id' => (int) $order->id_lang,
@@ -124,7 +134,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_new', new Extensions\Hook\Variables(array(
+            return $this->runHook('order_new', new \BulkGate\Extensions\Hook\Variables(array(
                 'order_id' => (int) $params['order']->id,
                 'lang_id' => (int) $params['order']->id_lang,
                 'store_id' => (int) $params['order']->id_shop,
@@ -139,7 +149,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['newCustomer']) && $params['newCustomer'] instanceof Customer)
         {
-            return $this->runHook('customer_new', new Extensions\Hook\Variables(array(
+            return $this->runHook('customer_new', new \BulkGate\Extensions\Hook\Variables(array(
                 'customer_id' => (int) $params['newCustomer']->id,
                 'lang_id' => (int) $params['newCustomer']->id_lang,
                 'store_id' => (int) $params['newCustomer']->id_shop
@@ -153,7 +163,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['orderReturn']) && $params['orderReturn'] instanceof OrderReturn)
         {
-            return $this->runHook('order_product_return', new Extensions\Hook\Variables(array(
+            return $this->runHook('order_product_return', new \BulkGate\Extensions\Hook\Variables(array(
                 'return_id' => (int) $params['orderReturn']->id,
                 'customer_id' => (int) $params['orderReturn']->id_customer,
                 'order_id' => (int) $params['orderReturn']->id_order,
@@ -169,7 +179,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_slip_add', new Extensions\Hook\Variables(array(
+            return $this->runHook('order_slip_add', new \BulkGate\Extensions\Hook\Variables(array(
                 'order_id' => (int) $params['order']->id,
                 'customer_id' => (int) $params['order']->id_customer,
                 'lang_id' => (int) $params['order']->id_lang,
@@ -185,7 +195,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_tracking_number', new Extensions\Hook\Variables(array(
+            return $this->runHook('order_tracking_number', new \BulkGate\Extensions\Hook\Variables(array(
                 'order_id' => (int) $params['order']->id,
                 'customer_id' => (int) $params['order']->id_customer,
                 'lang_id' => (int) $params['order']->id_lang,
@@ -204,7 +214,7 @@ class Bg_PrestaSms extends Module
 
             if($order->id !== null)
             {
-                return $this->runHook('order_payment_confirmation', new Extensions\Hook\Variables(array(
+                return $this->runHook('order_payment_confirmation', new \BulkGate\Extensions\Hook\Variables(array(
                     'order_id' => (int) $order->id,
                     'lang_id' => (int) $order->id_lang,
                     'store_id' => (int) $order->id_shop,
@@ -220,7 +230,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['product']) && $params['product'] instanceof Product)
         {
-            return $this->runHook('product_delete', new Extensions\Hook\Variables(array(
+            return $this->runHook('product_delete', new \BulkGate\Extensions\Hook\Variables(array(
                 'store_id' => (int) $params['product']->id_shop_default,
                 'product_id' => (int) $params['product']->id,
             )));
@@ -235,7 +245,7 @@ class Bg_PrestaSms extends Module
         {
             $product = new Product((int) $params['id_product']);
 
-            return $this->runHook('product_update_quantity', new Extensions\Hook\Variables(array(
+            return $this->runHook('product_update_quantity', new \BulkGate\Extensions\Hook\Variables(array(
                 'store_id' => (int) $product->id_shop_default,
                 'product_id' => (int) $product->id,
                 'id_product_attribute' => isset($params['id_product_attribute']) ? (int) $params['id_product_attribute'] : null,
@@ -251,9 +261,9 @@ class Bg_PrestaSms extends Module
         {
             if((int) $params['product']->quantity <= (int) $params['product']->minimal_quantity)
             {
-                if(Extensions\Helpers::outOfStockCheck($this->ps_settings, (int) $params['product']->id))
+                if(\BulkGate\Extensions\Helpers::outOfStockCheck($this->ps_settings, (int) $params['product']->id))
                 {
-                    return $this->runHook('product_out_of_stock', new Extensions\Hook\Variables(array(
+                    return $this->runHook('product_out_of_stock', new \BulkGate\Extensions\Hook\Variables(array(
                         'store_id' => (int) $params['product']->id_shop_default,
                         'product_id' => (int) $params['product']->id,
                     )));
@@ -268,7 +278,7 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_product_cancel', new Extensions\Hook\Variables(array(
+            return $this->runHook('order_product_cancel', new \BulkGate\Extensions\Hook\Variables(array(
                 'order_id' => (int) $params['order']->id,
                 'id_order_detail' => isset($params['id_order_detail']) ? $params['id_order_detail'] : null,
                 'customer_id' => (int) $params['order']->id_customer,
@@ -288,7 +298,7 @@ class Bg_PrestaSms extends Module
 
             if($customer_message !== null)
             {
-                return $this->runHook('contact_form', new Extensions\Hook\Variables(array(
+                return $this->runHook('contact_form', new \BulkGate\Extensions\Hook\Variables(array(
                     'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
                     'customer_message' => $customer_message,
                     'customer_message_short_50' => substr($customer_message, 0, 50),
@@ -307,7 +317,7 @@ class Bg_PrestaSms extends Module
     public function hookActionPrestaSmsSendSms(array $params)
     {
         $this->ps_di->getConnection()->run(
-            new BulkGate\Extensions\IO\Request(
+            new \BulkGate\Extensions\IO\Request(
                 $this->ps_di->getModule()->getUrl('/module/hook/custom'),
                 array(
                     'number' => isset($params['number']) ? $params['number'] : null,
@@ -326,7 +336,7 @@ class Bg_PrestaSms extends Module
         {
             if(isset($params['id_order']))
             {
-                list($phone_number, $iso) = PrestaSms\Helpers::getOrderPhoneNumber($params['id_order']);
+                list($phone_number, $iso) = \BulkGate\PrestaSms\Helpers::getOrderPhoneNumber($params['id_order']);
             }
             else
             {
@@ -352,7 +362,7 @@ class Bg_PrestaSms extends Module
                 'widget_api_url' => $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/widget-api/widget-api.js'),
                 'logo' => $this->ps_di->getModule()->getUrl('/images/products/ps.svg'),
                 'proxy' => array(),
-                'salt' => Extensions\Compress::compress(PrestaSms\Helpers::generateTokens()),
+                'salt' => \BulkGate\Extensions\Compress::compress(\BulkGate\PrestaSms\Helpers::generateTokens()),
                 'authenticate' => array(
                     'ajax' => true,
                     'controller' => $controller,
@@ -372,15 +382,15 @@ class Bg_PrestaSms extends Module
     }
 
 
-    public function runHook($name, Extensions\Hook\Variables $variables)
+    public function runHook($name, \BulkGate\Extensions\Hook\Variables $variables)
     {
-        $hook = new Extensions\Hook\Hook(
+        $hook = new \BulkGate\Extensions\Hook\Hook(
             $this->ps_di->getModule()->getUrl('/module/hook'),
             $variables->get('lang_id', (int) $this->context->language->id),
             $variables->get('store_id', (int) $this->context->shop->id),
             $this->ps_di->getConnection(),
             $this->ps_settings,
-            new PrestaSms\HookLoad($this->ps_di->getDatabase(), $this->context)
+            new \BulkGate\PrestaSms\HookLoad($this->ps_di->getDatabase(), $this->context)
         );
 
         try
@@ -388,7 +398,7 @@ class Bg_PrestaSms extends Module
             $hook->run((string) $name, $variables);
             return true;
         }
-        catch (Extensions\IO\InvalidResultException $e)
+        catch (\BulkGate\Extensions\IO\InvalidResultException $e)
         {
             return false;
         }

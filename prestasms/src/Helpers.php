@@ -60,41 +60,36 @@ class Helpers extends Extensions\Strict
 
     public static function installMenu(Extensions\Translator $translator)
     {
-        $main = Helpers::installModuleTab('PRESTASMS', $translator->translate('presta_sms', 'PrestaSMS'), 0,  'mail_outline');
-
-        Helpers::installModuleTab('AdminPrestaSmsDashboardDefault', $translator->translate('dashboard','Dashboard'), $main, 'desktop_windows');
-
-        $sms = Helpers::installModuleTab('PRESTASMS_SMS', $translator->translate('sms', 'SMS'), $main, 'sms');
-        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignNew', $translator->translate('start_campaign','Start Campaign'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignDefault', $translator->translate('campaigns','Campaigns'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsInboxList', $translator->translate('inbox','Inbox'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsHistoryList', $translator->translate('history','History'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsStatisticsDefault', $translator->translate('statistics','Statistics'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsBlackListDefault', $translator->translate('black_list','Black list'), $sms);
-        Helpers::installModuleTab('AdminPrestaSmsSmsPriceList', $translator->translate('price_list', 'Price list'), $sms);
-
-        $payment = Helpers::installModuleTab('PRESTASMS_PAYMENTS', $translator->translate('payments', 'Payments'), $main, 'payment');
-        Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('buy_credit', 'Buy credit'), $payment);
-        Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoices', 'Invoices'), $payment);
-        Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('payments_data', 'Payments data'), $payment);
-
-        $settings = Helpers::installModuleTab('PRESTASMS_SETTINGS',  $translator->translate('settings', 'Settings'), $main, 'settings');
-        Helpers::installModuleTab('AdminPrestaSmsUserProfile',  $translator->translate('user_profile', 'User profile'), $settings);
-        Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsAdmin',  $translator->translate('admin_sms', 'Admin SMS'), $settings);
-        Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsCustomer',  $translator->translate('customer_sms', 'Customer SMS'), $settings);
-        Helpers::installModuleTab('AdminPrestaSmsSmsSettingsDefault',  $translator->translate('sender_id_profiles', 'Sender ID Profiles'), $settings);
-        Helpers::installModuleTab('AdminPrestaSmsModuleSettingsDefault', $translator->translate('module_settings', 'Module settings'), $settings);
-
-        Helpers::installModuleTab('AdminPrestaSmsAboutDefault', $translator->translate('about_module','About module'), $settings);
+        $main = Helpers::installModuleTab('PRESTASMS', $translator->translate('prestasms', 'PrestaSMS'), 0,  'mail_outline');
+        
+        $dashboard = Helpers::installModuleTab('AdminPrestaSmsDashboardDefault', $translator->translate('dashboard','Dashboard'), $main, 'desktop_windows');
+        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignNew', $translator->translate('start_campaign','Start Campaign'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignDefault', $translator->translate('campaigns','Campaigns'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsInboxList', $translator->translate('inbox','Inbox'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsHistoryList', $translator->translate('history','History'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsStatisticsDefault', $translator->translate('statistics','Statistics'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsBlackListDefault', $translator->translate('black_list','Black list'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsSmsPriceList', $translator->translate('price_list', 'Price list'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('buy_credit', 'Buy credit'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoices', 'Invoices'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('payments_data', 'Payments data'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsUserProfile',  $translator->translate('user_profile', 'User profile'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsAdmin',  $translator->translate('admin_sms', 'Admin SMS'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsCustomer',  $translator->translate('customer_sms', 'Customer SMS'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsSmsSettingsDefault',  $translator->translate('sender_id_profiles', 'Sender ID Profiles'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsModuleSettingsDefault', $translator->translate('module_settings', 'Module settings'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsAboutDefault', $translator->translate('about_module','About module'), $main);
+        Helpers::installModuleTab('AdminPrestaSmsSignIn', 'SignIn', $dashboard);
+        Helpers::installModuleTab('AdminPrestaSmsSignUp', 'SignUp', $dashboard);
+        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignCampaign', 'SmsCampaignCampaign', $dashboard);
+        Helpers::installModuleTab('AdminPrestaSmsSmsCampaignActive', 'SmsCampaignActive', $dashboard);
+        Helpers::installModuleTab('AdminPrestaSmsBlackListImport', 'BlackListImport', $dashboard);
     }
 
     public static function uninstallMenu()
     {
         Helpers::uninstallModuleTab('PRESTASMS');
-
         Helpers::uninstallModuleTab('AdminPrestaSmsDashboardDefault');
-
-        Helpers::uninstallModuleTab('PRESTASMS_SMS');
         Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignNew');
         Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignDefault');
         Helpers::uninstallModuleTab('AdminPrestaSmsInboxList');
@@ -102,20 +97,20 @@ class Helpers extends Extensions\Strict
         Helpers::uninstallModuleTab('AdminPrestaSmsStatisticsDefault');
         Helpers::uninstallModuleTab('AdminPrestaSmsBlackListDefault');
         Helpers::uninstallModuleTab('AdminPrestaSmsSmsPriceList');
-
-        Helpers::uninstallModuleTab('PRESTASMS_PAYMENTS');
         Helpers::uninstallModuleTab('AdminPrestaSmsTopUp');
         Helpers::uninstallModuleTab('AdminPrestaSmsPaymentList');
         Helpers::uninstallModuleTab('AdminPrestaSmsWalletDetail');
-
-        Helpers::uninstallModuleTab('PRESTASMS_SETTINGS');
         Helpers::uninstallModuleTab('AdminPrestaSmsUserProfile');
         Helpers::uninstallModuleTab('AdminPrestaSmsModuleNotificationsAdmin');
         Helpers::uninstallModuleTab('AdminPrestaSmsModuleNotificationsCustomer');
         Helpers::uninstallModuleTab('AdminPrestaSmsSmsSettingsDefault');
         Helpers::uninstallModuleTab('AdminPrestaSmsModuleSettingsDefault');
-
         Helpers::uninstallModuleTab('AdminPrestaSmsAboutDefault');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSignIn');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSignUp');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignCampaign');
+        Helpers::uninstallModuleTab('AdminPrestaSmsSmsCampaignActive');
+        Helpers::uninstallModuleTab('AdminPrestaSmsBlackListImport');
     }
 
     public static function getOrderPhoneNumber($order_id)
