@@ -83,7 +83,7 @@ class HookLoad extends BulkGate\Extensions\Strict implements BulkGate\Extensions
                 $carrier = new \Carrier($variables->get('carrier_id'), $variables->get('lang_id', null));
 
                 $variables->set('order_carrier_name', $carrier->name);
-                $variables->set('order_carrier_url', $carrier->url);
+                $variables->set('order_carrier_url', str_replace('@', $order->shipping_number, $carrier->url));
                 $variables->set('order_carrier_delay', $carrier->delay);
 
                 $orderCarrier = new \OrderCarrier($variables->get('order_id'), $variables->get('lang_id', null));
