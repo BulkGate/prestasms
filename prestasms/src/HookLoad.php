@@ -83,15 +83,20 @@ class HookLoad extends BulkGate\Extensions\Strict implements BulkGate\Extensions
                 $carrier = new \Carrier($variables->get('carrier_id'), $variables->get('lang_id', null));
 
                 $variables->set('order_carrier_name', $carrier->name);
-                $variables->set('order_carrier_url', str_replace('@', $order->shipping_number, $carrier->url));
                 $variables->set('order_carrier_delay', $carrier->delay);
 
-                $orderCarrier = new \OrderCarrier($variables->get('order_id'), $variables->get('lang_id', null));
-                $variables->set('order_carrier_tracking_number', $orderCarrier->tracking_number);
-                $variables->set('order_carrier_tracking_date', $this->locale->datetime(new \DateTime($orderCarrier->date_add)));
-                $variables->set('order_carrier_price', number_format($orderCarrier->shipping_cost_tax_incl, 2));
-                $variables->set('order_carrier_weight', number_format($orderCarrier->weight, 2));
-                $variables->set('order_carrier_price_locale', $this->locale->price($orderCarrier->shipping_cost_tax_incl, $variables->get('order_currency')));
+                $order_carrier = $this->db->execute($this->db->prepare("SELECT `id_order_carrier` FROM `{$this->db->table('order_carrier')}` WHERE `id_order` = %s AND `id_carrier` = %s", array($variables->get('order_id'), $variables->get('carrier_id'))));
+
+                if($order_carrier->getNumRows() > 0)
+                {
+                    $orderCarrier = new \OrderCarrier($order_carrier->getRow()->id_order_carrier, $variables->get('lang_id', null));
+                    $variables->set('order_carrier_tracking_number', $orderCarrier->tracking_number);
+                    $variables->set('order_carrier_tracking_date', $this->locale->datetime(new \DateTime($orderCarrier->date_add)));
+                    $variables->set('order_carrier_price', number_format($orderCarrier->shipping_cost_tax_incl, 2));
+                    $variables->set('order_carrier_weight', number_format($orderCarrier->weight, 2));
+                    $variables->set('order_carrier_price_locale', $this->locale->price($orderCarrier->shipping_cost_tax_incl, $variables->get('order_currency')));
+                    $variables->set('order_carrier_url', str_replace('@', $orderCarrier->tracking_number, $carrier->url));
+                }
             }
 
             $message = \Message::getMessageByCartId($variables->get('cart_id'));
