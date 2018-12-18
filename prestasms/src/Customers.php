@@ -18,20 +18,20 @@ class Customers extends Extensions\Customers
 
     public function getTotal()
     {
-        return (int) $this->db->execute("SELECT COUNT(`id_customer`) AS `total` FROM `{$this->db->table('address')}` WHERE `id_customer` != 0 AND (`phone_mobile` OR `phone`) AND `active` = 1")->getRow()->total;
+        return (int) $this->db->execute("SELECT COUNT(DISTINCT `id_customer`) AS `total` FROM `{$this->db->table('address')}` WHERE `id_customer` != 0 AND (`phone_mobile` OR `phone`) AND `active` = 1")->getRow()->total;
     }
 
 
     public function getFilteredTotal(array $customers)
     {
-        return (int) $this->db->execute("SELECT COUNT(`id_customer`) AS `total` FROM `{$this->db->table('address')}` WHERE `id_customer` IN ('".implode("','", $customers)."') AND (`phone_mobile` OR `phone`) AND `active` = 1")->getRow()->total;
+        return (int) $this->db->execute("SELECT COUNT(DISTINCT `id_customer`) AS `total` FROM `{$this->db->table('address')}` WHERE `id_customer` IN ('".implode("','", $customers)."') AND (`phone_mobile` OR `phone`) AND `active` = 1")->getRow()->total;
     }
 
 
     protected function loadCustomers(array $customers, $limit = null)
     {
         return $this->db->execute("
-                SELECT 
+                SELECT
                     `{$this->db->table('customer')}`.`email`,
                     `{$this->db->table('address')}`.`firstname` AS `first_name`,
                     `{$this->db->table('address')}`.`lastname` AS `last_name`,
@@ -53,6 +53,7 @@ class Customers extends Extensions\Customers
                     ". (count($customers) > 0 ? "`{$this->db->table('customer')}`.`id_customer` IN ('".implode("','", $customers)."') AND" : "") . "
                     `{$this->db->table('address')}`.`active` = 1 AND 
                     (`{$this->db->table('address')}`.`phone_mobile` OR `{$this->db->table('address')}`.`phone`)
+                GROUP BY `{$this->db->table('customer')}`.`id_customer`
                     ". ($limit !== null ? ("LIMIT ".(int) $limit) : "")
         )->getRows();
     }
@@ -113,7 +114,14 @@ class Customers extends Extensions\Customers
                     case 'order_date':
                         $customers = $this->getCustomers($this->db->execute("SELECT `id_customer` FROM `{$this->db->table('orders')}` WHERE {$this->getSql($filter, 'date_add')}"), $customers);
                         break;
+                    case 'order_status':
+                        $customers = $this->getCustomers($this->db->execute("SELECT `id_customer` FROM `{$this->db->table('orders')}` WHERE {$this->getSql($filter, 'current_state')}"), $customers);
+                        break;
+                    case 'store':
+                        $customers = $this->getCustomers($this->db->execute("SELECT `id_customer` FROM `{$this->db->table('customer')}` WHERE {$this->getSql($filter, 'id_shop')}"), $customers);
+                        break;
                 }
+
                 $filtered = true;
             }
         }
