@@ -43,14 +43,14 @@ abstract class PrestaSmsController extends ModuleAdminController
         $this->ps_proxy = new PrestaSms\ProxyGenerator($this->controller_name, \Tools::getAdminTokenLite($this->controller_name));
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $this->addCSS(array(
             $this->ps_module->getUrl('/dist/css/devices.min.css'),
             $this->ps_module->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/css/bulkgate-prestasms.css'),
             'https://fonts.googleapis.com/icon?family=Material+Icons|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i'
         ));
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
     }
 
     protected function prestaSmsView($presenter, $action, $box = false)
