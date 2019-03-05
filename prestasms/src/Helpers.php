@@ -64,7 +64,7 @@ class Helpers extends Extensions\Strict
 
         Helpers::installModuleTab('AdminPrestaSmsDashboardDefault', $translator->translate('dashboard','Dashboard'), $main, 'desktop_windows');
 
-        $sms = Helpers::installModuleTab('PRESTASMS_SMS', $translator->translate('sms', 'SMS'), $main, 'sms');
+        $sms = Helpers::installModuleTab('AdminPrestaSmsSmsCampaignCampaign', $translator->translate('sms', 'SMS'), $main, 'sms');
         Helpers::installModuleTab('AdminPrestaSmsSmsCampaignNew', $translator->translate('start_campaign','Start Campaign'), $sms);
         Helpers::installModuleTab('AdminPrestaSmsSmsCampaignDefault', $translator->translate('campaigns','Campaigns'), $sms);
         Helpers::installModuleTab('AdminPrestaSmsInboxList', $translator->translate('inbox','Inbox'), $sms);
@@ -73,12 +73,12 @@ class Helpers extends Extensions\Strict
         Helpers::installModuleTab('AdminPrestaSmsBlackListDefault', $translator->translate('black_list','Black list'), $sms);
         Helpers::installModuleTab('AdminPrestaSmsSmsPriceList', $translator->translate('price_list', 'Price list'), $sms);
 
-        $payment = Helpers::installModuleTab('PRESTASMS_PAYMENTS', $translator->translate('payments', 'Payments'), $main, 'payment');
+        $payment = Helpers::installModuleTab('AdminPrestaSmsSignIn', $translator->translate('payments', 'Payments'), $main, 'payment');
         Helpers::installModuleTab('AdminPrestaSmsTopUp', $translator->translate('buy_credit', 'Buy credit'), $payment);
         Helpers::installModuleTab('AdminPrestaSmsPaymentList', $translator->translate('invoices', 'Invoices'), $payment);
         Helpers::installModuleTab('AdminPrestaSmsWalletDetail', $translator->translate('payments_data', 'Payments data'), $payment);
 
-        $settings = Helpers::installModuleTab('PRESTASMS_SETTINGS',  $translator->translate('settings', 'Settings'), $main, 'settings');
+        $settings = Helpers::installModuleTab('AdminPrestaSmsSignUp',  $translator->translate('settings', 'Settings'), $main, 'settings');
         Helpers::installModuleTab('AdminPrestaSmsUserProfile',  $translator->translate('user_profile', 'User profile'), $settings);
         Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsAdmin',  $translator->translate('admin_sms', 'Admin SMS'), $settings);
         Helpers::installModuleTab('AdminPrestaSmsModuleNotificationsCustomer',  $translator->translate('customer_sms', 'Customer SMS'), $settings);
