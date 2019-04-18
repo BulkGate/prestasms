@@ -253,14 +253,14 @@ class Bg_PrestaSms extends Module
             {
                 if(Extensions\Helpers::outOfStockCheck($this->ps_settings, (int) $params['product']->id))
                 {
-                    return $this->runHook('product_out_of_stock', new Extensions\Hook\Variables(array(
+                    $this->runHook('product_out_of_stock', new Extensions\Hook\Variables(array(
                         'store_id' => (int) $params['product']->id_shop_default,
                         'product_id' => (int) $params['product']->id,
                     )));
                 }
             }
         }
-        return true;
+        return;
     }
 
 
