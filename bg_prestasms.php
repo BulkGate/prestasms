@@ -270,7 +270,6 @@ class Bg_PrestaSms extends Module
                 }
             }
         }
-        return;
     }
 
 
