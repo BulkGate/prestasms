@@ -126,7 +126,7 @@ class Helpers extends Extensions\Strict
 
         $iso = strtolower($country->iso_code);
 
-        if(empty(trim($phone_number)))
+        if(strlen(trim($phone_number)) === 0)
         {
             $address_invoice = new \Address($order->id_address_invoice);
 
