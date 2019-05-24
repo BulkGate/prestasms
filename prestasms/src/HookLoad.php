@@ -319,7 +319,7 @@ class HookLoad extends BulkGate\Extensions\Strict implements BulkGate\Extensions
 
     public function extension(Variables $variables)
     {
-        if(class_exists('BulkGate\WooSMS\HookExtension'))
+        if(class_exists('BulkGate\PrestaSMS\HookExtension'))
         {
             $hook = new HookExtension();
             $hook->extend($this->db, $variables);
