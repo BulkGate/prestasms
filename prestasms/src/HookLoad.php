@@ -63,7 +63,7 @@ class HookLoad extends BulkGate\Extensions\Strict implements BulkGate\Extensions
             $variables->set('order_currency_symbol', isset($currency['sign']) ? $currency['sign'] : null);
             $variables->set('order_total_paid', number_format($order->total_paid, 2));
             $variables->set('order_total_locale', $this->locale->price($order->total_paid, $variables->get('order_currency')));
-            $variables->set('order_total_paid_integer', (string) (int) $order->total_paid);
+            $variables->set('order_total_paid_integer', (int) $order->total_paid);
             $variables->set('cart_id', (int) $order->id_cart);
             $variables->set('carrier_id', (int) $order->id_carrier);
             $variables->set('order_reference', $order->reference);
