@@ -334,11 +334,17 @@ class Bg_PrestaSms extends Module
 
             $controller = 'AdminPrestaSmsDashboardDefault';
 
-            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
-            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
-            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
-            $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtmlAttr', array('BulkGate\Extensions\Escape', 'htmlAttr'));
-            $this->context->smarty->registerPlugin('modifier', 'prestaSmsTranslate', array($this->ps_di->getTranslator(), 'translate'));
+            try 
+            {
+                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
+                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
+                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
+                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtmlAttr', array('BulkGate\Extensions\Escape', 'htmlAttr'));
+                $this->context->smarty->registerPlugin('modifier', 'prestaSmsTranslate', array($this->ps_di->getTranslator(), 'translate'));
+            }
+            catch (SmartyException $e)
+            {
+            }
 
             return $this->context->smarty->createTemplate(_BG_PRESTASMS_DIR_.'/templates/panel.tpl', null, null, array(
                 'application_id' => $this->ps_settings->load('static:application_id', ''),
