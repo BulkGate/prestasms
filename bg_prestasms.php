@@ -397,7 +397,7 @@ class Bg_PrestaSms extends Module
             $hook->run((string) $name, $variables);
             return true;
         }
-        catch (\BulkGate\Extensions\IO\InvalidResultException $e)
+        catch (\BulkGate\Extensions\IO\ConnectionException $e)
         {
             return false;
         }
