@@ -116,7 +116,7 @@ abstract class PrestaSmsController extends ModuleAdminController
 
                 return true;
             }
-            catch (Extensions\IO\InvalidResultException $e)
+            catch (Extensions\IO\ConnectionException $e)
             {
             }
         }
