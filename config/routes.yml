@@ -1,0 +1,5 @@
+main_app:
+  path: prestasms/demo
+  methods: [GET]
+  defaults:
+    _controller: 'BulkGate\Controller\AdminPrestaSmsController::demoAction'
