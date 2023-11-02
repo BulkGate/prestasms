@@ -1,9 +1,10 @@
 <?php
 
-if (!defined('_PS_VERSION_'))
-    exit;
-
 use BulkGate\PrestaSms, BulkGate\Extensions;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 require_once __DIR__.'/src/init.php';
 
@@ -346,7 +347,7 @@ class Bg_PrestaSms extends Module
             {
             }
 
-            return $this->context->smarty->createTemplate(_BG_PRESTASMS_DIR_.'/templates/panel.tpl', null, null, array(
+            return $this->context->smarty->createTemplate(BULKGATE_PLUGIN_DIR.'/templates/panel.tpl', null, null, array(
                 'application_id' => $this->ps_settings->load('static:application_id', ''),
                 'language' => $this->ps_settings->load('main:language', 'en'),
                 'id' => $phone_number,

@@ -99,7 +99,7 @@ abstract class PrestaSmsController extends ModuleAdminController
 
     protected function prestaSmsTemplate(array $data = array(), $template = 'base')
     {
-        return $this->context->smarty->createTemplate(_BG_PRESTASMS_DIR_.'/templates/'.$template.'.tpl', null, null, $data)->fetch();
+        return $this->context->smarty->createTemplate(BULKGATE_PLUGIN_DIR.'/templates/'.$template.'.tpl', null, null, $data)->fetch();
     }
 
     protected function synchronize($now = false)
