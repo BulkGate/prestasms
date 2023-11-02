@@ -52,11 +52,8 @@ class Bg_PrestaSms extends Module
 
     public function getContent()
     {
-        if($this->ps_settings->load('static:application_token', false))
-        {
-            \Tools::redirectAdmin($this->context->link->getAdminLink('AdminPrestaSmsModuleSettingsDefault'));
-        }
-        \Tools::redirectAdmin($this->context->link->getAdminLink('AdminPrestaSmsSignIn'));
+        // we have dedicated controller.
+        \Tools::redirectAdmin($this->context->link->getAdminLink('AdminPrestaSms'));
     }
 
 
