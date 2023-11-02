@@ -8,6 +8,7 @@ services:
       - db
     ports:
       - "80:80"
+#    user: www-data
     environment:
       DB_SERVER: db
       PS_INSTALL_DB: 1
