@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../../prestasms/src/init.php';
+require_once __DIR__.'/../../src/init.php';
 
 use BulkGate\PrestaSms, BulkGate\Extensions;
 

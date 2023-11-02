@@ -4,7 +4,7 @@
  * @link https://www.bulkgate.com/
  */
 
-define('_BG_PRESTASMS_DIR_', __DIR__.'/../../');
+define('_BG_PRESTASMS_DIR_', __DIR__.'/../');
 
 define('_BG_PRESTASMS_NAME_', 'PrestaSMS');
 define('_BG_PRESTASMS_AUTHOR_', 'TOPefekt s.r.o.');

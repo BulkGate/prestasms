@@ -5,7 +5,7 @@ if (!defined('_PS_VERSION_'))
 
 use BulkGate\PrestaSms, BulkGate\Extensions;
 
-require_once __DIR__.'/prestasms/src/init.php';
+require_once __DIR__.'/src/init.php';
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
