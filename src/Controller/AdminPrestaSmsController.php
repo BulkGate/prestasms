@@ -1,6 +1,6 @@
 <?php
 
-namespace BulkGate\Controller;
+namespace BulkGate\PrestaSms\Controller;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
-class AdminPrestaSmsController extends FrameworkBundleAdminController
+class AdminController extends FrameworkBundleAdminController
 {
     public function __construct(string $test)
     {

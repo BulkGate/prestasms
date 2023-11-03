@@ -1,8 +1,8 @@
 # https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
 
 services:
-  BulkGate\Controller\AdminPrestaSmsController:
-    class: BulkGate\Controller\AdminPrestaSmsController
+  BulkGate\PrestaSms\Controller\AdminController:
+    class: BulkGate\PrestaSms\Controller\AdminController
     tags: ['controller.service_arguments']
     autowire: true
     arguments:
