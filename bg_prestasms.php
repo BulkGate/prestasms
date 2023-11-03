@@ -43,10 +43,7 @@ class Bg_PrestaSms extends Module
 
         $this->displayName = _BG_PRESTASMS_NAME_;
         $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
-
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-
-        $this->context->smarty->assign('module_name', $this->name);
     }
 
 

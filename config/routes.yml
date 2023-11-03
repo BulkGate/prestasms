@@ -3,3 +3,4 @@ main_app:
   methods: [GET]
   defaults:
     _controller: 'BulkGate\Controller\AdminPrestaSmsController::demoAction'
+    _legacy_link: AdminPrestaSms #https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/tabs/

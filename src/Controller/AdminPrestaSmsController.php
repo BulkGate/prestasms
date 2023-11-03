@@ -1,10 +1,9 @@
 <?php
 
 namespace BulkGate\Controller;
-require_once __DIR__ . '/../../src/init.php';
-
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -17,8 +16,16 @@ class AdminPrestaSmsController extends FrameworkBundleAdminController
 
     }
 
-    public function demoAction()
+    public function indexAction()
     {
         return $this->render('@Modules/bg_prestasms/templates/demo.html.twig');
+    }
+
+    public function demoAction(Request $request)
+    {
+        dump($this, $request);
+        return $this->render('@Modules/bg_prestasms/templates/demo.html.twig', [
+            'layoutTitle' => 'BulkGate SMS'
+        ]);
     }
 }

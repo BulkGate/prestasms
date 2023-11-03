@@ -1,6 +1,6 @@
 {
   "name": "bulkgate/prestasms",
-  "type": "project",
+  "type": "prestashop-module",
   "minimum-stability": "RC",
   "require": {
     "php": ">= 7.4",
@@ -14,6 +14,9 @@
     "mockery/mockery": "^1.6"
   },
   "autoload": {
+    "psr-4": {
+      "BulkGate\\Controller\\": "src/Controller/"
+    },
     "classmap": [
       "src/"
     ]
@@ -24,6 +27,7 @@
     "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G"
   },
   "config": {
+    "prepend-autoloader": false,
     "allow-plugins": {
       "phpstan/extension-installer": true
     }
