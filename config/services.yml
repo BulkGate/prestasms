@@ -5,10 +5,18 @@ services:
     class: BulkGate\PrestaSms\Controller\AdminController
     tags: ['controller.service_arguments']
     autowire: true
-    arguments:
-      - "ABCD"
 
-  BulkGate\PrestaSms\Database\ConnectionPrestashop:
-    class: BulkGate\PrestaSms\Database\ConnectionPrestashop
+  BulkGate\Plugin\DI\Container:
+    factory: [BulkGate\PrestaSms\DI\Factory, createContainer]
     arguments:
-      - Db:getInstance()
+      $parameters:
+        db: Db:getInstance()
+        debug: false
+        gate_url: "https://portal.bulkgate.com"
+        language: en
+        country: cz
+        name: "My shop name"
+        url: "https://shop.example.com"
+        plugin_data: []
+        api_version: "1.0"
+        logger_limit: 100

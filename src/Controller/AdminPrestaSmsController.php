@@ -2,6 +2,7 @@
 
 namespace BulkGate\PrestaSms\Controller;
 
+use BulkGate\Plugin\DI\Container;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -11,14 +12,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminController extends FrameworkBundleAdminController
 {
-    public function __construct(string $test)
+    private Container $di;
+
+    public function __construct(Container $di)
     {
-        dump($test);
+        $this->di = $di;
     }
 
     public function indexAction(Request $request)
     {
-        dump($this, $request);
+        dump($this->di);
+
         return $this->render('@Modules/bg_prestasms/views/demo.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
         ]);
