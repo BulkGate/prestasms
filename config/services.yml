@@ -1,0 +1,14 @@
+# https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
+
+services:
+  BulkGate\Controller\AdminPrestaSmsController:
+    class: BulkGate\Controller\AdminPrestaSmsController
+    tags: ['controller.service_arguments']
+    autowire: true
+    arguments:
+      - "ABCD"
+
+  BulkGate\PrestaSms\Database\ConnectionPrestashop:
+    class: BulkGate\PrestaSms\Database\ConnectionPrestashop
+    arguments:
+      - Db:getInstance()
