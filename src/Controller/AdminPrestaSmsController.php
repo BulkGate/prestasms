@@ -16,15 +16,10 @@ class AdminPrestaSmsController extends FrameworkBundleAdminController
 
     }
 
-    public function indexAction()
-    {
-        return $this->render('@Modules/bg_prestasms/templates/demo.html.twig');
-    }
-
     public function demoAction(Request $request)
     {
         dump($this, $request);
-        return $this->render('@Modules/bg_prestasms/templates/demo.html.twig', [
+        return $this->render('@Modules/bg_prestasms/views/demo.html.twig', [
             'layoutTitle' => 'BulkGate SMS'
         ]);
     }
