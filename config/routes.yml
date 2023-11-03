@@ -1,6 +1,12 @@
-main_app:
+bulkgate_main_app:
   path: prestasms/demo
   methods: [GET]
   defaults:
     _controller: 'BulkGate\Controller\AdminPrestaSmsController::demoAction'
     _legacy_link: AdminPrestaSms #https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/tabs/
+
+bulkgate_debug:
+  path: prestasms/debug
+  methods: [GET]
+  defaults:
+    _controller: 'BulkGate\Controller\AdminPrestaSmsController::debugAction'

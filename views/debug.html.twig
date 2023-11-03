@@ -1,0 +1,32 @@
+{% extends '@!PrestaShop/Admin/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+{% endblock %}
+
+{% block content %}
+    <div style="max-width: 1000px; margin: 50px auto;">
+        <h1><img src="data:image/svg+xml;base64,PHN2ZyBpZD0ic3ZnNDA1OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDEuMyAzMS43NCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiM5Y2EyYTc7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5sb2dvPC90aXRsZT48ZyBpZD0ibGF5ZXIxIj48ZyBpZD0iZzM0MTgiPjxwYXRoIGlkPSJwYXRoMzQyMCIgY2xhc3M9ImNscy0xIiBkPSJNMTUwLjA2LDE3LjExYzYuNzUsNC42MiwxMS40NywxMC41NSwxMy40MSwyNC4xN2g3LjI0QzE3MCwyNy43LDE2MS44NSwxNiwxNTAuMDYsOS41NCwxMzguMjgsMTYsMTMwLjE3LDI3LjcsMTI5LjQxLDQxLjI4aDcuMjVzMTIuODMuNDgsMjEuMzEtMTIuODdjMCwwLTguNTIsNC41My0xMy41MywyLjY1LTQuNzQtMS43OC0yLjQ1LTUuODktMi4xOS02LjMzYTI4LjI5LDI4LjI5LDAsMCwxLDcuODEtNy42MiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTEyOS40MSAtOS41NCkiLz48L2c+PC9nPjwvc3ZnPg==" alt="" width="25"/>&nbsp;BulkGate Debug</h1>
+        <p>This page serves as a comprehensive tool for users to monitor, analyze, and troubleshoot the plugin, including tracking errors in the log. It also provides essential information and troubleshooting capabilities.</p>
+    </div>
+    <h2>Requirements test</h2>
+    <table id="bulkgate-requirements-table" class="widefat striped">
+        <tbody>
+        <tr>
+            <td style="width: 180px">
+                <b>PHP Version</b>
+            </td>
+            <td class="desc">
+                <b style="background: none;font-weight: 900;">{{ php_version }}</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>PrestaShop Version</b>
+            </td>
+            <td class="desc">
+                <b style="background: none;font-weight: 900;">{{ prestashop_version }}</b>
+            </td>
+        </tr>
+{% endblock %}
