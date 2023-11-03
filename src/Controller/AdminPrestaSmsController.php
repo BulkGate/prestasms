@@ -16,7 +16,7 @@ class AdminPrestaSmsController extends FrameworkBundleAdminController
         dump($test);
     }
 
-    public function demoAction(Request $request)
+    public function indexAction(Request $request)
     {
         dump($this, $request);
         return $this->render('@Modules/bg_prestasms/views/demo.html.twig', [
