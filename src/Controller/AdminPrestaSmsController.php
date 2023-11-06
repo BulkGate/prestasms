@@ -23,7 +23,7 @@ class AdminController extends FrameworkBundleAdminController
     {
         dump($this->di);
 
-        return $this->render('@Modules/bg_prestasms/views/demo.html.twig', [
+        return $this->render('@Modules/bg_prestasms/views/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
         ]);
     }
