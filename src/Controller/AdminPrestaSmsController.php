@@ -3,8 +3,11 @@
 namespace BulkGate\PrestaSms\Controller;
 
 use BulkGate\Plugin\DI\Container;
+use BulkGate\Plugin\Utils\Jwt;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -19,12 +22,27 @@ class AdminController extends FrameworkBundleAdminController
         $this->di = $di;
     }
 
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        dump($this->di);
+        //todo: development phase only!!!
+        $permanent_token = 'YvyXRPEXBMk8ZICFIOUBCxr8XXpmVtvStXseQRldm2xq1JV1ij';
+        $token = Jwt::encode([
+            'application_id' => 18,
+            'application_installation' => 'https://shop.example.com',
+            'application_product' => 'ps',
+            'application_language' => 'cs',
+            'application_version' => '5.0.10',
+            'application_parameters' => [
+                'guest' => false,
+                //'expire' => time() + 10
+            ]],
+            $permanent_token
+        );
 
         return $this->render('@Modules/bg_prestasms/views/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
+            'showContentHeader' => false,
+            'token' => $token,
         ]);
     }
 
@@ -40,5 +58,21 @@ class AdminController extends FrameworkBundleAdminController
             'php_version' => phpversion(),
             'prestashop_version' => _PS_VERSION_,
         ]);
+    }
+
+    public function proxyAction(string $action): JsonResponse
+    {
+        switch($action)
+        {
+            case "login":
+                // https://github.com/PrestaShop/PrestaShop/issues/18703 - z nejakeho duvodu proste nefunguje ABSOLUTE_URL
+                return $this->json(['token' => 'ABC', 'data' => ['redirect' => $this->generateUrl('bulkgate_main_app', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/dashboard']]);
+            case "logout":
+                return $this->json(['token' => 'EFG', 'data' => ['redirect' => $this->generateUrl('bulkgate_main_app')]]);
+            case "authenticate":
+                return $this->json(['token' => 'IJK', 'redirect' => $this->generateUrl('bulkgate_main_app')]);
+            case "module-settings":
+                return $this->json(['error' => 'not impl.']);
+        }
     }
 }

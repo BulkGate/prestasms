@@ -5,6 +5,12 @@ bulkgate_main_app:
     _controller: 'BulkGate\PrestaSms\Controller\AdminController::indexAction'
     _legacy_link: AdminPrestaSms #https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/tabs/
 
+bulkgate_proxy:
+  path: prestasms/proxy-{action<[\w-]+>}
+  methods: [POST]
+  defaults:
+    _controller: 'BulkGate\PrestaSms\Controller\AdminController::proxyAction'
+
 bulkgate_debug:
   path: prestasms/debug
   methods: [GET]
