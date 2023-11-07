@@ -9,9 +9,8 @@ namespace BulkGate\PrestaSms\Database;
 
 use BulkGate\Plugin\{Database\ResultCollection, Strict, Database};
 use Doctrine\DBAL;
-use function count, is_array;
 
-class Connection implements Database\Connection
+class Connection //implements Database\Connection
 {
 	use Strict;
 
@@ -28,49 +27,25 @@ class Connection implements Database\Connection
 	}
 
 
-	public function execute(string $sql): ?ResultCollection
+	public function execute(string $sql, array $parameters = []): ?ResultCollection
 	{
 		$output = new ResultCollection();
 
 		$this->sql[] = $sql;
 
-		$result = $this->db->executeS($sql);
+		$result = $this->db->executeQuery($sql, $parameters)->fetchAllAssociative();
 
-		if (is_array($result) && count($result) > 0)
-		{
-			foreach ($result as $key => $item)
-			{
-				$output[$key] = (array) $item;
-			}
-		}
+        foreach ($result as $key => $item)
+        {
+            $output[$key] = (array) $item;
+        }
 
 		return $output;
 	}
 
-
-	public function prepare(string $sql, ...$parameters): string
-	{
-        foreach($parameters as $param)
-        {
-            $sql = preg_replace("/%s/", "'".$this->db->_escape((string) $param)."'", $sql, 1);
-        }
-
-        return $sql;
-	}
-
-
 	public function lastId()
 	{
         return $this->db->Insert_ID();
-	}
-
-
-	/**
-	 * @param scalar|null $string
-	 */
-	public function escape($string): string
-	{
-		return $this->db->_escape((string) $string);
 	}
 
 

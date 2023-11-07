@@ -44,3 +44,6 @@ services:
 
   # Alias interfaces - use local implementations
   BulkGate\Plugin\Eshop\Configuration: "@BulkGate\\PrestaSms\\Eshop\\Configuration"
+  BulkGate\Plugin\Settings\Repository\Settings: "@BulkGate\\PrestaSms\\Settings\\Repository\\SettingsDatabase"
+  BulkGate\Plugin\Settings\Repository\Synchronization: "@BulkGate\\PrestaSms\\Settings\\Repository\\SynchronizationDatabase"
+  BulkGate\Plugin\Event\Repository\Asynchronous: "@BulkGate\\PrestaSms\\Event\\Repository\\AsynchronousDatabase"
