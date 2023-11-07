@@ -15,3 +15,32 @@ services:
   BulkGate\PrestaSms\:
     resource: "../src/"
     exclude: "../src/{_extension.php,init.php}"
+
+  BulkGate\Plugin\:
+    resource: "../vendor/bulkgate/plugin/src"
+    exclude:
+      - "../vendor/bulkgate/plugin/src/**/exceptions.php"
+      - "../vendor/bulkgate/plugin/src/compatibility.php"
+
+
+  BulkGate\PrestaSms\Eshop\Configuration:
+    arguments:
+      $version_number: '%bulkgate_module_version%'
+
+  BulkGate\Plugin\IO\ConnectionStream:
+    factory: ['BulkGate\Plugin\IO\ConnectionFactory', 'create']
+
+  BulkGate\Plugin\Localization\LanguageSettings:
+    arguments:
+      $iso: ""
+
+  BulkGate\Plugin\IO\Url:
+    arguments:
+      $url: 'https://portal.bulkgate.com'
+
+  BulkGate\Plugin\Event\Hook:
+    arguments:
+      $version: "1.0"
+
+  # Alias interfaces - use local implementations
+  BulkGate\Plugin\Eshop\Configuration: "@BulkGate\\PrestaSms\\Eshop\\Configuration"

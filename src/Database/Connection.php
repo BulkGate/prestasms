@@ -11,7 +11,7 @@ use BulkGate\Plugin\{Database\ResultCollection, Strict, Database};
 use Doctrine\DBAL;
 use function count, is_array;
 
-class ConnectionPrestashop implements Database\Connection
+class Connection implements Database\Connection
 {
 	use Strict;
 
