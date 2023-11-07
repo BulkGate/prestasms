@@ -63,16 +63,16 @@
             });
 
             widget.events.onComputeHostLayout = (compute) => {
-                let hostAppBar = document.getElementById("wpadminbar");
-                let hostNavBar = document.getElementById("adminmenuback");
+                let hostAppBar = [document.getElementById("header_infos"), document.getElementById("nav-topbar")];
+                let hostNavBar = document.querySelector(".nav-bar");
                 let hostRootWrap = document.getElementById("bulkgate-plugin");
 
                 compute({appBar: hostAppBar, navBar: hostNavBar});
 
-                if (hostRootWrap.parentElement.id === "wpbody-content") { // woosms-module page, otherwise eg. send-sms widget
-                    let style = getComputedStyle(document.getElementById("wpcontent"));
-                    hostRootWrap.style.setProperty("--bulkgate-plugin-body-indent", style.getPropertyValue("padding-left"));
-                }
+                //if (hostRootWrap.parentElement.id === "wpbody-content") { // woosms-module page, otherwise eg. send-sms widget
+                    let style = getComputedStyle(document.querySelector(".content-div"));
+                    hostRootWrap.style.setProperty("--bulkgate-plugin-body-indent", style.getPropertyValue("padding-right"));
+                //}
             };
 
             widget.options.theme = {
@@ -227,6 +227,8 @@
             position: relative;
             z-index: 0;
             margin-left: calc(var(--bulkgate-plugin-body-indent, 0) * -1);
+            margin-right: calc(var(--bulkgate-plugin-body-indent, 0) * -1);
+            margin-bottom: calc(var(--bulkgate-plugin-body-indent, 0) * -1);
         }
 
         #bulkgate-plugin #loading {

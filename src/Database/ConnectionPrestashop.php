@@ -7,10 +7,11 @@ namespace BulkGate\PrestaSms\Database;
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Database\ResultCollection, Strict, Database\Connection};
+use BulkGate\Plugin\{Database\ResultCollection, Strict, Database};
+use Doctrine\DBAL;
 use function count, is_array;
 
-class ConnectionPrestashop implements Connection
+class ConnectionPrestashop implements Database\Connection
 {
 	use Strict;
 
@@ -21,7 +22,7 @@ class ConnectionPrestashop implements Connection
 	 */
 	private array $sql = [];
 
-	public function __construct($db)
+	public function __construct(DBAL\Connection $db)
 	{
 		$this->db = $db;
 	}

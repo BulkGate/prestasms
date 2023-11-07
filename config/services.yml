@@ -1,22 +1,17 @@
 # https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
 
-services:
-  BulkGate\PrestaSms\Controller\AdminController:
-    class: BulkGate\PrestaSms\Controller\AdminController
-    tags: ['controller.service_arguments']
-    autowire: true
+parameters:
+  bulkgate_module_name: "PrestaSMS" #_BG_PRESTASMS_NAME_
+  bulkgate_module_author: "TOPefekt s.r.o." #_BG_PRESTASMS_AUTHOR_
+  bulkgate_module_author_url: "https://www.bulkgate.com/" #_BG_PRESTASMS_AUTHOR_URL_
+  bulkgate_module_min_ps_version: "1.7.5.0" #_BG_PRESTASMS_PS_MIN_VERSION_
+  bulkgate_module_version: "5.0.10" #_BG_PRESTASMS_VERSION_
 
-  BulkGate\Plugin\DI\Container:
-    factory: [BulkGate\PrestaSms\DI\Factory, createContainer]
-    arguments:
-      $parameters:
-        db: Db:getInstance()
-        debug: false
-        gate_url: "https://portal.bulkgate.com"
-        language: en
-        country: cz
-        name: "My shop name"
-        url: "https://shop.example.com"
-        plugin_data: []
-        api_version: "1.0"
-        logger_limit: 100
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  BulkGate\PrestaSms\:
+    resource: "../src/"
+    exclude: "../src/{_extension.php,init.php}"

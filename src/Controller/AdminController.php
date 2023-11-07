@@ -2,7 +2,7 @@
 
 namespace BulkGate\PrestaSms\Controller;
 
-use BulkGate\Plugin\DI\Container;
+use BulkGate\PrestaSms\Database\ConnectionPrestashop;
 use BulkGate\Plugin\Utils\Jwt;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +15,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class AdminController extends FrameworkBundleAdminController
 {
-    private Container $di;
-
-    public function __construct(Container $di)
+    public function __construct(ConnectionPrestashop $connection)
     {
-        $this->di = $di;
+        
     }
 
     public function indexAction()
