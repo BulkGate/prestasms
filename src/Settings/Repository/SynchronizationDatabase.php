@@ -7,16 +7,17 @@ namespace BulkGate\PrestaSms\Settings\Repository;
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Database, IO, Settings\Repository, Settings\Repository\Entity, Structure};
+use BulkGate\Plugin\{IO, Settings\Repository, Settings\Repository\Entity, Structure};
+use BulkGate\PrestaSms\Database\Connection;
 use function array_values, is_array;
 
 class SynchronizationDatabase implements Repository\Synchronization
 {
-	private Database\Connection $db;
+	private Connection $db;
 
 	private IO\Connection $io;
 
-	public function __construct(Database\Connection $db, IO\Connection $io)
+	public function __construct(Connection $db, IO\Connection $io)
 	{
 		$this->db = $db;
 		$this->io = $io;
