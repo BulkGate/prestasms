@@ -41,8 +41,21 @@
                         homepage: "/homepage"
                     },
                     server: {
-                        application: {}, {# $escape_js($application)} #}
-                        application_settings: {}, {# $escape_js($plugin_settings) #}
+                        application: {
+                            last_sync: "{{ synchronizer.getLastSync() | date('c') }}"
+                        },
+                        application_settings: {
+                            dispatcher: "{{ settings.load("main:dispatcher") ?? "asset" }}",
+                            synchronization: "{{ settings.load("main:synchronization") ?? "all" }}",
+                            language: "{{ settings.load("main:language") ?? "en" }}",
+                            language_mutation: {{ settings.load("main:language_mutation") ?? false | json_encode}},
+                            delete_db: {{ settings.load("main:delete_db") ?? false | json_encode }},
+                            address_preference: "{{ settings.load("main:address_preference") ?? "delivery" }}",
+                            marketing_message_opt_in_enabled: "{{ settings.load("main:address_preference") ?? "delivery" }}",
+                            marketing_message_opt_in_label: "{{ settings.load("main:marketing_message_opt_in_label") ?? "" }}",
+                            marketing_message_opt_in_default: {{ settings.load("main:marketing_message_opt_in_default") ?? false | json_encode }},
+                            marketing_message_opt_in_url: "{{ settings.load("main:marketing_message_opt_in_url") ?? "" }}",
+                        },
                     },
                     // static (dictionary) for frontend form
                     scope: {

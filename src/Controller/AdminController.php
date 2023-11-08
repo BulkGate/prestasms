@@ -3,6 +3,8 @@
 namespace BulkGate\PrestaSms\Controller;
 
 use BulkGate\Plugin\IO\Url;
+use BulkGate\Plugin\Settings\Settings;
+use BulkGate\Plugin\Settings\Synchronizer;
 use BulkGate\Plugin\User\Sign;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +22,7 @@ class AdminController extends FrameworkBundleAdminController
 
     }
 
-    public function indexAction(Sign $sign, Url $url)
+    public function indexAction(Sign $sign, Url $url, Synchronizer $synchronizer, Settings $settings)
     {
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
@@ -29,6 +31,8 @@ class AdminController extends FrameworkBundleAdminController
             'showContentHeader' => false,
             'token' => $token,
             'url' => $url,
+            'synchronizer' => $synchronizer,
+            'settings' => $settings,
         ]);
     }
 
