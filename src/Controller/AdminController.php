@@ -53,15 +53,16 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change, Authenticate $authenticate): JsonResponse
+    public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change, Authenticate $authenticate, Sign $sign): JsonResponse
     {
         switch($action)
         {
             case "login":
-                // https://github.com/PrestaShop/PrestaShop/issues/18703 - z nejakeho duvodu proste nefunguje ABSOLUTE_URL
-                return $this->json(['token' => 'ABC', 'data' => ['redirect' => $this->generateUrl('bulkgate_main_app', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/dashboard']]);
+                ['email' => $email, 'password' => $password] = Json::decode($request->getContent());
+
+                return $this->json($sign->in($email, $password, $this->generateUrl('bulkgate_main_app', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/dashboard'));
             case "logout":
-                return $this->json(['token' => 'EFG', 'data' => ['redirect' => $this->generateUrl('bulkgate_main_app')]]);
+                return $this->json($sign->out($this->generateUrl('bulkgate_main_app', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/sign/in'));
             case "authenticate":
                 return $this->json($authenticate->run($this->generateUrl('bulkgate_main_app', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/sign/in'));
             case "module-settings":
