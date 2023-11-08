@@ -6,6 +6,8 @@ use BulkGate\Plugin\IO\Url;
 use BulkGate\Plugin\Settings\Settings;
 use BulkGate\Plugin\Settings\Synchronizer;
 use BulkGate\Plugin\User\Sign;
+use BulkGate\Plugin\Utils\Json;
+use BulkGate\PrestaSms\Ajax\PluginSettingsChange;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +52,7 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function proxyAction(string $action): JsonResponse
+    public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change): JsonResponse
     {
         switch($action)
         {
@@ -62,7 +64,9 @@ class AdminController extends FrameworkBundleAdminController
             case "authenticate":
                 return $this->json(['token' => 'IJK', 'redirect' => $this->generateUrl('bulkgate_main_app')]);
             case "module-settings":
-                return $this->json(['error' => 'not impl.']);
+                $data = Json::decode($request->getContent());
+
+                return $this->json($settings_change->run($data));
         }
     }
 }

@@ -44,18 +44,19 @@
                         application: {
                             last_sync: "{{ synchronizer.getLastSync() | date('c') }}"
                         },
-                        application_settings: {
-                            dispatcher: "{{ settings.load("main:dispatcher") ?? "asset" }}",
-                            synchronization: "{{ settings.load("main:synchronization") ?? "all" }}",
-                            language: "{{ settings.load("main:language") ?? "en" }}",
-                            language_mutation: {{ settings.load("main:language_mutation") ?? false | json_encode}},
-                            delete_db: {{ settings.load("main:delete_db") ?? false | json_encode }},
-                            address_preference: "{{ settings.load("main:address_preference") ?? "delivery" }}",
-                            marketing_message_opt_in_enabled: "{{ settings.load("main:address_preference") ?? "delivery" }}",
-                            marketing_message_opt_in_label: "{{ settings.load("main:marketing_message_opt_in_label") ?? "" }}",
-                            marketing_message_opt_in_default: {{ settings.load("main:marketing_message_opt_in_default") ?? false | json_encode }},
-                            marketing_message_opt_in_url: "{{ settings.load("main:marketing_message_opt_in_url") ?? "" }}",
-                        },
+                        application_settings: {{{
+                            dispatcher: settings.load("main:dispatcher") ?? "asset",
+                            synchronization: settings.load("main:synchronization") ?? "all",
+                            language: settings.load("main:language") ?? "en",
+                            language_mutation: settings.load("main:language_mutation") ?? false,
+                            delete_db: settings.load("main:delete_db") ?? false,
+                            address_preference: settings.load("main:address_preference") ?? "delivery",
+                            marketing_message_opt_in_enabled: settings.load("main:marketing_message_opt_in_enabled") ?? true,
+                            marketing_message_opt_in_label: settings.load("main:marketing_message_opt_in_label") ?? "",
+                            marketing_message_opt_in_default: settings.load("main:marketing_message_opt_in_default") ?? false,
+                            marketing_message_opt_in_url: settings.load("main:marketing_message_opt_in_url") ?? ""
+                        } | json_encode | raw
+                        }}
                     },
                     // static (dictionary) for frontend form
                     scope: {
@@ -136,9 +137,8 @@
                 let {url, params} = proxyData[requestData.actionType] || {};
 
                 if (url) {
-                    requestData.contentType = "application/x-www-form-urlencoded";
                     requestData.url = url;
-                    requestData.data = {__bulkgate: requestData.data, ...params};
+                    requestData.data = {...requestData.data, ...params};
                     return true;
                 }
 

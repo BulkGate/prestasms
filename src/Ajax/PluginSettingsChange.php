@@ -70,7 +70,7 @@ class PluginSettingsChange
 	{
 		if (isset($unsafe_data[$key]) && is_scalar($unsafe_data[$key]))
 		{
-			$value = Helpers::deserializeValue(sanitize_text_field((string) $unsafe_data[$key]), $type);
+			$value = Helpers::deserializeValue((string) $unsafe_data[$key], $type);
 
 			$this->settings->set("main:$key", $output[$key] = $value, ['type' => $type]);
 		}

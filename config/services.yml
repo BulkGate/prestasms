@@ -27,8 +27,13 @@ services:
     arguments:
       $version_number: '%bulkgate_module_version%'
 
+  BulkGate\Plugin\IO\ConnectionFactory:
+    arguments:
+      $application_url: '@=service("BulkGate\\PrestaSms\\Eshop\\Configuration").url()'
+      $application_product: '@=service("BulkGate\\PrestaSms\\Eshop\\Configuration").product()'
+
   BulkGate\Plugin\IO\ConnectionStream:
-    factory: ['BulkGate\Plugin\IO\ConnectionFactory', 'create']
+    factory: ['@BulkGate\Plugin\IO\ConnectionFactory', 'create']
 
   BulkGate\Plugin\Localization\LanguageSettings:
     arguments:
