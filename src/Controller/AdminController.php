@@ -2,7 +2,8 @@
 
 namespace BulkGate\PrestaSms\Controller;
 
-use BulkGate\Plugin\Utils\Jwt;
+use BulkGate\Plugin\IO\Url;
+use BulkGate\Plugin\User\Sign;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,27 +20,15 @@ class AdminController extends FrameworkBundleAdminController
 
     }
 
-    public function indexAction()
+    public function indexAction(Sign $sign, Url $url)
     {
-        //todo: development phase only!!!
-        $permanent_token = 'YvyXRPEXBMk8ZICFIOUBCxr8XXpmVtvStXseQRldm2xq1JV1ij';
-        $token = Jwt::encode([
-            'application_id' => 18,
-            'application_installation' => 'https://shop.example.com',
-            'application_product' => 'ps',
-            'application_language' => 'cs',
-            'application_version' => '5.0.10',
-            'application_parameters' => [
-                'guest' => false,
-                //'expire' => time() + 10
-            ]],
-            $permanent_token
-        );
+        $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
         return $this->render('@Modules/bg_prestasms/views/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
             'showContentHeader' => false,
             'token' => $token,
+            'url' => $url,
         ]);
     }
 

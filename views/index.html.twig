@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script async src="//localhost:81/widget/eshop/load/{{ token }}/?config=init_widget_eshop_load"></script>
+    <script async src="{{ url.get("widget/eshop/load/#{token}/?config=init_widget_eshop_load") }}"></script>
     <script>
         function init_widget_eshop_load(widget) {
             function getHeaders(token) {
@@ -83,7 +83,7 @@
                             showPermanentLogin: false,
                             logo: "images/white-label/bulkgate/logo/logo-title.svg",
                             logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
-                            background: "images/products/backgrounds/ws.svg"
+                            background: "images/products/backgrounds/ps.svg"
                         }
                     },
                     BulkGateSignUpView: {
@@ -91,7 +91,7 @@
                             showLanguagePanel: false,
                             logo: "images/white-label/bulkgate/logo/logo-title.svg",
                             logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
-                            background: "images/products/backgrounds/ws.svg"
+                            background: "images/products/backgrounds/ps.svg"
                         }
                     }
                 }
@@ -131,7 +131,7 @@
 
                 try {
                     // relative -> absolute url conversion. In modules context, relative urls are not suitable. This covers routing (soft redirects change route) and signals (actions).
-                    let baseUrl = new URL("http://localhost:81"); // bulkgate's app url
+                    let baseUrl = new URL("{{ url.get() }}"); // bulkgate's app url
                     url = new URL(requestData.url, baseUrl);
                     requestData.url = url.toString();
                     return true;
@@ -290,7 +290,7 @@
         <gate-ecommerce-plugin data-theme='{"palette": {"mode": "light", "background": {"default": "#f1f1f1"}}}'></gate-ecommerce-plugin>
         <div id="loading">
             <div>
-                <img src="//localhost:81/images/white-label/bulkgate/logo/short.svg" alt="BulkGate" />
+                <img src="{{ url.get("images/white-label/bulkgate/logo/short.svg") }}" alt="BulkGate" />
                 <div id="progress"></div>
             </div>
         </div>
