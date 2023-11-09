@@ -37,7 +37,7 @@ services:
 
   BulkGate\Plugin\Localization\LanguageSettings:
     arguments:
-      $iso: ""
+      $iso: '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()' #todo: zjistit jak dostat tuto informaci mimo legacy kontext
 
   BulkGate\Plugin\IO\Url:
     arguments:
@@ -48,7 +48,7 @@ services:
       $version: "1.0"
 
   # Alias interfaces - use local implementations
-  BulkGate\Plugin\Eshop\Configuration: "@BulkGate\\PrestaSms\\Eshop\\Configuration"
-  BulkGate\Plugin\Settings\Repository\Settings: "@BulkGate\\PrestaSms\\Settings\\Repository\\SettingsDatabase"
-  BulkGate\Plugin\Settings\Repository\Synchronization: "@BulkGate\\PrestaSms\\Settings\\Repository\\SynchronizationDatabase"
-  BulkGate\Plugin\Event\Repository\Asynchronous: "@BulkGate\\PrestaSms\\Event\\Repository\\AsynchronousDatabase"
+  BulkGate\Plugin\Eshop\Configuration: '@BulkGate\PrestaSms\Eshop\Configuration'
+  BulkGate\Plugin\Settings\Repository\Settings: '@BulkGate\PrestaSms\Settings\Repository\SettingsDatabase'
+  BulkGate\Plugin\Settings\Repository\Synchronization: '@BulkGate\PrestaSms\Settings\Repository\SynchronizationDatabase'
+  BulkGate\Plugin\Event\Repository\Asynchronous: '@BulkGate\PrestaSms\Event\Repository\AsynchronousDatabase'
