@@ -3,8 +3,8 @@
 namespace BulkGate\PrestaSms\Controller;
 
 use BulkGate\Plugin\IO\Url;
-use BulkGate\Plugin\Settings\Settings;
-use BulkGate\Plugin\Settings\Synchronizer;
+use BulkGate\Plugin\Settings;
+use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\User\Sign;
 use BulkGate\Plugin\Utils\Json;
 use BulkGate\PrestaSms\Ajax\Authenticate;
@@ -20,13 +20,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class AdminController extends FrameworkBundleAdminController
 {
-    public function __construct()
+    public function indexAction(Sign $sign, Url $url, Settings\Synchronizer $settings_synchronizer, Eshop\EshopSynchronizer $shop_synchronizer, Settings\Settings $settings)
     {
+        $shop_synchronizer->run();
 
-    }
-
-    public function indexAction(Sign $sign, Url $url, Synchronizer $synchronizer, Settings $settings)
-    {
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
         return $this->render('@Modules/bg_prestasms/views/index.html.twig', [
@@ -34,7 +31,7 @@ class AdminController extends FrameworkBundleAdminController
             'showContentHeader' => false,
             'token' => $token,
             'url' => $url,
-            'synchronizer' => $synchronizer,
+            'synchronizer' => $settings_synchronizer,
             'settings' => $settings,
         ]);
     }

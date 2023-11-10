@@ -8,7 +8,7 @@ namespace BulkGate\PrestaSms\Eshop;
  */
 
 use BulkGate\Plugin\{Strict, Eshop};
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Shop;
 
 class Configuration implements Eshop\Configuration
 {
@@ -26,13 +26,11 @@ class Configuration implements Eshop\Configuration
 	/**
 	 * @param array<string, string> $plugin_data
 	 */
-	public function __construct(string $version_number, LegacyContext $context)
+	public function __construct(string $version_number, Shop\Url\BaseUrlProvider $url, Shop\Context $shop)
 	{
-		$shop = $context->getContext()->shop;
-
         $this->version_number = $version_number;
-		$this->site_url = $shop->getBaseUrl();
-		$this->site_name = $shop->name;
+		$this->site_url = $url->getUrl();
+		$this->site_name = $shop->getShopName();
 	}
 
 

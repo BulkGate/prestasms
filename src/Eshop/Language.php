@@ -8,23 +8,23 @@ namespace BulkGate\PrestaSms\Eshop;
  */
 
 use BulkGate\Plugin\Eshop;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter;
 
 
 class Language implements Eshop\Language
 {
-	private LegacyContext $context;
+	private Adapter\Language\LanguageDataProvider $language;
 
-    public function __construct(LegacyContext $context)
+    public function __construct(Adapter\Language\LanguageDataProvider $language)
     {
-        $this->context = $context;
+        $this->language = $language;
     }
 
     public function load(): array
 	{
         $output = [];
 
-        foreach($this->context->getLanguages() as ['iso_code' => $iso, 'name' => $name])
+        foreach($this->language->getLanguages() as ['iso_code' => $iso, 'name' => $name])
         {
             $output[$iso] = $name;
         }
@@ -35,6 +35,7 @@ class Language implements Eshop\Language
 
 	public function get(?int $id = null): string
 	{
-		return (string) $this->context->getContext()->language->getIsoById($id);
+		throw new \Exception("todo: get iso from order_id");
+        //return (string) $this->context->getContext()->language->getIsoById($id);
 	}
 }
