@@ -1,9 +1,0 @@
-# https://devdocs.prestashop-project.org/1.7/modules/concepts/services/#services-in-legacy-environment
-imports:
-  - {resource: ../services.yml}
-
-services:
-
-  bulkgate.plugin.settings:
-    alias: BulkGate\Plugin\Settings\Settings
-    public: true # access via $container->get('service')

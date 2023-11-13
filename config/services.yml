@@ -22,7 +22,6 @@ services:
 
   BulkGate\PrestaSms\:
     resource: "../src/"
-    exclude: "../src/{_extension.php,init.php}"
 
   BulkGate\Plugin\:
     resource: "../vendor/bulkgate/plugin/src"
