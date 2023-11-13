@@ -1,12 +1,13 @@
 <?php
 
 use BulkGate\PrestaSms, BulkGate\Extensions;
+use BulkGate\Plugin\Settings\Settings;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once __DIR__.'/src/init.php';
+//require_once __DIR__.'/src/init.php';
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -14,36 +15,27 @@ require_once __DIR__.'/src/init.php';
  */
 class Bg_PrestaSms extends Module
 {
-    /** @var PrestaSms\DIContainer */
-    private $ps_di;
-
-    /** @var Extensions\Settings */
-    private $ps_settings;
-
-    /** @var Extensions\Translator */
-    private $ps_translator;
+    private Settings $settings;
 
     public function __construct()
     {
-        $this->name = _BG_PRESTASMS_SLUG_;
-        $this->version = _BG_PRESTASMS_VERSION_;
-        $this->author = _BG_PRESTASMS_AUTHOR_;
+        parent::__construct();
+
+        $this->name = 'bg_prestasms';
+        $this->version = '5.0.10';
+        $this->author = 'TOPefekt s.r.o.';
+        $this->author_uri = 'https://www.bulkgate.com/';
         $this->tab = 'emailing';
-        $this->author_uri = _BG_PRESTASMS_AUTHOR_URL_;
         $this->ps_versions_compliancy = [
-            'min' => _BG_PRESTASMS_PS_MIN_VERSION_,
+            'min' => '1.7.6.0',
             'max' => _PS_VERSION_,
         ];
 
-        parent::__construct();
-
-        $this->ps_di = new PrestaSms\DIContainer(\Db::getInstance());
-        $this->ps_settings = $this->ps_di->getSettings();
-        $this->ps_translator = $this->ps_di->getTranslator();
-
-        $this->displayName = _BG_PRESTASMS_NAME_;
+        $this->displayName = 'PrestaSMS';
         $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
+        $this->settings = $this->get('bulkgate.plugin.settings');
+        dump('xxx', $this->get('bulkgate.plugin.settings'));
     }
 
 
@@ -57,7 +49,7 @@ class Bg_PrestaSms extends Module
     public function install()
     {
         $install = parent::install();
-        $this->ps_settings->install();
+        $this->settings->install();
         PrestaSms\Helpers::installMenu($this->ps_translator);
         $this->installHooks();
 
@@ -68,7 +60,7 @@ class Bg_PrestaSms extends Module
     public function uninstall()
     {
         $uninstall = parent::uninstall();
-        $this->ps_settings->uninstall();
+        $this->settings->uninstall();
         PrestaSms\Helpers::uninstallMenu();
 
         return $uninstall;
@@ -246,7 +238,7 @@ class Bg_PrestaSms extends Module
         {
             if((int) $params['product']->quantity <= (int) $params['product']->minimal_quantity)
             {
-                if(Extensions\Helpers::outOfStockCheck($this->ps_settings, (int) $params['product']->id))
+                if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
                 {
                     $this->runHook('product_out_of_stock', new Extensions\Hook\Variables(array(
                         'store_id' => (int) $params['product']->id_shop_default,
@@ -316,7 +308,7 @@ class Bg_PrestaSms extends Module
 
     public function hookDisplayAdminOrderRight(array $params)
     {
-        if($this->ps_settings->load("static:application_token", false))
+        if($this->settings->load("static:application_token", false))
         {
             if(isset($params['id_order']))
             {
@@ -342,8 +334,8 @@ class Bg_PrestaSms extends Module
             }
 
             return $this->context->smarty->createTemplate(BULKGATE_PLUGIN_DIR.'/templates/panel.tpl', null, null, array(
-                'application_id' => $this->ps_settings->load('static:application_id', ''),
-                'language' => $this->ps_settings->load('main:language', 'en'),
+                'application_id' => $this->settings->load('static:application_id', ''),
+                'language' => $this->settings->load('main:language', 'en'),
                 'id' => $phone_number,
                 'key' => $iso,
                 'presenter' => 'ModuleComponents',
@@ -379,7 +371,7 @@ class Bg_PrestaSms extends Module
             $variables->get('lang_id', (int) $this->context->language->id),
             $variables->get('store_id', (int) $this->context->shop->id),
             $this->ps_di->getConnection(),
-            $this->ps_settings,
+            $this->settings,
             new PrestaSms\HookLoad($this->ps_di->getDatabase(), $this->context)
         );
 
