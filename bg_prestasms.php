@@ -7,7 +7,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-//require_once __DIR__.'/src/init.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -15,17 +15,25 @@ if (!defined('_PS_VERSION_')) {
  */
 class Bg_PrestaSms extends Module
 {
-    private Settings $settings;
+    public $tabs = [
+        [
+            'name' => 'BulkGate SMS',
+            'class_name' => 'AdminPrestaSms',
+            'visible' => true,
+            'icon' => 'desktop_windows'
+        ]
+    ];
 
     public function __construct()
     {
-        parent::__construct();
-
         $this->name = 'bg_prestasms';
+        $this->tab = 'emailing';
         $this->version = '5.0.10';
         $this->author = 'TOPefekt s.r.o.';
         $this->author_uri = 'https://www.bulkgate.com/';
-        $this->tab = 'emailing';
+
+        parent::__construct();
+
         $this->ps_versions_compliancy = [
             'min' => '1.7.6.0',
             'max' => _PS_VERSION_,
@@ -34,8 +42,7 @@ class Bg_PrestaSms extends Module
         $this->displayName = 'PrestaSMS';
         $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-        $this->settings = $this->get('bulkgate.plugin.settings');
-        dump('xxx', $this->get('bulkgate.plugin.settings'));
+        PrestaSms\DI\Factory::setup(fn () => ['db' => $this->get('doctrine.dbal.default_connection')]);
     }
 
 
@@ -49,8 +56,8 @@ class Bg_PrestaSms extends Module
     public function install()
     {
         $install = parent::install();
-        $this->settings->install();
-        PrestaSms\Helpers::installMenu($this->ps_translator);
+
+        PrestaSms\DI\Factory::get()->getByClass(Settings::class)->install();
         $this->installHooks();
 
         return $install;
@@ -60,8 +67,8 @@ class Bg_PrestaSms extends Module
     public function uninstall()
     {
         $uninstall = parent::uninstall();
-        $this->settings->uninstall();
-        PrestaSms\Helpers::uninstallMenu();
+
+        PrestaSms\DI\Factory::get()->getByClass(Settings::class)->uninstall();
 
         return $uninstall;
     }
