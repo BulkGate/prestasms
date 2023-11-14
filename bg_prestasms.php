@@ -301,17 +301,28 @@ class Bg_PrestaSms extends Module
 
     public function hookActionPrestaSmsSendSms(array $params)
     {
-        $this->ps_di->getConnection()->run(
-            new BulkGate\Extensions\IO\Request(
-                $this->ps_di->getModule()->getUrl('/module/hook/custom'),
-                array(
-                    'number' => isset($params['number']) ? $params['number'] : null,
-                    'template' => isset($params['template']) ? $params['template'] : null,
-                    'variables' => isset($params['variables']) && is_array($params['variables']) ? $params['variables'] : array(),
-                    'settings' => isset($params['settings']) && is_array($params['settings']) ? $params['settings'] : array()
-                ),
-                true)
-        );
+        $number = $params['number'] ?? null;
+        $template = $params['template'] ?? null;
+        $variables = $params['variables'] ?? [];
+        $settings = $params['settings'] ?? [];
+
+        $hook = $this->get('bulkgate.plugin.event.hook');
+
+        $hook->send('/api/2.0/advanced/transactional', [
+            'number' => $number,
+            'application_product' => 'ps',
+            'tag' => 'module_custom',
+            'variables' => $variables,
+            'country' => $settings['country'] ?? null,
+            'channel' => [
+                'sms' => [
+                    'sender_id' => $settings['senderType'] ?? 'gSystem',
+                    'sender_id_value' => $settings['senderValue'] ?? '',
+                    'unicode' => $settings['unicode'] ?? false,
+                    'text' => $template
+                ]
+            ]
+        ]);
     }
 
 

@@ -5,8 +5,8 @@ services:
   _defaults:
     public: true
 
-  bulkgate.plugin.event.dispatcher:
-    alias: BulkGate\Plugin\Event\Dispatcher
+  bulkgate.plugin.event.hook:
+    alias: BulkGate\Plugin\Event\Hook
 
   bulkgate.plugin.user.sign:
     alias: BulkGate\Plugin\User\Sign
