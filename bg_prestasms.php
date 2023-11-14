@@ -2,6 +2,7 @@
 
 use BulkGate\PrestaSms, BulkGate\Extensions;
 use BulkGate\Plugin\Settings\Settings;
+use BulkGate\PrestaSms\Eshop\Order;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,6 +20,7 @@ class Bg_PrestaSms extends Module
         [
             'name' => 'BulkGate SMS',
             'class_name' => 'AdminPrestaSms',
+            'parent_class_name' => 'CONFIGURE',
             'visible' => true,
             'icon' => 'desktop_windows'
         ]
@@ -89,7 +91,7 @@ class Bg_PrestaSms extends Module
         $this->registerHook('actionEmailSendBefore');
         $this->registerHook('actionPrestaSmsSendSms');
         $this->registerHook('actionPrestaSmsExtendsVariables');
-        $this->registerHook('displayAdminOrderRight');
+        $this->registerHook('displayAdminOrderSide');
     }
 
 
@@ -313,61 +315,44 @@ class Bg_PrestaSms extends Module
     }
 
 
-    public function hookDisplayAdminOrderRight(array $params)
+    public function hookDisplayAdminOrderSide(array $params)
     {
-        if($this->settings->load("static:application_token", false))
+        ['id_order' => $id] = $params;
+
+        $settings = $this->get('bulkgate.plugin.settings.settings');
+        $sign = $this->get('bulkgate.plugin.user.sign');
+        $url = $this->get('bulkgate.plugin.io.url');
+
+        $order = new Order($id); //todo: service factory
+        $address = $order->getAddress();
+        $country = $order->getCountry($address);
+
+        $token = $sign->authenticate();
+
+        if ($settings->load("static:application_token", false)) //todo: isModuleLoggedIn
         {
-            if(isset($params['id_order']))
-            {
-                list($phone_number, $iso) = PrestaSms\Helpers::getOrderPhoneNumber($params['id_order']);
-            }
-            else
-            {
-                $phone_number = $iso = null;
-            }
-
-            $controller = 'AdminPrestaSmsDashboardDefault';
-
-            try 
-            {
-                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtml', array('BulkGate\Extensions\Escape', 'html'));
-                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeJs', array('BulkGate\Extensions\Escape', 'js'));
-                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeUrl', array('BulkGate\Extensions\Escape', 'url'));
-                $this->context->smarty->registerPlugin('modifier', 'prestaSmsEscapeHtmlAttr', array('BulkGate\Extensions\Escape', 'htmlAttr'));
-                $this->context->smarty->registerPlugin('modifier', 'prestaSmsTranslate', array($this->ps_di->getTranslator(), 'translate'));
-            }
-            catch (SmartyException $e)
-            {
-            }
-
-            return $this->context->smarty->createTemplate(BULKGATE_PLUGIN_DIR.'/templates/panel.tpl', null, null, array(
-                'application_id' => $this->settings->load('static:application_id', ''),
-                'language' => $this->settings->load('main:language', 'en'),
-                'id' => $phone_number,
-                'key' => $iso,
-                'presenter' => 'ModuleComponents',
-                'action' => 'sendSms',
-                'mode' => defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist',
-                'widget_api_url' => $this->ps_di->getModule()->getUrl('/'.(defined('BULKGATE_DEV_MODE') ? 'dev' : 'dist').'/widget-api/widget-api.js'),
-                'logo' => $this->ps_di->getModule()->getUrl('/images/products/ps.svg'),
-                'proxy' => array(),
-                'salt' => Extensions\Compress::compress(PrestaSms\Helpers::generateTokens()),
-                'authenticate' => array(
-                    'ajax' => true,
-                    'controller' => $controller,
-                    'action' => 'authenticate',
-                    'token'  => \Tools::getAdminTokenLite($controller),
-                ),
-                'homepage' => $this->context->link->getAdminLink('AdminPrestaSmsDashboardDefault'),
-                'info' => $this->ps_di->getModule()->info()
-            ))->fetch();
+            return $this->render('@Modules/bg_prestasms/views/templates/send-message.html.twig', [
+                'token' => $token,
+                'url' => $url,
+                'address' => $address,
+                'country' => $country,
+            ]);
         }
-        return '';
+
+        return null;
     }
 
 
     public function hookActionPrestaSmsExtendsVariables(array $params)
     {
+    }
+
+
+    private function render(string $template, array $params = [])
+    {
+        $twig = $this->get('twig');
+
+        return $twig->render($template, $params);
     }
 
 

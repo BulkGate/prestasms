@@ -34,6 +34,23 @@ services:
     arguments:
       $version_number: '%bulkgate_module_version%'
 
+  BulkGate\Plugin\Event\Loader:
+    arguments:
+      $loaders:
+        - '@BulkGate\PrestaSms\Event\Loader\Shop'
+        - '@BulkGate\PrestaSms\Event\Loader\Product'
+        - '@BulkGate\PrestaSms\Event\Loader\Post'
+        - '@BulkGate\PrestaSms\Event\Loader\OrderStatus'
+        - '@BulkGate\PrestaSms\Event\Loader\Order'
+        - '@BulkGate\PrestaSms\Event\Loader\Extension'
+        - '@BulkGate\PrestaSms\Event\Loader\Customer'
+
+  BulkGate\Plugin\Localization\FormatterIntl:
+    arguments:
+      $language: '@=service("BulkGate\\Plugin\\Localization\\LanguageSettings").get()' #todo: je to opravdu hodnota kterou hledame?
+
+  BulkGate\Plugin\Localization\Formatter: '@BulkGate\Plugin\Localization\FormatterIntl' #todo: conditional formatter service. Mozna pouzit localization primo z prestashopu?
+
   BulkGate\Plugin\IO\ConnectionFactory:
     arguments:
       $application_url: '@=service("BulkGate\\PrestaSms\\Eshop\\Configuration").url()'
