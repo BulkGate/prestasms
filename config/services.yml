@@ -56,7 +56,7 @@ services:
       $application_url: '@=service("BulkGate\\PrestaSms\\Eshop\\Configuration").url()'
       $application_product: '@=service("BulkGate\\PrestaSms\\Eshop\\Configuration").product()'
 
-  BulkGate\Plugin\IO\ConnectionStream:
+  BulkGate\Plugin\IO\Connection:
     factory: ['@BulkGate\Plugin\IO\ConnectionFactory', 'create']
 
   BulkGate\Plugin\Localization\LanguageSettings:

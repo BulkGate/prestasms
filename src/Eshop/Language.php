@@ -38,4 +38,9 @@ class Language implements Eshop\Language
 		throw new \Exception("todo: get iso from order_id");
         //return (string) $this->context->getContext()->language->getIsoById($id);
 	}
+
+	public function hasMultiLanguageSupport(): bool
+	{
+		return true;
+	}
 }
