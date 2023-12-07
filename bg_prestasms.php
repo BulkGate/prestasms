@@ -2,7 +2,8 @@
 
 use BulkGate\PrestaSms, BulkGate\Extensions;
 use BulkGate\Plugin\Settings\Settings;
-use BulkGate\PrestaSms\Eshop\Order;
+use BulkGate\Plugin\Event\Variables;
+use BulkGate\PrestaSms\Eshop\Order as PrestaSmsOrder;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -103,16 +104,15 @@ class Bg_PrestaSms extends Module
 
             if($order->id !== null)
             {
-                return $this->runHook('order_status_change_'.$params['newOrderStatus']->id, new Extensions\Hook\Variables(array(
+                $this->runHook('order', 'change-status', new Variables([
                     'order_status_id' => $params['newOrderStatus']->id,
                     'order_id' => (int) $order->id,
                     'lang_id' => (int) $order->id_lang,
                     'store_id' => (int) $order->id_shop,
                     'customer_id' => (int) $order->id_customer
-                )));
+                ]), ['order' => $order]);
             }
         }
-        return true;
     }
 
 
@@ -120,14 +120,13 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_new', new Extensions\Hook\Variables(array(
+            $this->runHook('order', 'new', new Variables([
                 'order_id' => (int) $params['order']->id,
                 'lang_id' => (int) $params['order']->id_lang,
                 'store_id' => (int) $params['order']->id_shop,
                 'customer_id' => (int) $params['order']->id_customer
-            )));
+            ]), ['order' => $params['order']]);
         }
-        return true;
     }
 
 
@@ -135,13 +134,12 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['newCustomer']) && $params['newCustomer'] instanceof Customer)
         {
-            return $this->runHook('customer_new', new Extensions\Hook\Variables(array(
+            $this->runHook('customer', 'new', new Variables([
                 'customer_id' => (int) $params['newCustomer']->id,
                 'lang_id' => (int) $params['newCustomer']->id_lang,
                 'store_id' => (int) $params['newCustomer']->id_shop
-            )));
+            ]), ['customer' => $params['newCustomer']]);
         }
-        return true;
     }
 
 
@@ -149,15 +147,14 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['orderReturn']) && $params['orderReturn'] instanceof OrderReturn)
         {
-            return $this->runHook('order_product_return', new Extensions\Hook\Variables(array(
+            $this->runHook('return', 'new', new Variables([
                 'return_id' => (int) $params['orderReturn']->id,
                 'customer_id' => (int) $params['orderReturn']->id_customer,
                 'order_id' => (int) $params['orderReturn']->id_order,
                 'lang_id' => (int) $params['orderReturn']->id_lang,
                 'store_id' => (int) $params['orderReturn']->id_shop
-            )));
+            ]));
         }
-        return true;
     }
 
 
@@ -165,15 +162,14 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_slip_add', new Extensions\Hook\Variables(array(
+            $this->runHook('order', 'TODO_slip_add', new Variables([
                 'order_id' => (int) $params['order']->id,
                 'customer_id' => (int) $params['order']->id_customer,
                 'lang_id' => (int) $params['order']->id_lang,
                 'store_id' => (int) $params['order']->id_shop,
                 'filter_products' => array_keys(isset($params['qtyList']) ? $params['qtyList'] : array())
-            )));
+            ]), ['order' => $params['order']]);
         }
-        return true;
     }
 
 
@@ -181,14 +177,13 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_tracking_number', new Extensions\Hook\Variables(array(
+            $this->runHook('order', 'tracking-number', new Variables([
                 'order_id' => (int) $params['order']->id,
                 'customer_id' => (int) $params['order']->id_customer,
                 'lang_id' => (int) $params['order']->id_lang,
                 'store_id' => (int) $params['order']->id_shop
-            )));
+            ]), ['order' => $params['order']]);
         }
-        return true;
     }
 
 
@@ -200,15 +195,14 @@ class Bg_PrestaSms extends Module
 
             if($order->id !== null)
             {
-                return $this->runHook('order_payment_confirmation', new Extensions\Hook\Variables(array(
+                $this->runHook('order', 'payment', new Variables([
                     'order_id' => (int) $order->id,
                     'lang_id' => (int) $order->id_lang,
                     'store_id' => (int) $order->id_shop,
                     'customer_id' => (int) $order->id_customer
-                )));
+                ]), ['order' => $order]);
             }
         }
-        return true;
     }
 
 
@@ -216,12 +210,11 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['product']) && $params['product'] instanceof Product)
         {
-            return $this->runHook('product_delete', new Extensions\Hook\Variables(array(
+            $this->runHook('product', 'TODO_delete', new Variables([
                 'store_id' => (int) $params['product']->id_shop_default,
                 'product_id' => (int) $params['product']->id,
-            )));
+            ]), ['product' => $params['product']]);
         }
-        return true;
     }
 
 
@@ -231,13 +224,12 @@ class Bg_PrestaSms extends Module
         {
             $product = new Product((int) $params['id_product']);
 
-            return $this->runHook('product_update_quantity', new Extensions\Hook\Variables(array(
+            $this->runHook('product', 'TODO_update_quantity', new Variables([
                 'store_id' => (int) $product->id_shop_default,
                 'product_id' => (int) $product->id,
                 'id_product_attribute' => isset($params['id_product_attribute']) ? (int) $params['id_product_attribute'] : null,
-            )));
+            ]), ['product' => $product]);
         }
-        return true;
     }
 
 
@@ -249,10 +241,10 @@ class Bg_PrestaSms extends Module
             {
                 if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
                 {
-                    $this->runHook('product_out_of_stock', new Extensions\Hook\Variables(array(
+                    $this->runHook('product', 'out-of-stock', new Variables([
                         'store_id' => (int) $params['product']->id_shop_default,
                         'product_id' => (int) $params['product']->id,
-                    )));
+                    ]), ['product' => $params['product']]);
                 }
             }
         }
@@ -263,15 +255,14 @@ class Bg_PrestaSms extends Module
     {
         if(isset($params['order']) && $params['order'] instanceof Order)
         {
-            return $this->runHook('order_product_cancel', new Extensions\Hook\Variables(array(
+            $this->runHook('order', 'TODO_product_cancel', new Variables([
                 'order_id' => (int) $params['order']->id,
-                'id_order_detail' => isset($params['id_order_detail']) ? $params['id_order_detail'] : null,
+                'id_order_detail' => $params['id_order_detail'] ?? null,
                 'customer_id' => (int) $params['order']->id_customer,
                 'lang_id' => (int) $params['order']->id_lang,
                 'store_id' => (int) $params['order']->id_shop
-            )));
+            ]), ['order' => $params['order']]);
         }
-        return true;
     }
 
 
@@ -283,7 +274,7 @@ class Bg_PrestaSms extends Module
 
             if($customer_message !== null)
             {
-                return $this->runHook('contact_form', new Extensions\Hook\Variables(array(
+                $this->runHook('contact', 'form', new Variables([
                     'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
                     'customer_message' => $customer_message,
                     'customer_message_short_50' => substr($customer_message, 0, 50),
@@ -292,10 +283,9 @@ class Bg_PrestaSms extends Module
                     'customer_message_short_120' => substr($customer_message, 0, 120),
                     'lang_id' => isset($params['idLang']) ? (int) $params['idLang'] : null,
                     'store_id' => isset($params['idShop']) ? (int) $params['idShop'] : null
-                )));
+                ]));
             }
         }
-        return true;
     }
 
 
@@ -334,7 +324,7 @@ class Bg_PrestaSms extends Module
         $sign = $this->get('bulkgate.plugin.user.sign');
         $url = $this->get('bulkgate.plugin.io.url');
 
-        $order = new Order($id); //todo: service factory
+        $order = new PrestaSmsOrder($id); //todo: service factory
         $address = $order->getAddress();
         $country = $order->getCountry($address);
 
@@ -359,17 +349,21 @@ class Bg_PrestaSms extends Module
     }
 
 
-    private function render(string $template, array $params = [])
+    /*private function render(string $template, array $params = [])
     {
         $twig = $this->get('twig');
 
         return $twig->render($template, $params);
-    }
+    }*/
 
 
-    public function runHook($name, Extensions\Hook\Variables $variables)
+    public function runHook(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void
     {
-        $hook = new Extensions\Hook\Hook(
+        $dispatcher = $this->get('bulkgate.plugin.event.dispatcher');
+
+		$dispatcher->dispatch($category, $endpoint, $variables, $parameters, $success_callback);
+
+		/*$hook = new Extensions\Hook\Hook(
             $this->ps_di->getModule()->getUrl('/module/hook'),
             $variables->get('lang_id', (int) $this->context->language->id),
             $variables->get('store_id', (int) $this->context->shop->id),
@@ -386,6 +380,6 @@ class Bg_PrestaSms extends Module
         catch (Extensions\IO\ConnectionException $e)
         {
             return false;
-        }
+        }*/
     }
 }
