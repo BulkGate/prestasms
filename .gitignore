@@ -3,5 +3,6 @@ debug.php
 vendor
 composer.lock
 coverage.html
+config.xml
 tests/**/output/*.actual
 tests/**/output/*.expected
