@@ -93,6 +93,9 @@ class Bg_PrestaSms extends Module
         $this->registerHook('actionPrestaSmsSendSms');
         $this->registerHook('actionPrestaSmsExtendsVariables');
         $this->registerHook('displayAdminOrderSide');
+
+		$this->registerHook('actionFrontControllerSetMedia');
+		$this->registerHook('actionAdminControllerSetMedia');
     }
 
 
@@ -349,15 +352,27 @@ class Bg_PrestaSms extends Module
     }
 
 
-    /*private function render(string $template, array $params = [])
-    {
-        $twig = $this->get('twig');
+    public function hookActionFrontControllerSetMedia()
+	{
+		$this->context->controller->registerJavascript(
+			'bulkgate',
+			$this->context->link->getModuleLink($this->name, 'AsynchronousAsset'),
+			[
+				'server' => 'remote', // must be specified in case of dynamically rendered javascript
+				'attributes' => 'async',
+				'position' => 'head',
+				'priority' => 100
+			]
+		);
+	}
 
-        return $twig->render($template, $params);
-    }*/
+	public function hookActionAdminControllerSetMedia()
+	{
+		$this->asynchronousAsset(); //todo: jak registrovat javascript?
+	}
 
 
-    public function runHook(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void
+    private function runHook(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void
     {
         $dispatcher = $this->get('bulkgate.plugin.event.dispatcher');
 
@@ -382,4 +397,9 @@ class Bg_PrestaSms extends Module
             return false;
         }*/
     }
+
+	private function asynchronousAsset()
+	{
+
+	}
 }

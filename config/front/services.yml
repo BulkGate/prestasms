@@ -1,0 +1,12 @@
+imports:
+  - { resource: ../services.yml }
+
+services:
+  _defaults:
+    public: true
+
+  bulkgate.plugin.event.asynchronous:
+    alias: BulkGate\Plugin\Event\Asynchronous
+
+  bulkgate.plugin.settings.settings:
+    alias: BulkGate\Plugin\Settings\Settings
