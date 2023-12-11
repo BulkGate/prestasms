@@ -3,6 +3,7 @@
 use BulkGate\PrestaSms, BulkGate\Extensions;
 use BulkGate\Plugin\Settings\Settings;
 use BulkGate\Plugin\Event\Variables;
+use BulkGate\Plugin\Event\Dispatcher;
 use BulkGate\PrestaSms\Eshop\Order as PrestaSmsOrder;
 
 if (!defined('_PS_VERSION_')) {
@@ -94,8 +95,8 @@ class Bg_PrestaSms extends Module
         $this->registerHook('actionPrestaSmsExtendsVariables');
         $this->registerHook('displayAdminOrderSide');
 
-		$this->registerHook('actionFrontControllerSetMedia');
-		$this->registerHook('actionAdminControllerSetMedia');
+		$this->registerHook('displayHeader');
+		$this->registerHook('displayBackOfficeHeader');
     }
 
 
@@ -352,23 +353,14 @@ class Bg_PrestaSms extends Module
     }
 
 
-    public function hookActionFrontControllerSetMedia()
+    public function hookDisplayHeader()
 	{
-		$this->context->controller->registerJavascript(
-			'bulkgate',
-			$this->context->link->getModuleLink($this->name, 'AsynchronousAsset'),
-			[
-				'server' => 'remote', // must be specified in case of dynamically rendered javascript
-				'attributes' => 'async',
-				'position' => 'head',
-				'priority' => 100
-			]
-		);
+		return $this->asynchronousAsset();
 	}
 
-	public function hookActionAdminControllerSetMedia()
+	public function hookDisplayBackOfficeHeader()
 	{
-		$this->asynchronousAsset(); //todo: jak registrovat javascript?
+		return $this->asynchronousAsset();
 	}
 
 
@@ -377,29 +369,15 @@ class Bg_PrestaSms extends Module
         $dispatcher = $this->get('bulkgate.plugin.event.dispatcher');
 
 		$dispatcher->dispatch($category, $endpoint, $variables, $parameters, $success_callback);
-
-		/*$hook = new Extensions\Hook\Hook(
-            $this->ps_di->getModule()->getUrl('/module/hook'),
-            $variables->get('lang_id', (int) $this->context->language->id),
-            $variables->get('store_id', (int) $this->context->shop->id),
-            $this->ps_di->getConnection(),
-            $this->settings,
-            new PrestaSms\HookLoad($this->ps_di->getDatabase(), $this->context)
-        );
-
-        try
-        {
-            $hook->run((string) $name, $variables);
-            return true;
-        }
-        catch (Extensions\IO\ConnectionException $e)
-        {
-            return false;
-        }*/
     }
 
 	private function asynchronousAsset()
 	{
+		$settings = $this->get('bulkgate.plugin.settings.settings');
 
+		if ($settings->load('main:dispatcher') === Dispatcher::Asset)
+		{
+			return '<script type="text/javascript" src="'.$this->context->link->getModuleLink($this->name, 'AsynchronousAsset').'" async></script>';
+		}
 	}
 }
