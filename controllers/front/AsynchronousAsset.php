@@ -15,7 +15,7 @@ class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontCont
 	{
 		$settings = $this->get('bulkgate.plugin.settings.settings');
 
-		if (($settings->load('main:dispatcher') ?? Dispatcher::$default_dispatcher) === Dispatcher::Asset)
+		if ($settings->load('main:dispatcher') === Dispatcher::Asset)
 		{
 			$count = $this->get('bulkgate.plugin.event.asynchronous')->run(max(5, (int) ($settings->load('main:cron-limit') ?? 10)));
 

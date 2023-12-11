@@ -6,13 +6,26 @@ parameters:
   bulkgate_module_author_url: "https://www.bulkgate.com/" #_BG_PRESTASMS_AUTHOR_URL_
   bulkgate_module_min_ps_version: "1.7.5.0" #_BG_PRESTASMS_PS_MIN_VERSION_
   bulkgate_module_version: "5.0.10" #_BG_PRESTASMS_VERSION_
+  bulkgate_module_settings_defaults:
+    "main:dispatcher": 'asset'
+    "main:synchronization": 'all'
+    "main:language": 'auto' #TODO: jak WTF funguje hodnota auto???
+    "main:language_mutation": false
+    "main:delete_db": false
+    "main:address_preference": 'delivery'
+    "main:marketing_message_opt_in_enabled": false
+    "main:marketing_message_opt_in_label": ''
+    "main:marketing_message_opt_in_default": false
+    "main:marketing_message_opt_in_url": ''
+
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
 
-  #alias PrestaShop classes - we need this
+  #Adapter classes services
+
   PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider: #'@prestashop.adapter.data_provider.order_state'
   PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider: #'@prestashop.adapter.data_provider.order_return_state'
   PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider: #'@prestashop.adapter.data_provider.language'
@@ -23,6 +36,8 @@ services:
   PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider: #'@prestashop.adapter.data_provider.employee'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().employee'
+
+  # Module
 
   BulkGate\PrestaSms\:
     resource: "../src/"
@@ -54,6 +69,12 @@ services:
       $language: '@=service("BulkGate\\Plugin\\Localization\\LanguageSettings").get()' #todo: je to opravdu hodnota kterou hledame?
 
   BulkGate\Plugin\Localization\Formatter: '@BulkGate\Plugin\Localization\FormatterIntl' #todo: conditional formatter service. Mozna pouzit localization primo z prestashopu?
+
+  BulkGate\Plugin\Settings\Settings:
+    calls:
+      - method: setDefaultSettings
+        arguments:
+          - '%bulkgate_module_settings_defaults%'
 
   BulkGate\Plugin\IO\ConnectionFactory:
     arguments:
