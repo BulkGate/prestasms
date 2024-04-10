@@ -1,0 +1,21 @@
+imports:
+  - { resource: ../services.yml }
+
+services:
+  _defaults:
+    public: true
+
+  bulkgate.plugin.event.hook:
+    alias: BulkGate\Plugin\Event\Hook
+
+  bulkgate.plugin.event.dispatcher:
+    alias: BulkGate\Plugin\Event\Dispatcher
+
+  bulkgate.plugin.user.sign:
+    alias: BulkGate\Plugin\User\Sign
+
+  bulkgate.plugin.io.url:
+    alias: BulkGate\Plugin\IO\Url
+
+  bulkgate.plugin.settings.settings:
+    alias: BulkGate\Plugin\Settings\Settings

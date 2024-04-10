@@ -1,0 +1,34 @@
+<script async src="{{ url.get("widget/message/send/#{token}/?config=init_widget_message_send") }}"></script>
+<script>
+    function init_widget_message_send(widget) {
+        console.log("Widget configuration was called successfully", widget);
+
+        widget.options.SendMessageProps = {
+            recipients: [
+                {{{
+                    first_name: address.firstname,
+                    last_name: address.lastname,
+                    company: address.company,
+                    street1: [address.address1, address.address2],
+                    city: address.city,
+                    zip: address.postcode,
+                    country: address.country,
+                    phone_mobile: address.phone_mobile ?: address.phone,
+                    phone_number_iso: country.iso_code | lower,
+                    order_status: "",
+                } | json_encode | raw}}
+            ]
+        }
+    }
+</script>
+
+<div class="card mt-2" data-role="message-card">
+    <div class="card-header">
+        <h3 class="card-header-title">
+            BulkGate SMS
+        </h3>
+    </div>
+    <div class="card-body">
+        <gate-send-message></gate-send-message>
+    </div>
+</div>
