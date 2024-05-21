@@ -32,7 +32,7 @@
 
         var _bg_client_config = {
             url: {
-                authenticationService : 'ajax-tab.php',
+                authenticationService : 'index.php',
             },
             actions: {
                 authenticate: function () {

@@ -24,7 +24,7 @@ class ProxyGenerator extends Extensions\Strict
         $this->token = (string) $token;
     }
 
-    public function add($action, $proxy_action, $reducer = '_generic', $url = 'ajax-tab.php')
+    public function add($action, $proxy_action, $reducer = '_generic', $url = 'index.php')
     {
         $proxy = array(
             'url' => $url,
