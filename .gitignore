@@ -1,7 +1,5 @@
 debug.php
 .idea
-vendor
-composer.lock
 coverage.html
 config.xml
 tests/**/output/*.actual

@@ -1,0 +1,35 @@
+{
+    "name": "bulkgate/plugin",
+    "description": "Meta package for BulkGate plugins",
+    "type": "library",
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "authors": [
+        {
+            "name": "Lukáš Piják",
+            "email": "lukaspijak@gmail.com"
+        }
+    ],
+    "minimum-stability": "RC",
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-zlib": "*",
+        "ext-intl": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.9",
+        "nette/tester": "^2",
+        "mockery/mockery": "1.4.2",
+        "tracy/tracy": "^2.9",
+        "rector/rector": "^0.16"
+    },
+    "scripts": {
+        "tester": "tester -C tests --colors=1",
+        "coverage": "tester -C --coverage=coverage.html --coverage-src=src --colors=1",
+        "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G"
+    }
+}
