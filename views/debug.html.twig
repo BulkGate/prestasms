@@ -44,20 +44,22 @@
 
         <h2>Error log</h2>
         {% if errors %}
-            <table id="bulkgate-log-table" class="table table-striped table-bordered">
-                <tbody>
-                {% for error in errors %}
-                <tr>
-                    <td>
-                        <b>{{ error.created | date('d.m. Y H:i:s') }}</b>
-                    </td>
-                    <td class="desc">
-                        <code style="background: none;">{{ error.message }}</code>
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <div style="overflow: auto;">
+                <table id="bulkgate-log-table" class="table table-striped table-bordered">
+                    <tbody>
+                    {% for error in errors %}
+                        <tr>
+                            <td>
+                                <b>{{ error.created | date('d.m. Y H:i:s') }}</b>
+                            </td>
+                            <td class="desc">
+                                <code style="background: none;">{{ error.message }}</code>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <p>No errors found.</p>
         {% endif %}
