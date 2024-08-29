@@ -14,7 +14,6 @@ use BulkGate\PrestaSms\Ajax\PluginSettingsChange;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.

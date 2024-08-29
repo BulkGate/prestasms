@@ -1,6 +1,6 @@
 <?php
 
-use BulkGate\Plugin\Event\{Asynchronous, Dispatcher};
+use BulkGate\Plugin\Event\Dispatcher;
 
 class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontController
 {

@@ -8,7 +8,8 @@ namespace BulkGate\PrestaSms\Ajax;
  */
 
 use BulkGate\Plugin\{Settings\Helpers, Settings\Synchronizer, Strict, Settings\Settings as SettingsPlugin};
-use function preg_match, is_scalar, site_url, sanitize_text_field;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use function preg_match, is_scalar;
 
 class PluginSettingsChange
 {
@@ -18,10 +19,13 @@ class PluginSettingsChange
 
 	private Synchronizer $synchronizer;
 
-	public function __construct(SettingsPlugin $settings, Synchronizer $synchronizer)
+	private UrlGeneratorInterface $router;
+
+	public function __construct(SettingsPlugin $settings, Synchronizer $synchronizer, UrlGeneratorInterface $router)
 	{
 		$this->settings = $settings;
 		$this->synchronizer = $synchronizer;
+		$this->router = $router;
 	}
 
 
@@ -55,7 +59,9 @@ class PluginSettingsChange
 
 		if (isset($unsafe_post_data['language']) && $actual_language !== $unsafe_post_data['language'])
 		{
-			return ['data' => ['redirect' => site_url('/?bulkgate-redirect=dashboard')]];
+			// language change requires hard reload for re-initialization languages.
+			// we are using reload_lang parameter to handle url change and effectively reloads the page
+			return ['data' => ['redirect' => $this->router->generate('bulkgate_main_app', ['reload_lang' => $unsafe_post_data['language'], '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_URL)]];
 		}
 
 		return ['data' => ['layout' => ['server' => ['application_settings' => $output]]], 'success' => ['saved']];
