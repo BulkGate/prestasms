@@ -1,23 +1,8 @@
 # https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
 
-parameters:
-  bulkgate_module_name: "PrestaSMS" #_BG_PRESTASMS_NAME_
-  bulkgate_module_author: "TOPefekt s.r.o." #_BG_PRESTASMS_AUTHOR_
-  bulkgate_module_author_url: "https://www.bulkgate.com/" #_BG_PRESTASMS_AUTHOR_URL_
-  bulkgate_module_min_ps_version: "1.7.5.0" #_BG_PRESTASMS_PS_MIN_VERSION_
-  bulkgate_module_version: "5.0.10" #_BG_PRESTASMS_VERSION_
-  bulkgate_module_settings_defaults:
-    "main:dispatcher": 'asset'
-    "main:synchronization": 'all'
-    "main:language": 'auto' #TODO: jak WTF funguje hodnota auto???
-    "main:language_mutation": false
-    "main:delete_db": false
-    "main:address_preference": 'delivery'
-    "main:marketing_message_opt_in_enabled": false
-    "main:marketing_message_opt_in_label": ''
-    "main:marketing_message_opt_in_default": false
-    "main:marketing_message_opt_in_url": ''
-
+imports:
+  - { resource: ./includes/parameters.yml}
+  - { resource: ./includes/parameters.local.yml, ignore_errors: not_found}
 
 services:
   _defaults:
@@ -56,19 +41,18 @@ services:
   BulkGate\Plugin\Event\Loader:
     arguments:
       $loaders:
+        - '@BulkGate\PrestaSms\Event\Loader\Order'
+        - '@BulkGate\PrestaSms\Event\Loader\OrderStatus'
+        - '@BulkGate\PrestaSms\Event\Loader\Customer'
         - '@BulkGate\PrestaSms\Event\Loader\Shop'
         - '@BulkGate\PrestaSms\Event\Loader\Product'
         - '@BulkGate\PrestaSms\Event\Loader\Post'
-        - '@BulkGate\PrestaSms\Event\Loader\OrderStatus'
-        - '@BulkGate\PrestaSms\Event\Loader\Order'
         - '@BulkGate\PrestaSms\Event\Loader\Extension'
-        - '@BulkGate\PrestaSms\Event\Loader\Customer'
 
-  BulkGate\Plugin\Localization\FormatterIntl:
+  BulkGate\Plugin\Localization\Formatter:
+    factory: ['BulkGate\PrestaSms\Localization\FormatterFactory', 'create']
     arguments:
-      $language: '@=service("BulkGate\\Plugin\\Localization\\LanguageSettings").get()' #todo: je to opravdu hodnota kterou hledame?
-
-  BulkGate\Plugin\Localization\Formatter: '@BulkGate\Plugin\Localization\FormatterIntl' #todo: conditional formatter service. Mozna pouzit localization primo z prestashopu?
+      $language: '@=service("BulkGate\\Plugin\\Localization\\LanguageSettings").get()'
 
   BulkGate\Plugin\Settings\Settings:
     calls:
@@ -90,7 +74,7 @@ services:
 
   BulkGate\Plugin\IO\Url:
     arguments:
-      $url: 'https://portal.bulkgate.com'
+      $url: '%bulkgate_module_url%'
 
   BulkGate\Plugin\Event\Hook:
     arguments:

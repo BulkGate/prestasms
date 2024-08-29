@@ -5,6 +5,9 @@ services:
   _defaults:
     public: true
 
+  bulkgate.plugin.event.dispatcher:
+    alias: BulkGate\Plugin\Event\Dispatcher
+
   bulkgate.plugin.event.asynchronous:
     alias: BulkGate\Plugin\Event\Asynchronous
 

@@ -4,3 +4,4 @@ coverage.html
 config.xml
 tests/**/output/*.actual
 tests/**/output/*.expected
+config/includes/*.local.yml
