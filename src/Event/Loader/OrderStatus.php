@@ -7,8 +7,7 @@ namespace BulkGate\PrestaSms\Event\Loader;
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\{WooSms\Event\Helpers, Plugin\Event\Variables, Plugin\Strict, Plugin\Event\DataLoader};
-use function function_exists;
+use BulkGate\{Plugin\Event\Variables, Plugin\Strict, Plugin\Event\DataLoader};
 
 class OrderStatus implements DataLoader
 {
@@ -16,20 +15,10 @@ class OrderStatus implements DataLoader
 
 	public function load(Variables $variables, array $parameters = []): void
 	{
-		if (function_exists('wc_get_order_statuses') && isset($variables['order_status_id']))
+		if (isset($variables['order_status_id']))
 		{
-			$order_status_id = $variables['order_status_id'] ?? 'unknown';
-
-			$variables['order_status'] = Helpers::resolveOrderStatus($order_status_id);
-			$variables['order_status_id'] = "wc-$order_status_id";
-
-			if (isset($variables['order_status_id_from']))
-			{
-				$order_status_id_from = $variables['order_status_id_from'] ?? 'unknown';
-
-				$variables['order_status_from'] = Helpers::resolveOrderStatus($order_status_id_from);
-				$variables['order_status_id_from'] = "wc-$order_status_id_from";
-			}
+			$status = new \OrderState($variables['order_status_id'], $variables['lang_id']);
+			$variables['order_status'] = $status->name;
 		}
 	}
 }

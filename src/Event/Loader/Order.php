@@ -7,9 +7,8 @@ namespace BulkGate\PrestaSms\Event\Loader;
  * @link https://www.bulkgate.com/
  */
 
-use WC_Order, WC_Product, WC_Meta_Data;
-use BulkGate\{Plugin\Event\Helpers, Plugin\Eshop\Language, Plugin\Event\Variables, Plugin\Localization\Formatter, Plugin\Strict, Plugin\Event\DataLoader, Plugin\Utils\Strings};
-use function date, implode, sprintf, strtotime;
+use BulkGate\{Plugin\Eshop\Language, Plugin\Event\Variables, Plugin\Localization\Formatter, Plugin\Strict, Plugin\Event\DataLoader};
+use function sprintf;
 
 class Order implements DataLoader
 {
@@ -33,118 +32,131 @@ class Order implements DataLoader
 			return;
 		}
 
-		$order = isset($parameters['order']) && $parameters['order'] instanceof WC_Order ? $parameters['order'] : new WC_Order((int) $variables['order_id']);
+		$order = isset($parameters['order']) && $parameters['order'] instanceof \Order ? $parameters['order'] : new \Order((int) $variables['order_id']);
 
-		$variables['lang_id'] = $this->language->get((int) $variables['order_id']);
+		$currency = \Currency::getCurrency($order->id_currency);
+
+		$variables['id_address_delivery'] = (int) $order->id_address_delivery;
+		$variables['id_address_invoice'] = (int) $order->id_address_invoice;
 
 		$variables['long_order_id'] = sprintf("%06d", $variables['order_id']);
-		$variables['order_reference'] = $variables['order_ref'] = $order->get_order_number();
-		$variables['order_currency'] = $order->get_currency();
-		$variables['order_payment'] = $order->get_payment_method_title();
-		$variables['order_total_paid'] = (string) $order->get_total();
-		$variables['order_total_formatted'] = $this->formatter->format('price', $variables['order_total_paid'], $variables['order_currency']);
+		$variables['cart_id'] = (int) $order->id_cart;
+		$variables['carrier_id'] = (int) $order->id_carrier;
+		$variables['order_payment'] = $order->payment;
+		$variables['order_currency'] = $currency['iso_code'] ?? null;
+		$variables['order_total_paid'] = $this->formatter->format("number", $order->total_paid);
+		$variables['order_total_locale'] = $this->formatter->format("price", $order->total_paid, $variables['order_currency']);
+		$variables['order_reference'] = $order->reference;
 
-		$date = $order->get_date_created();
+		$variables['order_datetime'] = $this->formatter->format('datetime', $order->date_add);
+		$variables['order_date'] = $this->formatter->format('date', $order->date_add);
+		$date = new \DateTime($order->date_add);
+		$variables['order_date_1'] = $date->format('d.m.Y');
+		$variables['order_date_2'] = $date->format('d/m/Y');
+		$variables['order_date_3'] = $date->format('d-m-Y');
+		$variables['order_date_4'] = $date->format('Y-m-d');
+		$variables['order_date_5'] = $date->format('m.d.Y');
+		$variables['order_date_6'] = $date->format('m/d/Y');
+		$variables['order_date_7'] = $date->format('m-d-Y');
+		$variables['order_time'] = $this->formatter->format('time', $order->date_add);
+		$variables['order_time_1'] = $date->format('H:i');
 
-		if ($date !== null)
+		if ($variables['carrier_id'])
 		{
-			$date = $date->format('Y-m-d H:i:s');
+			$carrier = new \Carrier($variables['carrier_id'], $variables['lang_id']);
+			$order_carrier = new \OrderCarrier($variables['carrier_id'], $variables['lang_id']);
+			$variables['order_carrier_name'] = $carrier->name;
+			$variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
+			$variables['order_carrier_delay'] = $carrier->delay;
+			$variables['order_carrier_tracking_number'] = $order_carrier->tracking_number;
+			$variables['order_carrier_tracking_date'] = $this->formatter->format("datetime", $order_carrier->date_add);
+			$variables['order_carrier_price'] = $this->formatter->format("number", $order_carrier->shipping_cost_tax_incl);
+			$variables['order_carrier_weight'] = $this->formatter->format("number", $order_carrier->weight);
+			$variables['order_carrier_price_locale'] = $this->formatter->format("price", $order_carrier->shipping_cost_tax_incl, $variables['order_currency']);
 		}
 
-		$variables['order_date'] = $this->formatter->format('date', $date);
-		$variables['order_datetime'] = $this->formatter->format('datetime', $date);
-		$variables['order_time'] = $this->formatter->format('time', $date);
+		$message = \Message::getMessageByCartId($variables['cart_id']);
 
-		$billing = $order->get_address('billing');
-		$shipping = $order->get_address('shipping');
-
-		$variables['customer_id'] = $order->get_customer_id() ?: null;
-
-		$variables['customer_firstname'] = Helpers::address('first_name', $shipping, $billing);
-		$variables['customer_lastname'] = Helpers::address('last_name', $shipping, $billing);
-		$variables['customer_company'] = Helpers::address('company', $shipping, $billing);
-		$variables['customer_street'] = Helpers::joinStreet('address_1', 'address_2', $shipping, $billing);
-		$variables['customer_city'] = Helpers::address('city', $shipping, $billing);
-		$variables['customer_state'] = Helpers::address('state', $shipping, $billing);
-		$variables['customer_postcode'] = Helpers::address('postcode', $shipping, $billing);
-		$variables['customer_country'] = $this->formatter->format('country', Helpers::address('country', $billing, $shipping));
-		$variables['customer_country_id'] = Strings::lower(Helpers::address('country', $billing, $shipping) ?? '') ?: null;
-		$variables['customer_mobile'] = $variables['customer_phone'] = Helpers::address('phone', $shipping, $billing);
-		$variables['customer_email'] = Helpers::address('email', $shipping, $billing);
-
-		$variables['customer_invoice_firstname'] = Helpers::address('first_name', $billing, $shipping);
-		$variables['customer_invoice_lastname'] = Helpers::address('last_name', $billing, $shipping);
-		$variables['customer_invoice_company'] = Helpers::address('company', $billing, $shipping);
-		$variables['customer_invoice_street'] = Helpers::joinStreet('address_1', 'address_2', $billing, $shipping);
-		$variables['customer_invoice_city'] = Helpers::address('city', $billing, $shipping);
-		$variables['customer_invoice_state'] = Helpers::address('state', $billing, $shipping);
-		$variables['customer_invoice_postcode'] = Helpers::address('postcode', $billing, $shipping);
-		$variables['customer_invoice_country'] = $this->formatter->format('country', Helpers::address('country', $billing, $shipping));
-		$variables['customer_invoice_country_id'] = Strings::lower(Helpers::address('country', $billing, $shipping) ?? '') ?: null;
-		$variables['customer_invoice_mobile'] = $variables['customer_invoice_phone'] = Helpers::address('phone', $billing, $shipping);
-		$variables['customer_invoice_email'] = Helpers::address('email', $billing, $shipping);
-
-		$variables['customer_message'] = $order->get_customer_note();
-
-		$v1 = $v2 = $v3 = $v4 = $p1 = $p2 = [];
-
-		foreach ($order->get_items() as $item)
+		if(is_array($message) && isset($message['message']))
 		{
-			$qty = $item->get_quantity();
-			$name = $item->get_name();
-			$model = $name;
-			$total = '0.0';
+			$variables['order_message'] = $message['message'];
+		}
 
-			if ($item instanceof \WC_Order_Item_Product)
+		$this->products($variables);
+
+		if (isset($variables['return_id']))
+		{
+			$this->returnProducts($variables, $order);
+		}
+	}
+
+	private function products(Variables $variables): void
+	{
+		$p1 = $p2 = $p3 = $p4 = $pr1 = $pr2 = $pr3 = $pr4 = [];
+
+		$list = \OrderDetail::getList($variables['order_id']);
+
+		$filter = $variables['filter_products'] ?? [];
+
+		foreach($list as $row)
+		{
+			if(empty($filter) || in_array($row['id_order_detail'], $filter))
 			{
-				$product = $item->get_product();
-				$total = $item->get_total();
-				$model = $product instanceof WC_Product ? $product->get_sku() : $name;
+				$p1[] = $row['product_quantity'].'x '.$row['product_name'].' '.$row['product_reference'];
+				$p2[] = $row['product_quantity'].'x '.$row['product_name'];
+				$p3[] = $row['product_quantity'].'x ('.$row['product_id'].')'.$row['product_name'].' '.$row['product_reference'];
+				$p4[] = $row['product_quantity'].'x '.$row['product_reference'];
+
+				$price = $this->formatter->format('price', $row['product_price'], $variables['order_currency']);
+
+				$pr1[] = $row['product_quantity'].','.$row['product_name'].','.$price;
+				$pr2[] = $row['product_quantity'].';'.$row['product_name'].';'.$price;
+				$pr3[] = $row['product_quantity'].','.$row['product_reference'].','.$price;
+				$pr4[] = $row['product_quantity'].';'.$row['product_reference'].';'.$price;
 			}
-
-			$product_id = $item->get_id();
-			$total_formatted = $this->formatter->format('price', $total, $variables['order_currency']);
-
-			$v1[] = "{$qty}x $name $model $total_formatted";
-			$v2[] = "{$qty}x $name $total_formatted";
-			$v3[] = "{$qty}x ($product_id) $name $model $total_formatted";
-			$v4[] = "{$qty}x $model $total_formatted";
-
-			$p1[] = "$qty,$name,$total";
-			$p2[] = "$qty;$name;$total";
 		}
 
-		$variables['order_products1'] = implode('; ', $v1);
-		$variables['order_products2'] = implode('; ', $v2);
-		$variables['order_products3'] = implode('; ', $v3);
-		$variables['order_products4'] = implode('; ', $v4);
+		$variables['order_products1'] = implode('; ', $p1);
+		$variables['order_products2'] = implode('; ', $p2);
+		$variables['order_products3'] = implode('; ', $p3);
+		$variables['order_products4'] = implode('; ', $p4);
 
-		$variables['order_products5'] = implode("\n", $v1);
-		$variables['order_products6'] = implode("\n", $v2);
-		$variables['order_products7'] = implode("\n", $v3);
-		$variables['order_products8'] = implode("\n", $v4);
 
-		$variables['order_smsprinter1'] = implode(';', $p1);
-		$variables['order_smsprinter2'] = implode(';', $p2);
+		$variables['order_products5'] = implode("\n", $p1);
+		$variables['order_products6'] = implode("\n", $p2);
+		$variables['order_products7'] = implode("\n", $p3);
+		$variables['order_products8'] = implode("\n", $p4);
 
-		$timestamp = $date !== null ? strtotime($date) ?: time() : time();
-		$variables['order_date1'] = date('d.m.Y', $timestamp);
-		$variables['order_date2'] = date('d/m/Y', $timestamp);
-		$variables['order_date3'] = date('d-m-Y', $timestamp);
-		$variables['order_date4'] = date('Y-m-d', $timestamp);
-		$variables['order_date5'] = date('m.d.Y', $timestamp);
-		$variables['order_date6'] = date('m/d/Y', $timestamp);
-		$variables['order_date7'] = date('m-d-Y', $timestamp);
-		$variables['order_time1'] = date('H:i:s', $timestamp);
+		$variables['order_smsprinter1'] = implode(';', $pr1);
+		$variables['order_smsprinter2'] = implode(';', $pr2);
+		$variables['order_smsprinter3'] = implode(';', $pr3);
+		$variables['order_smsprinter4'] = implode(';', $pr4);
+	}
 
-		/**
-		 * @var WC_Meta_Data $meta
-		 */
-		foreach ($order->get_meta_data() as $meta)
+	private function returnProducts(Variables $variables, \Order $order)
+	{
+		$return = new \OrderReturn($variables['return_id'], $variables['lang_id']);
+		$return_detail = \OrderReturn::getOrdersReturnProducts($variables->get('return_id'), $order);
+
+		$p1 = $p2 = $p3 = $p4 = array();
+
+		foreach($return_detail as $row)
 		{
-			['key' => $key, 'value' => $value] = $meta->get_data();
-
-			$variables["extra_$key"] = $value;
+			$p1[] = $row['product_quantity'].'x '.$row['product_name'].' '.$row['product_reference'];
+			$p2[] = $row['product_quantity'].'x '.$row['product_name'];
+			$p3[] = $row['product_quantity'].'x ('.$row['product_id'].')'.$row['product_name'].' '.$row['product_reference'];
+			$p4[] = $row['product_quantity'].'x '.$row['product_reference'];
 		}
+
+		$variables['return_question'] = $return->question;
+		$variables['return_products1'] = implode("; ", $p1);
+		$variables['return_products2'] = implode("; ", $p2);
+		$variables['return_products3'] = implode("; ", $p3);
+		$variables['return_products4'] = implode("; ", $p4);
+
+		$variables['return_products5'] = implode("\n", $p1);
+		$variables['return_products6'] = implode("\n", $p2);
+		$variables['return_products7'] = implode("\n", $p3);
+		$variables['return_products8'] = implode("\n", $p4);
 	}
 }

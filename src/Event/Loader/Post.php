@@ -41,7 +41,7 @@ class Post implements DataLoader
 		{
 			if (isset($_POST[$key]))
 			{
-				$variables[$value] = sanitize_text_field($_POST[$key]);
+				$variables[$value] = \Tools::getValue($key);
 			}
 		}
 	}
