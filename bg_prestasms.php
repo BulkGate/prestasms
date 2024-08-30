@@ -48,8 +48,8 @@ class Bg_PrestaSms extends Module
         parent::__construct();
 
         $this->ps_versions_compliancy = [
-            'min' => '7.7.0',
-            'max' => '8.99.99',
+            'min' => '1.7.7.0',
+            'max' => _PS_VERSION_,
         ];
 
         $this->displayName = 'PrestaSMS';
@@ -58,20 +58,19 @@ class Bg_PrestaSms extends Module
         PrestaSms\DI\Factory::setup(fn () => ['db' => $this->get('doctrine.dbal.default_connection')]);
     }
 
-    public function getContent()
+    public function getContent(): void
     {
         // we have dedicated controller.
         Tools::redirectAdmin($this->get('router')->generate('bulkgate_main_app', []));
     }
 
-    public function install()
+    public function install(): bool
     {
         $install = parent::install();
 
         PrestaSms\DI\Factory::get()->getByClass(Settings::class)->install();
-        $this->installHooks();
 
-        return $install;
+        return $install && $this->installHooks();
     }
 
     public function uninstall()
@@ -83,26 +82,51 @@ class Bg_PrestaSms extends Module
         return $uninstall;
     }
 
-    public function installHooks()
+    private function installHooks(): bool
     {
-        $this->registerHook('actionOrderStatusPostUpdate');
-        $this->registerHook('actionValidateOrder');
-        $this->registerHook('actionCustomerAccountAdd');
-        $this->registerHook('actionOrderReturn');
-        $this->registerHook('actionOrderSlipAdd');
-        $this->registerHook('actionAdminOrdersTrackingNumberUpdate');
-        $this->registerHook('actionPaymentConfirmation');
-        $this->registerHook('actionProductDelete');
-        // $this->registerHook('actionProductOutOfStock');
-        $this->registerHook('actionProductCancel');
-        $this->registerHook('actionEmailSendBefore');
-        $this->registerHook('actionPrestaSmsSendSms');
-        $this->registerHook('actionPrestaSmsExtendsVariables');
-        $this->registerHook('displayAdminOrderSide');
+        $this->installAdminCustomerSmsHooks();
+		$this->installBackOfficeHooks();
+		$this->installFrontOfficeHooks();
 
-        $this->registerHook('displayHeader');
-        $this->registerHook('displayBackOfficeHeader');
+		return true;
     }
+
+	private function installAdminCustomerSmsHooks(): bool
+	{
+		$this->registerHook('actionOrderStatusPostUpdate');
+		$this->registerHook('actionValidateOrder');
+		$this->registerHook('actionCustomerAccountAdd');
+		$this->registerHook('actionOrderReturn');
+		$this->registerHook('actionOrderSlipAdd');
+		$this->registerHook('actionAdminOrdersTrackingNumberUpdate');
+		$this->registerHook('actionPaymentConfirmation');
+		$this->registerHook('actionProductDelete');
+		// $this->registerHook('actionProductOutOfStock');
+		$this->registerHook('actionProductCancel');
+		$this->registerHook('actionEmailSendBefore');
+		$this->registerHook('actionPrestaSmsSendSms');
+		$this->registerHook('actionPrestaSmsExtendsVariables');
+
+		return true;
+	}
+
+	private function installFrontOfficeHooks(): bool
+	{
+		$this->registerHook('displayHeader');
+
+		return true;
+	}
+
+	private function installBackOfficeHooks(): bool
+	{
+		$this->registerHook('displayAdminOrderSide');
+		$this->registerHook('displayBackOfficeHeader');
+		$this->registerHook('actionListModules');
+
+		return true;
+	}
+
+	/* AdminCustomerSms hooks */
 
     // DONE
     public function hookActionOrderStatusPostUpdate(array $params)
@@ -307,6 +331,12 @@ class Bg_PrestaSms extends Module
         ]);
     }
 
+	public function hookActionPrestaSmsExtendsVariables(array $params)
+	{
+	}
+
+	/* BackOffice hooks */
+
     public function hookDisplayAdminOrderSide(array $params)
     {
         ['id_order' => $id] = $params;
@@ -333,18 +363,25 @@ class Bg_PrestaSms extends Module
         return null;
     }
 
-    public function hookActionPrestaSmsExtendsVariables(array $params)
-    {
-    }
+	public function hookActionListModules()
+	{
+		$settings = $this->get('bulkgate.plugin.settings.settings');
+
+		if ($settings->load('static:application_token') === null) {
+			$this->warning = 'You must be logged in to BulkGate to start sending SMS!';
+		}
+	}
+
+	public function hookDisplayBackOfficeHeader()
+	{
+		// $this->test();
+		return $this->asynchronousAsset();
+	}
+
+	/* FrontOffice hooks */
 
     public function hookDisplayHeader()
     {
-        return $this->asynchronousAsset();
-    }
-
-    public function hookDisplayBackOfficeHeader()
-    {
-        // $this->test();
         return $this->asynchronousAsset();
     }
 
