@@ -414,7 +414,7 @@ class Bg_PrestaSms extends Module
      */
     private function getModuleTemplatePath(): string
     {
-        return sprintf('@Modules/%s/views/templates/', $this->name);
+        return sprintf('@Modules/%s/views/templates/admin/', $this->name);
     }
 
     private function runHook(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void

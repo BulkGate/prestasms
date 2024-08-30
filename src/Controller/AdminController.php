@@ -28,7 +28,7 @@ class AdminController extends FrameworkBundleAdminController
 
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
-        return $this->render('@Modules/bg_prestasms/views/index.html.twig', [
+        return $this->render('@Modules/bg_prestasms/views/templates/admin/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
             'showContentHeader' => false,
             'token' => $token,
@@ -45,7 +45,7 @@ class AdminController extends FrameworkBundleAdminController
             $requirements->same(true, version_compare(_PS_VERSION_, '1.7.5', '>='), 'Prestashop ver. >= 1.7.5'),
         ]);
 
-        return $this->render('@Modules/bg_prestasms/views/debug.html.twig', [
+        return $this->render('@Modules/bg_prestasms/views/templates/admin/debug.html.twig', [
             'layoutTitle' => 'BulkGate SMS - debug',
             'php_version' => phpversion(),
             'prestashop_version' => _PS_VERSION_,
