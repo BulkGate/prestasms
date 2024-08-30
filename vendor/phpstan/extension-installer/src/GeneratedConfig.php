@@ -10,10 +10,27 @@ final class GeneratedConfig
 {
 
 	public const EXTENSIONS = array (
+  'composer/pcre' => 
+  array (
+    'install_path' => '/var/www/html/modules/bg_prestasms/vendor/composer/pcre',
+    'relative_install_path' => '../../../composer/pcre',
+    'extra' => 
+    array (
+      'includes' => 
+      array (
+        0 => 'extension.neon',
+      ),
+    ),
+    'version' => '3.3.1',
+    'phpstanVersionConstraint' => NULL,
+  ),
 );
 
 	public const NOT_INSTALLED = array (
 );
+
+	/** @var string|null */
+	public const PHPSTAN_VERSION_CONSTRAINT = NULL;
 
 	private function __construct()
 	{
