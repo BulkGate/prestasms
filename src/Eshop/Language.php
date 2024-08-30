@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/**
+/*
  * @author Lukáš Piják 2023 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
@@ -10,10 +12,9 @@ namespace BulkGate\PrestaSms\Eshop;
 use BulkGate\Plugin\Eshop;
 use PrestaShop\PrestaShop\Adapter;
 
-
 class Language implements Eshop\Language
 {
-	private Adapter\Language\LanguageDataProvider $language;
+    private Adapter\Language\LanguageDataProvider $language;
 
     public function __construct(Adapter\Language\LanguageDataProvider $language)
     {
@@ -21,26 +22,24 @@ class Language implements Eshop\Language
     }
 
     public function load(): array
-	{
+    {
         $output = [];
 
-        foreach($this->language->getLanguages() as ['iso_code' => $iso, 'name' => $name])
-        {
+        foreach ($this->language->getLanguages() as ['iso_code' => $iso, 'name' => $name]) {
             $output[$iso] = $name;
         }
 
-		return $output;
-	}
+        return $output;
+    }
 
+    public function get(?int $id = null): string
+    {
+        throw new \Exception('todo: get iso from order_id');
+        // return (string) $this->context->getContext()->language->getIsoById($id);
+    }
 
-	public function get(?int $id = null): string
-	{
-		throw new \Exception("todo: get iso from order_id");
-        //return (string) $this->context->getContext()->language->getIsoById($id);
-	}
-
-	public function hasMultiLanguageSupport(): bool
-	{
-		return true;
-	}
+    public function hasMultiLanguageSupport(): bool
+    {
+        return true;
+    }
 }

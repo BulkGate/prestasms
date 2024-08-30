@@ -4,20 +4,21 @@ namespace BulkGate\PrestaSms\Controller;
 
 use BulkGate\Plugin\Debug\Logger;
 use BulkGate\Plugin\Debug\Requirements;
+use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\IO\Url;
 use BulkGate\Plugin\Settings;
-use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\User\Sign;
 use BulkGate\Plugin\Utils\Json;
 use BulkGate\PrestaSms\Ajax\Authenticate;
 use BulkGate\PrestaSms\Ajax\PluginSettingsChange;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
+ *
+ * @see https://www.bulkgate.com/
  */
 class AdminController extends FrameworkBundleAdminController
 {
@@ -48,24 +49,23 @@ class AdminController extends FrameworkBundleAdminController
             'layoutTitle' => 'BulkGate SMS - debug',
             'php_version' => phpversion(),
             'prestashop_version' => _PS_VERSION_,
-			'requirements' => $requirements,
-			'errors' => array_reverse($logger->getList()),
+            'requirements' => $requirements,
+            'errors' => array_reverse($logger->getList()),
         ]);
     }
 
     public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change, Authenticate $authenticate, Sign $sign): JsonResponse
     {
-        switch($action)
-        {
-            case "login":
+        switch ($action) {
+            case 'login':
                 ['email' => $email, 'password' => $password] = Json::decode($request->getContent());
 
                 return $this->json($sign->in($email, $password, '/dashboard'));
-            case "logout":
+            case 'logout':
                 return $this->json($sign->out('/sign/in'));
-            case "authenticate":
+            case 'authenticate':
                 return $this->json($authenticate->run('/sign/in'));
-            case "module-settings":
+            case 'module-settings':
                 $data = Json::decode($request->getContent());
 
                 return $this->json($settings_change->run($data));

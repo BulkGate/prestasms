@@ -1,84 +1,83 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Database;
 
-/**
+/*
  * @author Lukáš Piják 2023 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Database\ResultCollection, Strict, Database};
+use BulkGate\Plugin\Database;
+use BulkGate\Plugin\Database\ResultCollection;
+use BulkGate\Plugin\Strict;
 use Doctrine\DBAL;
 
 class Connection implements Database\Connection
 {
-	use Strict;
+    use Strict;
 
-	private $db;
+    private $db;
 
-	private array $prepare_parameters = [];
+    private array $prepare_parameters = [];
 
-	/**
-	 * @var list<string>
-	 */
-	private array $sql = [];
+    /**
+     * @var list<string>
+     */
+    private array $sql = [];
 
-	public function __construct(DBAL\Connection $db)
-	{
-		$this->db = $db;
-	}
+    public function __construct(DBAL\Connection $db)
+    {
+        $this->db = $db;
+    }
 
+    public function execute(string $sql): ?ResultCollection
+    {
+        $output = new ResultCollection();
 
-	public function execute(string $sql): ?ResultCollection
-	{
-		$output = new ResultCollection();
+        $this->sql[] = $sql;
 
-		$this->sql[] = $sql;
+        $result = $this->db->executeQuery($sql, $this->prepare_parameters)->fetchAllAssociative();
+        $this->prepare_parameters = [];
 
-		$result = $this->db->executeQuery($sql, $this->prepare_parameters)->fetchAllAssociative();
-		$this->prepare_parameters = [];
-
-        foreach ($result as $key => $item)
-        {
+        foreach ($result as $key => $item) {
             $output[$key] = (array) $item;
         }
 
-		return $output;
-	}
+        return $output;
+    }
 
-	public function lastId()
-	{
+    public function lastId()
+    {
         return $this->db->Insert_ID();
-	}
+    }
 
-
-	public function prefix(): string
-	{
+    public function prefix(): string
+    {
         return _DB_PREFIX_;
-	}
+    }
 
+    public function getSqlList(): array
+    {
+        return $this->sql;
+    }
 
-	public function getSqlList(): array
-	{
-		return $this->sql;
-	}
+    public function table(string $table): string
+    {
+        return $this->prefix() . $table;
+    }
 
+    public function prepare(string $sql, ...$parameters): string
+    {
+        $this->prepare_parameters = $parameters;
 
-	public function table(string $table): string
-	{
-		return $this->prefix() . $table;
-	}
+        // plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
+        return str_replace('%s', '?', $sql);
+    }
 
-	public function prepare(string $sql, ...$parameters): string
-	{
-		$this->prepare_parameters = $parameters;
-
-		// plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
-		return str_replace("%s", "?", $sql);
-	}
-
-	public function escape(string $string): string
-	{
-		return $string;
-	}
+    public function escape(string $string): string
+    {
+        return $string;
+    }
 }

@@ -1,19 +1,22 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/**
+/*
  * @author Lukáš Piják 2023 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Eshop, Strict};
-use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
+use BulkGate\Plugin\Eshop;
+use BulkGate\Plugin\Strict;
 use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
+use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
 
 class ReturnStatus implements Eshop\ReturnStatus
 {
-	use Strict;
+    use Strict;
 
     private OrderReturnStateDataProvider $order_state;
 
@@ -30,8 +33,7 @@ class ReturnStatus implements Eshop\ReturnStatus
         $list = $this->order_state->getOrderReturnStates($this->employee->getLanguageId());
         $output = [];
 
-        foreach ($list as ['id_order_return_state' => $state_id, 'name' => $name])
-        {
+        foreach ($list as ['id_order_return_state' => $state_id, 'name' => $name]) {
             $output[$state_id] = $name;
         }
 

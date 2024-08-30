@@ -1,17 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/**
+/*
  * @author Lukáš Piják 2023 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Eshop, Strict};
+use BulkGate\Plugin\Strict;
 
 class Order
 {
-	use Strict;
+    use Strict;
 
     private \Order $order;
 
@@ -25,19 +27,14 @@ class Order
         $shipping_address = new \Address($this->order->id_address_delivery);
         $billing_address = new \Address($this->order->id_address_invoice);
 
-        if ($prefers_billing)
-        {
-            if (empty($billing_address->phone_mobile ?? $billing_address->phone ?? null))
-            {
+        if ($prefers_billing) {
+            if (empty($billing_address->phone_mobile ?? $billing_address->phone ?? null)) {
                 return $shipping_address;
             }
 
             return $billing_address;
-        }
-        else
-        {
-            if (empty($shipping_address->phone_mobile ?? $shipping_address->phone ?? null))
-            {
+        } else {
+            if (empty($shipping_address->phone_mobile ?? $shipping_address->phone ?? null)) {
                 return $billing_address;
             }
 
