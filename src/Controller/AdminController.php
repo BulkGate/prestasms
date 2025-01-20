@@ -38,10 +38,10 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function debugAction(Request $request, Requirements $requirements, Logger $logger)
+    public function debugAction(Request $request, Requirements $requirements, Url $url, Logger $logger)
     {
         $requirements = $requirements->run([
-            $requirements->same('{"message":"BulkGate API"}', file_get_contents('https://portal.bulkgate.com/api/welcome'), 'Api Connection'),
+            $requirements->same('{"message":"BulkGate API"}', file_get_contents($url->get('api/welcome')), 'Api Connection'),
             $requirements->same(true, version_compare(_PS_VERSION_, '1.7.5', '>='), 'Prestashop ver. >= 1.7.5'),
         ]);
 
@@ -49,6 +49,7 @@ class AdminController extends FrameworkBundleAdminController
             'layoutTitle' => 'BulkGate SMS - debug',
             'php_version' => phpversion(),
             'prestashop_version' => _PS_VERSION_,
+			'url' => $url->get(),
             'requirements' => $requirements,
             'errors' => array_reverse($logger->getList()),
         ]);
