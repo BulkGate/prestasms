@@ -2,25 +2,24 @@ version: '3.3'
 
 services:
   prestashop:
-    image: prestashop/prestashop:8.1.2-7.4-apache
-    restart: always
+    image: prestashop/prestashop:${PS_VERSION:-latest}
     depends_on:
       - db
     ports:
-      - "80:80"
+      - "8081:80"
 #    user: www-data
+    env_file:
+      - ./.env
     environment:
       DB_SERVER: db
-      PS_INSTALL_DB: 1
-      PS_INSTALL_AUTO: 1
-      BULKGATE_DEBUG_HOST: https://portal.bulkgate.com
-      BULKGATE_DEV_MODE: 0
+      PS_DOMAIN: ${PS_DOMAIN:-localhost}
+      PS_FOLDER_ADMIN: administration
     volumes:
       - ./:/var/www/html/modules/bg_prestasms
+      #- ./prestashop:/var/www/html
 
   db:
     image: mysql:5.7
-    restart: always
     environment:
       MYSQL_DATABASE: prestashop
       MYSQL_ROOT_PASSWORD: admin
@@ -29,12 +28,11 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     environment:
       ADMINER_DESIGN: "nette"
       ADMINER_DEFAULT_SERVER: "db"
     ports:
-      - "8080:8080"
+      - "8090:8080"
 
 volumes:
   db:
