@@ -35,14 +35,14 @@ class Shop implements DataLoader
 
     public function load(Variables $variables, array $parameters = []): void
     {
-        $variables['shop_id'] = 0;
+		$variables['shop_id'] = 0;
         $variables['shop_email'] = $this->configuration->get('PS_SHOP_EMAIL', '@');
         $variables['shop_name'] = $this->eshop_configuration->name();
         $variables['shop_domain'] = $this->eshop_configuration->url();
 
-        /*if (!isset($variables['lang_id']))
+        if (isset($variables['lang_id']))
         {
-            $variables['lang_id'] = $this->language->get();
-        }*/
+            $variables['lang_iso'] = $this->language->get($variables['lang_id']);
+        }
     }
 }
