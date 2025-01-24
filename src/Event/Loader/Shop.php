@@ -9,36 +9,33 @@ namespace BulkGate\PrestaSms\Event\Loader;
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\Eshop\Configuration as EshopConfiguration;
 use BulkGate\Plugin\Eshop\Language;
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;
 use BulkGate\Plugin\Strict;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 
 class Shop implements DataLoader
 {
     use Strict;
 
-    private EshopConfiguration $eshop_configuration;
-
-    private Configuration $configuration;
-
     private Language $language;
 
-    public function __construct(EshopConfiguration $eshop_configuration, Configuration $configuration, Language $language)
+    public function __construct(Language $language)
     {
-        $this->eshop_configuration = $eshop_configuration;
-        $this->configuration = $configuration;
         $this->language = $language;
     }
 
     public function load(Variables $variables, array $parameters = []): void
     {
-		$variables['shop_id'] = 0;
-        $variables['shop_email'] = $this->configuration->get('PS_SHOP_EMAIL', '@');
-        $variables['shop_name'] = $this->eshop_configuration->name();
-        $variables['shop_domain'] = $this->eshop_configuration->url();
+		if (isset($variables['shop_id']))
+		{
+			$shop = new \Shop($variables['shop_id']);
+
+			$variables['shop_email'] = \Configuration::get('PS_SHOP_EMAIL', null, null, $shop->id) ?: null;
+			$variables['shop_phone'] = \Configuration::get('PS_SHOP_PHONE', null, null, $shop->id) ?: null;
+			$variables['shop_name'] = $shop->name;
+			$variables['shop_domain'] = $shop->getBaseURL();
+		}
 
         if (isset($variables['lang_id']))
         {
