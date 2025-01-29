@@ -31,7 +31,7 @@ class Order implements DataLoader
 
     public function load(Variables $variables, array $parameters = []): void
     {
-        if (!isset($variables['order_id'])) {
+		if (!isset($variables['order_id'])) {
             return;
         }
 
@@ -54,19 +54,19 @@ class Order implements DataLoader
         $variables['order_datetime'] = $this->formatter->format('datetime', $order->date_add);
         $variables['order_date'] = $this->formatter->format('date', $order->date_add);
         $date = new \DateTime($order->date_add);
-        $variables['order_date_1'] = $date->format('d.m.Y');
-        $variables['order_date_2'] = $date->format('d/m/Y');
-        $variables['order_date_3'] = $date->format('d-m-Y');
-        $variables['order_date_4'] = $date->format('Y-m-d');
-        $variables['order_date_5'] = $date->format('m.d.Y');
-        $variables['order_date_6'] = $date->format('m/d/Y');
-        $variables['order_date_7'] = $date->format('m-d-Y');
+        $variables['order_date1'] = $date->format('d.m.Y');
+        $variables['order_date2'] = $date->format('d/m/Y');
+        $variables['order_date3'] = $date->format('d-m-Y');
+        $variables['order_date4'] = $date->format('Y-m-d');
+        $variables['order_date5'] = $date->format('m.d.Y');
+        $variables['order_date6'] = $date->format('m/d/Y');
+        $variables['order_date7'] = $date->format('m-d-Y');
         $variables['order_time'] = $this->formatter->format('time', $order->date_add);
-        $variables['order_time_1'] = $date->format('H:i');
+        $variables['order_time1'] = $date->format('H:i');
 
         if ($variables['carrier_id']) {
             $carrier = new \Carrier($variables['carrier_id'], $variables['lang_id']);
-            $order_carrier = new \OrderCarrier($variables['carrier_id'], $variables['lang_id']);
+            $order_carrier = new \OrderCarrier($variables['order_id'], $variables['lang_id']);
             $variables['order_carrier_name'] = $carrier->name;
             $variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
             $variables['order_carrier_delay'] = $carrier->delay;
@@ -77,7 +77,7 @@ class Order implements DataLoader
             $variables['order_carrier_price_locale'] = $this->formatter->format('price', $order_carrier->shipping_cost_tax_incl, $variables['order_currency']);
         }
 
-        $message = \Message::getMessageByCartId($variables['cart_id']);
+        $message = \Message::getMessagesByOrderId($variables['order_id']);
 
         if (is_array($message) && isset($message['message'])) {
             $variables['order_message'] = $message['message'];
@@ -85,9 +85,9 @@ class Order implements DataLoader
 
         $this->products($variables);
 
-        if (isset($variables['return_id'])) {
-            $this->returnProducts($variables, $order);
-        }
+		if (isset($variables['return_id'])) {
+			$this->returnProducts($variables, $order);
+		}
     }
 
     private function products(Variables $variables): void
@@ -132,8 +132,8 @@ class Order implements DataLoader
 
     private function returnProducts(Variables $variables, \Order $order)
     {
-        $return = new \OrderReturn($variables['return_id'], $variables['lang_id']);
-        $return_detail = \OrderReturn::getOrdersReturnProducts($variables->get('return_id'), $order);
+        $return = new \OrderReturn($variables['return_id'], $variables['lang_id'], $order->id_shop);
+        $return_detail = \OrderReturn::getOrdersReturnProducts($return->id, $order);
 
         $p1 = $p2 = $p3 = $p4 = [];
 

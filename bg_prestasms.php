@@ -128,130 +128,252 @@ class Bg_PrestaSms extends Module
 
 	/* AdminCustomerSms hooks */
 
-    // DONE
+    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderstatuspostupdate */
     public function hookActionOrderStatusPostUpdate(array $params)
     {
-        if (isset($params['id_order']) && isset($params['newOrderStatus'])) {
-            $order = new Order((int) $params['id_order']);
-
-            if ($order->id !== null) {
-                $this->runHook('order', 'change-status', new Variables([
-                    'order_status_id' => $params['newOrderStatus']->id,
-                    'order_id' => (int) $order->id,
-                    'lang_id' => (int) $order->id_lang,
-                    'store_id' => (int) $order->id_shop,
-                    'customer_id' => (int) $order->id_customer,
-                ]), ['order' => $order]);
-            }
+        if (!isset($params['id_order']) || !isset($params['newOrderStatus'])) {
+            return;
         }
+
+		$order = new Order((int) $params['id_order']);
+
+		$this->runHook('order', 'change-status', new Variables([
+			'order_status_id' => $params['newOrderStatus']->id,
+			'order_id' => (int) $order->id,
+			'lang_id' => (int) $order->id_lang,
+			'shop_id' => (int) $order->id_shop,
+			'customer_id' => (int) $order->id_customer,
+		]), ['order' => $order]);
     }
 
-    // DONE
+	public function testHookActionOrderStatusPostUpdate()
+	{
+		$newOrderStatus = new \OrderState(2);
+
+		//should invoke
+		$this->hookActionOrderStatusPostUpdate(['id_order' => 7, 'newOrderStatus' => $newOrderStatus]);
+
+		//should not invoke
+		$this->hookActionOrderStatusPostUpdate(['id_order' => 7]);
+		$this->hookActionOrderStatusPostUpdate(['newOrderStatus' => $newOrderStatus]);
+		$this->hookActionOrderStatusPostUpdate([]);
+	}
+
+    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionvalidateorder */
     public function hookActionValidateOrder(array $params)
     {
-        if (isset($params['order']) && $params['order'] instanceof Order) {
-            $this->runHook('order', 'new', new Variables([
-                'order_id' => (int) $params['order']->id,
-                'lang_id' => (int) $params['order']->id_lang,
-                'store_id' => (int) $params['order']->id_shop,
-                'customer_id' => (int) $params['order']->id_customer,
-            ]), ['order' => $params['order']]);
+        if (!isset($params['order']) || !$params['order'] instanceof Order) {
+            return;
         }
+
+		$this->runHook('order', 'new', new Variables([
+			'order_id' => (int) $params['order']->id,
+			'lang_id' => (int) $params['order']->id_lang,
+			'shop_id' => (int) $params['order']->id_shop,
+			'customer_id' => (int) $params['order']->id_customer,
+		]), ['order' => $params['order']]);
     }
 
-    // DONE
+
+	private function testHookActionValidateOrder()
+	{
+		$order = new Order(8); // 7 - CZC | 8 - Alza
+
+		//should invoke
+		$this->hookActionValidateOrder(['order' => $order]);
+
+		//should not invoke
+		$this->hookActionValidateOrder(['order' => new stdClass]);
+		$this->hookActionValidateOrder([]);
+	}
+
+    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actioncustomeraccountadd */
     public function hookActionCustomerAccountAdd(array $params)
     {
-        if (isset($params['newCustomer']) && $params['newCustomer'] instanceof Customer) {
-            $this->runHook('customer', 'new', new Variables([
-                'customer_id' => (int) $params['newCustomer']->id,
-                'lang_id' => (int) $params['newCustomer']->id_lang,
-                'store_id' => (int) $params['newCustomer']->id_shop,
-            ]), ['customer' => $params['newCustomer']]);
+        if (!isset($params['newCustomer']) || !$params['newCustomer'] instanceof Customer) {
+            return;
         }
+
+		$this->runHook('customer', 'new', new Variables([
+			'customer_id' => (int) $params['newCustomer']->id,
+			'lang_id' => (int) $params['newCustomer']->id_lang,
+			'shop_id' => (int) $params['newCustomer']->id_shop,
+		]), ['customer' => $params['newCustomer']]);
     }
 
-    // DONE
+	private function testHookActionCustomerAccountAdd()
+	{
+		$customer = new Customer(5); // 2 - CZC | 5 - Alza
+
+		//should invoke
+		$this->hookActionCustomerAccountAdd(['newCustomer' => $customer]);
+
+		//should not invoke
+		$this->hookActionCustomerAccountAdd(['newCustomer' => new stdClass]);
+		$this->hookActionCustomerAccountAdd([]);
+	}
+
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderreturn */
     public function hookActionOrderReturn(array $params)
     {
-        if (isset($params['orderReturn']) && $params['orderReturn'] instanceof OrderReturn) {
-            $this->runHook('return', 'new', new Variables([
-                'return_id' => (int) $params['orderReturn']->id,
-                'customer_id' => (int) $params['orderReturn']->id_customer,
-                'order_id' => (int) $params['orderReturn']->id_order,
-                'lang_id' => (int) $params['orderReturn']->getAssociatedLanguage()->id,
-                'store_id' => (int) $params['orderReturn']->getShopId(),
-            ]));
+        if (!isset($params['orderReturn']) || !$params['orderReturn'] instanceof OrderReturn) {
+            return;
         }
+
+		$this->runHook('return', 'new', new Variables([
+			'return_id' => (int) $params['orderReturn']->id,
+			'customer_id' => (int) $params['orderReturn']->id_customer,
+			'order_id' => (int) $params['orderReturn']->id_order,
+			'lang_id' => (int) $params['orderReturn']->getAssociatedLanguage()->id,
+			'shop_id' => (int) $params['orderReturn']->getShopId(),
+		]));
     }
 
-    // DONE
+	public function testHookActionOrderReturn()
+	{
+		$order_return = new OrderReturn(1);
+
+		//should invoke
+		$this->hookActionOrderReturn(['orderReturn' => $order_return]);
+
+		//should not invoke
+		$this->hookActionOrderReturn(['orderReturn' => new stdClass]);
+		$this->hookActionOrderReturn([]);
+	}
+
+    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderslipadd */
     public function hookActionOrderSlipAdd(array $params)
     {
-        if (isset($params['order']) && $params['order'] instanceof Order) {
-            $this->runHook('order', 'TODO_slip_add', new Variables([
-                'order_id' => (int) $params['order']->id,
-                'customer_id' => (int) $params['order']->id_customer,
-                'lang_id' => (int) $params['order']->id_lang,
-                'store_id' => (int) $params['order']->id_shop,
-                'filter_products' => array_keys(isset($params['qtyList']) ? $params['qtyList'] : []),
-            ]), ['order' => $params['order']]);
-        }
+		if (!isset($params['order']) || !$params['order'] instanceof Order) {
+			return;
+		}
+
+		$this->runHook('order', 'TODO_slip_add', new Variables([
+			'order_id' => (int) $params['order']->id,
+			'customer_id' => (int) $params['order']->id_customer,
+			'lang_id' => (int) $params['order']->id_lang,
+			'shop_id' => (int) $params['order']->id_shop,
+			'filter_products' => array_keys(isset($params['qtyList']) ? $params['qtyList'] : []),
+		]), ['order' => $params['order']]);
     }
 
-    // DONE - tracking number je prazdne
+	public function testHookActionOrderSlipAdd()
+	{
+		$order = new Order(2); // 7 - CZC | 8 - Alza
+
+		//should invoke
+		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1]]);
+		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1, 4 => 1]]);
+
+		//should not invoke
+		$this->hookActionOrderSlipAdd(['order' => new stdClass(), 'qtyList' => [3 => 1, 4 => 1]]);
+		$this->hookActionOrderSlipAdd(['order' => new stdClass()]);
+		$this->hookActionOrderSlipAdd([]);
+	}
+
+    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionadminorderstrackingnumberupdate */
     public function hookActionAdminOrdersTrackingNumberUpdate(array $params)
     {
-        if (isset($params['order']) && $params['order'] instanceof Order) {
-            $this->runHook('order', 'tracking-number', new Variables([
-                'order_id' => (int) $params['order']->id,
-                'customer_id' => (int) $params['order']->id_customer,
-                'lang_id' => (int) $params['order']->id_lang,
-                'store_id' => (int) $params['order']->id_shop,
-            ]), ['order' => $params['order'], 'carrier' => $params['carrier']]);
-        }
+		if (!isset($params['order']) || !$params['order'] instanceof Order) {
+			return;
+		}
+
+		$this->runHook('order', 'tracking-number', new Variables([
+			'order_id' => (int) $params['order']->id,
+			'customer_id' => (int) $params['order']->id_customer,
+			'lang_id' => (int) $params['order']->id_lang,
+			'shop_id' => (int) $params['order']->id_shop,
+		]), ['order' => $params['order']]);
     }
 
-    // DONE
+	public function testHookActionAdminOrdersTrackingNumberPostUpdate()
+	{
+		$order = new Order(2); // 7 - CZC | 8 - Alza
+
+		//should invoke
+		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => $order]);
+
+		//should not invoke
+		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => new stdClass]);
+		$this->hookActionAdminOrdersTrackingNumberUpdate([]);
+	}
+
+    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionpaymentconfirmation */
     public function hookActionPaymentConfirmation(array $params)
     {
-        if (isset($params['id_order'])) {
-            $order = new Order($params['id_order']);
+		if (!isset($params['id_order'])) {
+			return;
+		}
 
-            if ($order->id !== null) {
-                $this->runHook('order', 'payment', new Variables([
-                    'order_id' => (int) $order->id,
-                    'lang_id' => (int) $order->id_lang,
-                    'store_id' => (int) $order->id_shop,
-                    'customer_id' => (int) $order->id_customer,
-                ]), ['order' => $order]);
-            }
-        }
+		$order = new Order($params['id_order']);
+
+		$this->runHook('order', 'payment', new Variables([
+			'order_id' => (int) $order->id,
+			'lang_id' => (int) $order->id_lang,
+			'shop_id' => (int) $order->id_shop,
+			'customer_id' => (int) $order->id_customer,
+		]), ['order' => $order]);
     }
 
-    // DONE
+	public function testHookActionPaymentConfirmation()
+	{
+		//should invoke
+		$this->hookActionPaymentConfirmation(['id_order' => 2]);
+
+		//should not invoke
+		$this->hookActionPaymentConfirmation([]);
+	}
+
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductdelete */
     public function hookActionProductDelete(array $params)
     {
-        if (isset($params['product']) && $params['product'] instanceof Product) {
-            $this->runHook('product', 'TODO_delete', new Variables([
-                'store_id' => (int) $params['product']->id_shop_default,
-                'product_id' => (int) $params['product']->id,
-            ]), ['product' => $params['product']]);
-        }
+		if (!isset($params['product']) || !$params['product'] instanceof Product) {
+			return;
+		}
+
+		$this->runHook('product', 'TODO_delete', new Variables([
+			'shop_id' => (int) $params['product']->id_shop_default,
+			'product_id' => (int) $params['product']->id,
+		]), ['product' => $params['product']]);
     }
 
-    public function hookActionUpdateQuantity(array $params)
+	public function testHookActionProductDelete()
+	{
+		$product = new Product(4);
+
+		//should invoke
+		$this->hookActionProductDelete(['product' => $product]);
+
+		//should not invoke
+		$this->hookActionProductDelete(['product' => new stdClass]);
+		$this->hookActionProductDelete([]);
+	}
+
+    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionupdatequantity */
+	public function hookActionUpdateQuantity(array $params)
     {
-        if (isset($params['id_product'])) {
-            $product = new Product((int) $params['id_product']);
+		if (!isset($params['id_product'])) {
+			return;
+		}
 
-            $this->runHook('product', 'TODO_update_quantity', new Variables([
-                'store_id' => (int) $product->id_shop_default,
-                'product_id' => (int) $product->id,
-                'id_product_attribute' => isset($params['id_product_attribute']) ? (int) $params['id_product_attribute'] : null,
-            ]), ['product' => $product]);
-        }
+		if ($params['quantity'] === 0) {
+			$this->runHook('product', 'out-of-stock', new Variables([
+				'shop_id' => $params['id_shop'],
+				'product_id' => $params['id_product'],
+				'id_product_attribute' => $params['id_product_attribute'],
+			]));
+		}
     }
+
+	private function testHookActionUpdateQuantity()
+	{
+		//should invoke
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 0, 'id_product_attribute' => 0]);
+
+		//should not invoke
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'quantity' => 5, 'id_product_attribute' => 0]);
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 5, 'id_product_attribute' => 0]);
+	}
 
     /*public function hookActionProductOutOfStock(array $params)
     {
@@ -262,7 +384,7 @@ class Bg_PrestaSms extends Module
                 if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
                 {
                     $this->runHook('product', 'out-of-stock', new Variables([
-                        'store_id' => (int) $params['product']->id_shop_default,
+                        'shop_id' => (int) $params['product']->id_shop_default,
                         'product_id' => (int) $params['product']->id,
                     ]), ['product' => $params['product']]);
                 }
@@ -270,40 +392,69 @@ class Bg_PrestaSms extends Module
         }
     }*/
 
-    // DONE
+    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductcancel */
     public function hookActionProductCancel(array $params)
     {
-        if (isset($params['order']) && $params['order'] instanceof Order) {
-            $this->runHook('order', 'TODO_product_cancel', new Variables([
-                'order_id' => (int) $params['order']->id,
-                'id_order_detail' => $params['id_order_detail'] ?? null,
-                'customer_id' => (int) $params['order']->id_customer,
-                'lang_id' => (int) $params['order']->id_lang,
-                'store_id' => (int) $params['order']->id_shop,
-            ]), ['order' => $params['order']]);
-        }
+		if (!isset($params['order']) || !$params['order'] instanceof Order) {
+			return;
+		}
+
+		//todo: tento hook se spousti ze 4 ruznych mist, viz CancellationActionType.  i v pripade hookActionOrderSlipAdd (kdyz castecne vratim produkt)
+		$this->runHook('order', 'TODO_product_cancel', new Variables([
+			'order_id' => (int) $params['order']->id,
+			'filter_products' => [$params['id_order_detail']],
+			'customer_id' => (int) $params['order']->id_customer,
+			'lang_id' => (int) $params['order']->id_lang,
+			'shop_id' => (int) $params['order']->id_shop,
+		]), ['order' => $params['order']]);
     }
 
-    // todo: kde se to pouziva???
+	public function testHookActionProductCancel()
+	{
+		$order = new Order(2);
+
+		//should invoke
+		$this->hookActionProductCancel(['order' => $order, 'id_order_detail' => 3]);
+
+		//should not invoke
+		$this->hookActionProductCancel(['order' => new stdClass, 'id_order_detail' => 3]);
+		$this->hookActionProductCancel(['id_order_detail' => 3]);
+	}
+
+	/** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionemailsendbefore */
     public function hookActionEmailSendBefore(array $params)
     {
-        if (isset($params['templateVars']) && isset($params['template']) && $params['template'] === 'contact') {
-            $customer_message = isset($params['templateVars']['{message}']) ? $params['templateVars']['{message}'] : null;
-
-            if ($customer_message !== null) {
-                $this->runHook('contact', 'form', new Variables([
-                    'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
-                    'customer_message' => $customer_message,
-                    'customer_message_short_50' => substr($customer_message, 0, 50),
-                    'customer_message_short_80' => substr($customer_message, 0, 80),
-                    'customer_message_short_100' => substr($customer_message, 0, 100),
-                    'customer_message_short_120' => substr($customer_message, 0, 120),
-                    'lang_id' => isset($params['idLang']) ? (int) $params['idLang'] : null,
-                    'store_id' => isset($params['idShop']) ? (int) $params['idShop'] : null,
-                ]));
-            }
+		if (!isset($params['templateVars']) || !isset($params['template']) || $params['template'] !== 'contact') {
+            return;
         }
+
+		$customer_message = isset($params['templateVars']['{message}']) ? $params['templateVars']['{message}'] : null;
+
+		if ($customer_message !== null) {
+			$this->runHook('contact', 'form', new Variables([
+				'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
+				'customer_message' => $customer_message,
+				'customer_message_short_50' => substr($customer_message, 0, 50),
+				'customer_message_short_80' => substr($customer_message, 0, 80),
+				'customer_message_short_100' => substr($customer_message, 0, 100),
+				'customer_message_short_120' => substr($customer_message, 0, 120),
+				'lang_id' => isset($params['idLang']) ? (int) $params['idLang'] : null,
+				'shop_id' => isset($params['idShop']) ? (int) $params['idShop'] : null,
+			]));
+		}
     }
+
+	public function testHookActionEmailSendBefore()
+	{
+		//should invoke
+		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world', '{email}' => 'john.doe@example.com'], 'template' => 'contact']);
+		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world'], 'template' => 'contact']);
+
+		//should not invoke
+		$this->hookActionEmailSendBefore(['templateVars' => [], 'template' => 'contact']);
+	}
+
+
 
     public function hookActionPrestaSmsSendSms(array $params)
     {
@@ -374,7 +525,7 @@ class Bg_PrestaSms extends Module
 
 	public function hookDisplayBackOfficeHeader()
 	{
-		// $this->test();
+		$this->test();
 		return $this->asynchronousAsset();
 	}
 
@@ -385,18 +536,20 @@ class Bg_PrestaSms extends Module
         return $this->asynchronousAsset();
     }
 
-    /*private function test()
-    {
-        $order = new Order(5);
-        $this->runHook('order', 'TEST-order', new Variables([
-            // 'order_status_id' => 3,
-            // 'product_id' => 19,
-            'order_id' => (int) $order->id,
-            'lang_id' => (int) $order->id_lang,
-            'store_id' => (int) $order->id_shop,
-            'customer_id' => (int) $order->id_customer,
-        ]), ['order' => $order]);
-    }*/
+	private function test()
+	{
+		$this->testHookActionOrderStatusPostUpdate();
+		$this->testHookActionValidateOrder();
+		$this->testHookActionCustomerAccountAdd();
+		$this->testHookActionOrderReturn();
+		$this->testHookActionOrderSlipAdd();
+		$this->testHookActionAdminOrdersTrackingNumberPostUpdate();
+		$this->testHookActionPaymentConfirmation();
+		$this->testHookActionProductDelete();
+		$this->testHookActionUpdateQuantity();
+		$this->testHookActionProductCancel();
+		$this->testHookActionEmailSendBefore();
+	}
 
     /**
      * Render a twig template.

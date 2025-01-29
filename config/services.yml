@@ -40,10 +40,10 @@ services:
   BulkGate\Plugin\Event\Loader:
     arguments:
       $loaders:
+        - '@BulkGate\PrestaSms\Event\Loader\Shop'
         - '@BulkGate\PrestaSms\Event\Loader\Order'
         - '@BulkGate\PrestaSms\Event\Loader\OrderStatus'
         - '@BulkGate\PrestaSms\Event\Loader\Customer'
-        - '@BulkGate\PrestaSms\Event\Loader\Shop'
         - '@BulkGate\PrestaSms\Event\Loader\Product'
         - '@BulkGate\PrestaSms\Event\Loader\Post'
         - '@BulkGate\PrestaSms\Event\Loader\Extension'

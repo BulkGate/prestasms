@@ -27,19 +27,18 @@ class Shop implements DataLoader
 
     public function load(Variables $variables, array $parameters = []): void
     {
-		if (isset($variables['shop_id']))
-		{
-			$shop = new \Shop($variables['shop_id']);
-
-			$variables['shop_email'] = \Configuration::get('PS_SHOP_EMAIL', null, null, $shop->id) ?: null;
-			$variables['shop_phone'] = \Configuration::get('PS_SHOP_PHONE', null, null, $shop->id) ?: null;
-			$variables['shop_name'] = $shop->name;
-			$variables['shop_domain'] = $shop->getBaseURL();
+		if (!isset($variables['shop_id'])) {
+			return;
 		}
 
-        if (isset($variables['lang_id']))
-        {
-            $variables['lang_iso'] = $this->language->get($variables['lang_id']);
-        }
-    }
+		$shop = new \Shop($variables['shop_id']);
+
+		$variables['shop_email'] = \Configuration::get('PS_SHOP_EMAIL', null, null, $shop->id) ?: null;
+		$variables['shop_phone'] = \Configuration::get('PS_SHOP_PHONE', null, null, $shop->id) ?: null;
+		$variables['shop_currency'] = \Currency::getIsoCodeById((int) \Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop->id));
+		$variables['shop_name'] = $shop->name;
+		$variables['shop_domain'] = $shop->getBaseURL();
+		$variables['lang_id'] ??= \Configuration::get("PS_LANG_DEFAULT", null, null, $shop->id); //$shop->getAssociatedLanguage()->getId();
+		$variables['lang_iso'] = $this->language->get((int) $variables['lang_id']);
+	}
 }

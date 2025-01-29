@@ -29,27 +29,29 @@ class Customer implements DataLoader
             $customer = new \Customer($variables['customer_id']);
         }
 
-        if ($customer) {
-            $variables['customer_firstname'] = $customer->firstname;
-            $variables['customer_lastname'] = $customer->lastname;
-            $variables['customer_email'] = $customer->email;
+		if (!$customer) {
+			return;
+		}
 
-            $address_id = (int) \Address::getFirstCustomerAddressId($variables['customer_id']);
-            $id_address_delivery = $variables['id_address_delivery'] ?? null;
-            $id_address_invoice = $variables['id_address_invoice'] ?? null;
+		$variables['customer_firstname'] = $customer->firstname;
+		$variables['customer_lastname'] = $customer->lastname;
+		$variables['customer_email'] = $customer->email;
 
-            if ($address_id && $id_address_delivery) {
-                if ($id_address_delivery !== $address_id) {
-                    $this->address($variables, new \Address($address_id, $variables['lang_id']));
-                } else {
-                    $this->address($variables, new \Address($id_address_delivery, $variables['lang_id']));
-                }
-            }
+		$address_id = (int) \Address::getFirstCustomerAddressId($customer->id);
+		$id_address_delivery = $variables['id_address_delivery'] ?? null;
+		$id_address_invoice = $variables['id_address_invoice'] ?? null;
 
-            if ($id_address_invoice) {
-                $this->address($variables, new \Address($id_address_invoice, $variables['lang_id']), true);
-            }
-        }
+		if ($address_id) {
+			if ($id_address_delivery && $id_address_delivery !== $address_id) { // shipping address has precedence
+				$this->address($variables, new \Address($id_address_delivery, $variables['lang_id']));
+			} else {
+				$this->address($variables, new \Address($address_id, $variables['lang_id']));
+			}
+		}
+
+		if ($id_address_invoice) {
+			$this->address($variables, new \Address($id_address_invoice, $variables['lang_id']), true);
+		}
     }
 
     private function address(Variables $variables, \Address $address, $invoice = false): void

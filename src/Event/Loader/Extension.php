@@ -30,6 +30,6 @@ class Extension implements DataLoader
         \Hook::exec('actionPrestaSmsExtendsVariables', [
             'variables' => $variables,
             'database' => $this->database, // todo: nejsem si jistej, jestli je tohle vhodny. Ja bych jim asi nedaval nase database API. At si data zajisti zvenku sami.
-        ], null, false, true, false, $variables['store_id']);
+        ], null, false, true, false, $variables['shop_id']);
     }
 }
