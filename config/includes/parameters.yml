@@ -9,7 +9,7 @@ parameters:
   bulkgate_module_settings_defaults:
     "main:dispatcher": 'asset'
     "main:synchronization": 'all'
-    "main:language": 'auto' #TODO: jak WTF funguje hodnota auto???
+    "main:language": 'auto'
     "main:language_mutation": false
     "main:delete_db": false
     "main:address_preference": 'delivery'
