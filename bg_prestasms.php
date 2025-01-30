@@ -53,6 +53,7 @@ class Bg_PrestaSms extends Module
         ];
 
         $this->displayName = 'PrestaSMS';
+		//Posílejte personalizované SMS zprávy, kterých si zákazník všimne! Zabraňte nepovšimnutí si důležitých notifikací mezi běžnými kanály jako email. Používejte nové kanály, jako SMS, RCS, Whatsapp a další které zajistí odlišnost a získají si pozornost zákazníků
         $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
         PrestaSms\DI\Factory::setup(fn () => ['db' => $this->get('doctrine.dbal.default_connection')]);
@@ -495,10 +496,16 @@ class Bg_PrestaSms extends Module
         $settings = $this->get('bulkgate.plugin.settings.settings');
         $sign = $this->get('bulkgate.plugin.user.sign');
         $url = $this->get('bulkgate.plugin.io.url');
+		$loader = $this->get('bulkgate.plugin.event.loader');
 
-        $order = new PrestaSmsOrder($id); // todo: service factory
-        $address = $order->getAddress();
-        $country = $order->getCountry($address);
+		$order = new \Order($id);
+		$variables = new Variables([
+			'order_id' => $order->id,
+			'customer_id' => $order->id_customer,
+			'lang_id' => $order->id_lang,
+			'order_status_id' => $order->current_state
+		]);
+		$loader->load($variables);
 
         $token = $sign->authenticate();
 
@@ -506,8 +513,14 @@ class Bg_PrestaSms extends Module
             return $this->render($this->getModuleTemplatePath() . 'send-message.html.twig', [
                 'token' => $token,
                 'url' => $url,
-                'address' => $address,
-                'country' => $country,
+				'variables' => [
+					...$variables->toArray(),
+					// these variables are for web component
+					'first_name' => PrestaSms\Event\Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
+					'last_name' => PrestaSms\Event\Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
+					'phone_mobile' => PrestaSms\Event\Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
+					'phone_number_iso' => PrestaSms\Event\Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables)
+				],
             ]);
         }
 
@@ -525,7 +538,7 @@ class Bg_PrestaSms extends Module
 
 	public function hookDisplayBackOfficeHeader()
 	{
-		$this->test();
+		//$this->test();
 		return $this->asynchronousAsset();
 	}
 
