@@ -496,6 +496,11 @@ class Bg_PrestaSms extends Module
         ['id_order' => $id] = $params;
 
         $settings = $this->get('bulkgate.plugin.settings.settings');
+
+		if (!$settings->load('static:application_token')) { // todo: isModuleLoggedIn
+			return null;
+		}
+
         $sign = $this->get('bulkgate.plugin.user.sign');
         $url = $this->get('bulkgate.plugin.io.url');
 		$loader = $this->get('bulkgate.plugin.event.loader');
@@ -508,25 +513,20 @@ class Bg_PrestaSms extends Module
 			'order_status_id' => $order->current_state
 		]);
 		$loader->load($variables);
-
         $token = $sign->authenticate();
 
-        if ($settings->load('static:application_token', false)) { // todo: isModuleLoggedIn
-            return $this->render($this->getModuleTemplatePath() . 'send-message.html.twig', [
-                'token' => $token,
-                'url' => $url,
-				'variables' => [
-					...$variables->toArray(),
-					// these variables are for web component
-					'first_name' => PrestaSms\Event\Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
-					'last_name' => PrestaSms\Event\Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
-					'phone_mobile' => PrestaSms\Event\Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
-					'phone_number_iso' => PrestaSms\Event\Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables)
-				],
-            ]);
-        }
-
-        return null;
+		return $this->render($this->getModuleTemplatePath() . 'send-message.html.twig', [
+			'token' => $token,
+			'url' => $url,
+			'variables' => [
+				...$variables->toArray(),
+				// these variables are for web component
+				'first_name' => PrestaSms\Event\Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
+				'last_name' => PrestaSms\Event\Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
+				'phone_mobile' => PrestaSms\Event\Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
+				'phone_number_iso' => PrestaSms\Event\Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables)
+			],
+		]);
     }
 
 	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks */
