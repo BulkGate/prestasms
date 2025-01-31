@@ -43,5 +43,5 @@ return array(
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
     'Composer\\Pcre\\' => array($vendorDir . '/composer/pcre/src'),
     'Clue\\React\\NDJson\\' => array($vendorDir . '/clue/ndjson-react/src'),
-    'BulkGate\\Controller\\' => array($baseDir . '/src/Controller'),
+    'BulkGate\\PrestaSms\\Controller\\' => array($baseDir . '/src/Controller'),
 );

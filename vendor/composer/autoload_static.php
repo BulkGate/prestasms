@@ -84,7 +84,7 @@ class ComposerStaticInit56dfe34347b2eea857961f4f09451533
         ),
         'B' => 
         array (
-            'BulkGate\\Controller\\' => 20,
+            'BulkGate\\PrestaSms\\Controller\\' => 30,
         ),
     );
 
@@ -237,7 +237,7 @@ class ComposerStaticInit56dfe34347b2eea857961f4f09451533
         array (
             0 => __DIR__ . '/..' . '/clue/ndjson-react/src',
         ),
-        'BulkGate\\Controller\\' => 
+        'BulkGate\\PrestaSms\\Controller\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Controller',
         ),
