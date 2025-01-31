@@ -114,6 +114,7 @@ class Bg_PrestaSms extends Module
 	private function installFrontOfficeHooks(): bool
 	{
 		$this->registerHook('displayHeader');
+		$this->registerHook('additionalCustomerFormFields');
 
 		return true;
 	}
@@ -489,6 +490,7 @@ class Bg_PrestaSms extends Module
 
 	/* BackOffice hooks */
 
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayadminorderside */
     public function hookDisplayAdminOrderSide(array $params)
     {
         ['id_order' => $id] = $params;
@@ -527,6 +529,7 @@ class Bg_PrestaSms extends Module
         return null;
     }
 
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks */
 	public function hookActionListModules()
 	{
 		$settings = $this->get('bulkgate.plugin.settings.settings');
@@ -536,6 +539,7 @@ class Bg_PrestaSms extends Module
 		}
 	}
 
+	/** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displaybackofficeheader */
 	public function hookDisplayBackOfficeHeader()
 	{
 		//$this->test();
@@ -544,10 +548,44 @@ class Bg_PrestaSms extends Module
 
 	/* FrontOffice hooks */
 
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayheader */
     public function hookDisplayHeader()
     {
-        return $this->asynchronousAsset();
+		return $this->asynchronousAsset();
     }
+
+	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/additionalcustomerformfields */
+	public function hookAdditionalCustomerFormFields(array $params)
+	{
+		$settings = $this->get('bulkgate.plugin.settings.settings');
+
+		if (!$settings->load('main:marketing_message_opt_in_enabled')) {
+			return null;
+		}
+
+		$url = $settings->load('main:marketing_message_opt_in_url');
+		$label_suffix = $url && !preg_match('~^https?://$~', $url) ? '[1][2]%url%[/2]' : '';
+
+		$label = $this->trans(
+			'I consent to receiving marketing communications via SMS, Viber, RCS, WhatsApp, and other similar channels.'.$label_suffix,
+			[
+				'_raw' => true,
+				'[1]' => '<br>',
+				'[2]' => '<a href="' .$url . '" target="_blank">',
+				'%url%' => Tools::htmlentitiesUTF8($url),
+				'[/2]' => '</a>',
+			]
+		);
+
+
+		return [
+			(new FormField())
+				->setName('bulkgate_marketing_message_opt_in')
+				->setType('checkbox')
+				->setValue($settings->load('main:marketing_message_opt_in_default'))
+				->setLabel($settings->load('main:marketing_message_opt_in_label') ?: $label)
+		];
+	}
 
 	private function test()
 	{
@@ -593,9 +631,9 @@ class Bg_PrestaSms extends Module
 
     private function asynchronousAsset()
     {
-        $settings = $this->get('bulkgate.plugin.settings.settings');
+		$settings = $this->get('bulkgate.plugin.settings.settings');
 
-        if ($settings->load('main:dispatcher') === Dispatcher::Asset) {
+        if (in_array($settings->load('main:dispatcher'), [Dispatcher::Asset, Dispatcher::Cron])) {
             return '<script type="text/javascript" src="' . $this->context->link->getModuleLink($this->name, 'AsynchronousAsset') . '" async></script>';
         }
     }
