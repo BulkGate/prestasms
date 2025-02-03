@@ -13,7 +13,6 @@ use BulkGate\Plugin\Settings\Helpers;
 use BulkGate\Plugin\Settings\Settings as SettingsPlugin;
 use BulkGate\Plugin\Settings\Synchronizer;
 use BulkGate\Plugin\Strict;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PluginSettingsChange
 {
@@ -23,13 +22,10 @@ class PluginSettingsChange
 
     private Synchronizer $synchronizer;
 
-    private UrlGeneratorInterface $router;
-
-    public function __construct(SettingsPlugin $settings, Synchronizer $synchronizer, UrlGeneratorInterface $router)
+    public function __construct(SettingsPlugin $settings, Synchronizer $synchronizer)
     {
         $this->settings = $settings;
         $this->synchronizer = $synchronizer;
-        $this->router = $router;
     }
 
     /**
@@ -37,7 +33,7 @@ class PluginSettingsChange
      *
      * @return array{data: array{layout: array{server: array{application_settings: array<string, string>}}}}|array{data: array{redirect: string}}
      */
-    public function run(array $unsafe_post_data = []): array
+    public function run(array $unsafe_post_data, callable $on_language_change): array
     {
         $output = [];
 
@@ -63,7 +59,7 @@ class PluginSettingsChange
         if (isset($unsafe_post_data['language']) && $actual_language !== $unsafe_post_data['language']) {
             // language change requires hard reload for re-initialization languages.
             // we are using reload_lang parameter to handle url change and effectively reloads the page
-            return ['data' => ['redirect' => $this->router->generate('bulkgate_main_app', ['reload_lang' => $unsafe_post_data['language'], '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_URL)]];
+            return ['data' => ['redirect' => $on_language_change($unsafe_post_data['language'])]];
         }
 
         return ['data' => ['layout' => ['server' => ['application_settings' => $output]]], 'success' => ['saved']];

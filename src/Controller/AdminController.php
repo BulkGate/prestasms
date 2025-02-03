@@ -14,6 +14,7 @@ use BulkGate\PrestaSms\Ajax\PluginSettingsChange;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -24,9 +25,10 @@ class AdminController extends FrameworkBundleAdminController
 {
     public function indexAction(Sign $sign, Url $url, Settings\Synchronizer $settings_synchronizer, Eshop\EshopSynchronizer $shop_synchronizer, Settings\Settings $settings)
     {
-        $shop_synchronizer->run();
+		$shop_synchronizer->run();
 
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
+		dump(['last_sync' => $settings_synchronizer->getLastSync(), 'next_sync' => $settings->load('static:synchronize')]);
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
@@ -55,13 +57,15 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change, Authenticate $authenticate, Sign $sign): JsonResponse
+    public function proxyAction(string $action, Request $request, PluginSettingsChange $settings_change, Authenticate $authenticate, Sign $sign, UrlGeneratorInterface $router): JsonResponse
     {
-        switch ($action) {
+        $base_url = $request->getSchemeAndHttpHost();
+
+		switch ($action) {
             case 'login':
                 ['email' => $email, 'password' => $password] = Json::decode($request->getContent());
 
-                return $this->json($sign->in($email, $password, '/dashboard'));
+                return $this->json($sign->in($email, $password, $base_url . $router->generate('bulkgate_main_app', ['reload' => time(), '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_PATH)));
             case 'logout':
                 return $this->json($sign->out('/sign/in'));
             case 'authenticate':
@@ -69,7 +73,7 @@ class AdminController extends FrameworkBundleAdminController
             case 'module-settings':
                 $data = Json::decode($request->getContent());
 
-                return $this->json($settings_change->run($data));
+                return $this->json($settings_change->run($data, fn(string $lang) => $base_url . $router->generate('bulkgate_main_app', ['reload' => $lang, '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_PATH)));
         }
     }
 }

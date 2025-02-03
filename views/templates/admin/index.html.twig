@@ -82,38 +82,39 @@
                 //}
             };
 
-            widget.options.theme = {
-                components: {
-                    BulkGateSignInView: {
-                        defaultProps: {
-                            showLanguagePanel: false,
-                            showPermanentLogin: false,
-                            logo: "images/white-label/bulkgate/logo/logo-title.svg",
-                            logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
-                            background: "images/products/backgrounds/ps.svg"
+            widget.setOptionsChunk({
+                theme: {
+                    components: {
+                        BulkGateSignInView: {
+                            defaultProps: {
+                                showLanguagePanel: false,
+                                showPermanentLogin: false,
+                                logo: "images/white-label/bulkgate/logo/logo-title.svg",
+                                logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
+                                background: "images/products/backgrounds/ps.svg"
+                            }
+                        },
+                        BulkGateSignUpView: {
+                            defaultProps: {
+                                showLanguagePanel: false,
+                                logo: "images/white-label/bulkgate/logo/logo-title.svg",
+                                logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
+                                background: "images/products/backgrounds/ps.svg"
+                            }
                         }
-                    },
-                    BulkGateSignUpView: {
-                        defaultProps: {
-                            showLanguagePanel: false,
-                            logo: "images/white-label/bulkgate/logo/logo-title.svg",
-                            logo_dark: "images/white-label/bulkgate/logo/logo-white.svg",
-                            background: "images/products/backgrounds/ps.svg"
+                    }
+                },
+                layout: {
+                    appBar: {
+                        showLogOut: false,
+                        logoUrl: "images/white-label/bulkgate/logo/logo-title.svg",
+                        logoStyle: {
+                            height: "28px",
+                            width: "192px",
                         }
                     }
                 }
-            };
-
-            widget.options.layout = {
-                appBar: {
-                    showLogOut: false,
-                    logoUrl: "images/white-label/bulkgate/logo/logo-title.svg",
-                    logoStyle: {
-                        height: "28px",
-                        width: "192px",
-                    }
-                }
-            };
+            });
 
             widget.options.proxy = function (reducerName, requestData) {
                 let proxyData = {
