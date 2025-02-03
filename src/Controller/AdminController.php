@@ -28,7 +28,6 @@ class AdminController extends FrameworkBundleAdminController
 		$shop_synchronizer->run();
 
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
-		dump(['last_sync' => $settings_synchronizer->getLastSync(), 'next_sync' => $settings->load('static:synchronize')]);
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/index.html.twig', [
             'layoutTitle' => 'BulkGate SMS',
