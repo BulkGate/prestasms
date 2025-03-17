@@ -1,45 +1,36 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\DI;
 
-/*
- * @author Lukáš Piják 2023 TOPefekt s.r.o.
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\DI\Container;
-use BulkGate\Plugin\DI\Factory as DIFactory;
-use BulkGate\Plugin\DI\FactoryStatic;
-use BulkGate\Plugin\Exception;
-use BulkGate\Plugin\Settings;
-use BulkGate\Plugin\Strict;
 use BulkGate\PrestaSms\Database\Connection;
+use BulkGate\Plugin\{DI\Container, DI\Factory as DIFactory, DI\FactoryStatic, Settings, Strict};
 
 class Factory implements DIFactory
 {
-    use Strict;
-    use FactoryStatic;
+	use Strict;
+	use FactoryStatic;
 
-    /**
-     * @param array<string, mixed> $parameters
-     *
-     * @throws Exception
-     */
-    protected static function createContainer(array $parameters = []): Container
-    {
-        $container = new Container($parameters['mode'] ?? 'strict');
+	/**
+	 * @param array<string, mixed> $parameters
+	 */
+	protected static function createContainer(array $parameters = []): Container
+	{
+		$container = new Container($parameters['mode'] ?? 'strict');
 
-        // Database
-        $container['database.connection'] = ['factory' => Connection::class, 'parameters' => ['db' => $parameters['db']]];
+		// Database
+		$container['database.connection'] = ['factory' => Connection::class, 'parameters' => ['db' => $parameters['db']]];
 
-        // Settings
-        $container['settings.repository.database'] = Settings\Repository\SettingsDatabase::class;
-        $container['settings.repository.synchronizer'] = Settings\Repository\SynchronizationDatabase::class;
-        $container['settings.settings'] = Settings\Settings::class;
-        $container['settings.synchronizer'] = Settings\Synchronizer::class;
+		// Settings
+		$container['settings.repository.database'] = Settings\Repository\SettingsDatabase::class;
+		$container['settings.repository.synchronizer'] = Settings\Repository\SynchronizationDatabase::class;
+		$container['settings.settings'] = Settings\Settings::class;
+		$container['settings.synchronizer'] = Settings\Synchronizer::class;
 
-        return $container;
-    }
+		return $container;
+	}
 }

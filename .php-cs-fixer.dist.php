@@ -1,8 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
-$config = new PrestaShop\CodingStandards\CsFixer\Config();
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ * @link https://www.bulkgate.com/
+ */
 
-/** @var \Symfony\Component\Finder\Finder $finder */
+use Symfony\Component\Finder\Finder;
+use PrestaShop\CodingStandards\CsFixer\Config;
+
+$config = new Config();
+
+/**
+ * @var Finder $finder
+ */
 $finder = $config->setUsingCache(true)->getFinder();
 $finder->in(__DIR__)->exclude('vendor');
 

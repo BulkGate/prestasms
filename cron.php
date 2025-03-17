@@ -1,6 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-/** @see https://devdocs.prestashop-project.org/8/modules/concepts/controllers/front-controllers/#using-a-front-controller-as-a-cron-task */
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ * @link https://www.bulkgate.com/
+ * @see https://devdocs.prestashop-project.org/8/modules/concepts/controllers/front-controllers/#using-a-front-controller-as-a-cron-task
+ */
 
 $_GET['fc'] = 'module';
 $_GET['module'] = 'bg_prestasms';

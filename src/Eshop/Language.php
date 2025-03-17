@@ -1,37 +1,40 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/*
- * @author Lukáš Piják 2023 TOPefekt s.r.o.
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\Eshop;
+use BulkGate\Plugin\{Eshop, Strict};
+use Language as PrestaShopLanguage;
 
 class Language implements Eshop\Language
 {
+	use Strict;
 
-    public function load(): array
-    {
-        $output = [];
+	public function load(): array
+	{
+		$output = [];
 
-        foreach (\Language::getLanguages() as ['iso_code' => $iso, 'name' => $name]) {
-            $output[$iso] = $name;
-        }
+		foreach (PrestaShopLanguage::getLanguages() as ['iso_code' => $iso, 'name' => $name])
+		{
+			$output[$iso] = $name;
+		}
 
-        return $output;
-    }
+		return $output;
+	}
 
-    public function get(?int $id = null): string
-    {
-		return \Language::getIsoById($id);
-    }
 
-    public function hasMultiLanguageSupport(): bool
-    {
-        return true;
-    }
+	public function get(?int $id = null): string
+	{
+		return PrestaShopLanguage::getIsoById($id);
+	}
+
+
+	public function hasMultiLanguageSupport(): bool
+	{
+		return true;
+	}
 }
