@@ -9,7 +9,7 @@ namespace BulkGate\PrestaSms\Database;
 
 use Doctrine\DBAL;
 use BulkGate\Plugin\{Database, Database\ResultCollection, Strict};
-use function str_replace;
+use function is_string, is_int, str_replace;
 use const _DB_PREFIX_;
 
 class Connection implements Database\Connection
@@ -18,6 +18,9 @@ class Connection implements Database\Connection
 
 	private DBAL\Connection $db;
 
+	/**
+	 * @var array<array-key, mixed>
+	 */
 	private array $prepare_parameters = [];
 
 	/**
@@ -51,13 +54,25 @@ class Connection implements Database\Connection
 
 	public function lastId()
 	{
-		return $this->db->lastInsertId();
+		$id = $this->db->lastInsertId();
+
+		if (!is_string($id) && !is_int($id))
+		{
+			return 0;
+		}
+
+		return $id;
 	}
 
 
 	public function prefix(): string
 	{
-		return _DB_PREFIX_;
+		/**
+		 * @var literal-string $prefix
+		 */
+		$prefix = _DB_PREFIX_;
+
+		return $prefix;
 	}
 
 
@@ -73,17 +88,30 @@ class Connection implements Database\Connection
 	}
 
 
+	/**
+	 * @param mixed ...$parameters
+	 */
 	public function prepare(string $sql, ...$parameters): string
 	{
 		$this->prepare_parameters = $parameters;
 
 		// plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
-		return str_replace('%s', '?', $sql);
+		/**
+		 * @var literal-string $s
+		 */
+		$s = str_replace('%s', '?', $sql);
+
+		return $s;
 	}
 
 
 	public function escape(string $string): string
 	{
-		return (string) $this->db->quote($string);
+		/**
+		 * @var literal-string $s
+		 */
+		$s = (string) $this->db->quote($string);
+
+		return $s;
 	}
 }

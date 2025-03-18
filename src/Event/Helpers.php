@@ -16,6 +16,7 @@ class Helpers
 
 	/**
 	 * @param array<array-key, mixed> $priority
+	 * @param ArrayAccess<array-key, mixed> $values
 	 * @param mixed $default
 	 * @return mixed
 	 */

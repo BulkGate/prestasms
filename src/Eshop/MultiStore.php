@@ -25,6 +25,9 @@ class MultiStore implements Eshop\MultiStore
 	{
 		$output = [];
 
+		/**
+		 * @phpstan-ignore-next-line
+		 */
 		foreach ($this->multistore->getShops() as ['id_shop' => $id, 'name' => $name])
 		{
 			$output[$id] = $name;

@@ -27,7 +27,7 @@ class Customer implements DataLoader
 		{
 			if (isset($variables['customer_id']))
 			{
-				$customer = new PrestaShopCustomer($variables['customer_id']);
+				$customer = new PrestaShopCustomer((int) $variables['customer_id']);
 			}
 		}
 
@@ -46,29 +46,30 @@ class Customer implements DataLoader
 
 		if ($address_id)
 		{
-			if ($id_address_delivery && $id_address_delivery !== $address_id) {
+			if ($id_address_delivery && $id_address_delivery !== $address_id)
+			{
 				// shipping address has precedence
-				$this->address($variables, new Address($id_address_delivery, $variables['lang_id']));
+				$this->address($variables, new Address((int) $id_address_delivery, (int) $variables['lang_id']));
 			}
 			else
 			{
-				$this->address($variables, new Address($address_id, $variables['lang_id']));
+				$this->address($variables, new Address((int) $address_id, (int) $variables['lang_id']));
 			}
 		}
 
 		if ($id_address_invoice)
 		{
-			$this->address($variables, new Address($id_address_invoice, $variables['lang_id']), true);
+			$this->address($variables, new Address((int) $id_address_invoice, (int) $variables['lang_id']), true);
 		}
 	}
 
-	private function address(Variables $variables, Address $address, $invoice = false): void
+	private function address(Variables $variables, Address $address, bool $invoice = false): void
 	{
 		$prefix = $invoice ? 'customer_invoice' : 'customer';
 
 		$variables["{$prefix}_firstname"] = $address->firstname;
 		$variables["{$prefix}_lastname"] = $address->lastname;
-		$variables["{$prefix}_country_id"] = Strings::lower(\Country::getIsoById($address->id_country));
+		$variables["{$prefix}_country_id"] = Strings::lower((string) \Country::getIsoById($address->id_country));
 		$variables["{$prefix}_company"] = $address->company;
 		$variables["{$prefix}_phone"] = $address->phone;
 		$variables["{$prefix}_mobile"] = $address->phone_mobile;

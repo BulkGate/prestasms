@@ -27,6 +27,6 @@ class Extension implements DataLoader
 		Hook::exec('actionPrestaSmsExtendsVariables', [
 			'variables' => $variables,
 			'database' => $this->database,
-		], null, false, true, false, $variables['shop_id']);
+		], null, false, true, false, (int) $variables['shop_id']);
 	}
 }

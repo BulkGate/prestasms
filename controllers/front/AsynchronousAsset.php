@@ -5,11 +5,11 @@
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\Event\Dispatcher;
+use BulkGate\Plugin\{Event\Dispatcher, Settings\Settings, Event\Asynchronous};
 
 class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontController
 {
-	public function initContent()
+	public function initContent(): void
 	{
 		header('Content-Type: application/javascript');
 		header('Cache-Control: no-store');
@@ -17,13 +17,21 @@ class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontCont
 	}
 
 
-	public function display()
+	public function display(): bool
 	{
+		/**
+		 * @var Settings $settings
+		 */
 		$settings = $this->get('bulkgate.plugin.settings.settings');
 
 		if (in_array($settings->load('main:dispatcher'), [Dispatcher::Cron, Dispatcher::Asset]))
 		{
-			$count = $this->get('bulkgate.plugin.event.asynchronous')->run(max(5, (int)($settings->load('main:cron-limit') ?? 10)));
+			/**
+			 * @var Asynchronous $asynchronous
+			 */
+			$asynchronous = $this->get('bulkgate.plugin.event.asynchronous');
+
+			$count = $asynchronous->run(max(5, (int) ($settings->load('main:cron-limit') ?? 10)));
 
 			echo "// Asynchronous task consumer has processed $count tasks";
 		}
@@ -31,5 +39,7 @@ class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontCont
 		{
 			echo '// Asynchronous task consumer is disabled';
 		}
+
+		return true;
 	}
 }

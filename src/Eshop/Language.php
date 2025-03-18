@@ -9,6 +9,7 @@ namespace BulkGate\PrestaSms\Eshop;
 
 use BulkGate\Plugin\{Eshop, Strict};
 use Language as PrestaShopLanguage;
+use function is_string;
 
 class Language implements Eshop\Language
 {
@@ -29,7 +30,19 @@ class Language implements Eshop\Language
 
 	public function get(?int $id = null): string
 	{
-		return PrestaShopLanguage::getIsoById($id);
+		if ($id === null)
+		{
+			return 'en';
+		}
+
+		$iso = PrestaShopLanguage::getIsoById($id);
+
+		if (is_string($iso))
+		{
+			return $iso;
+		}
+
+		return 'en';
 	}
 
 

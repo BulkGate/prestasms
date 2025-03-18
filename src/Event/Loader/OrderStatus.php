@@ -18,7 +18,7 @@ class OrderStatus implements DataLoader
 	{
 		if (isset($variables['order_status_id']))
 		{
-			$status = new OrderState($variables['order_status_id'], $variables['lang_id']);
+			$status = new OrderState((int) $variables['order_status_id'], (int) $variables['lang_id']);
 			$variables['order_status'] = $status->name;
 		}
 	}

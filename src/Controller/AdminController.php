@@ -13,7 +13,7 @@ use Symfony\Component\{HttpFoundation\JsonResponse, HttpFoundation\Request, Http
 
 class AdminController extends FrameworkBundleAdminController
 {
-	public function indexAction(Sign $sign, Url $url, Settings\Synchronizer $settings_synchronizer, Eshop\EshopSynchronizer $shop_synchronizer, Settings\Settings $settings)
+	public function indexAction(Sign $sign, Url $url, Settings\Synchronizer $settings_synchronizer, Eshop\EshopSynchronizer $shop_synchronizer, Settings\Settings $settings): Response
 	{
 		$shop_synchronizer->run();
 
@@ -54,7 +54,7 @@ class AdminController extends FrameworkBundleAdminController
 
 		if ($action === 'login')
 		{
-			['email' => $email, 'password' => $password] = Json::decode($request->getContent());
+			['email' => $email, 'password' => $password] = Json::decode((string) $request->getContent());
 
 			return $this->json($sign->in($email, $password, $base_url . $router->generate('bulkgate_main_app', [
 				'reload' => time(),
@@ -71,9 +71,9 @@ class AdminController extends FrameworkBundleAdminController
 		}
 		else if ($action === 'module-settings')
 		{
-			$data = Json::decode($request->getContent());
+			$data = Json::decode((string) $request->getContent());
 
-			return $this->json($settings_change->run($data, fn(string $lang): string => $base_url . $router->generate('bulkgate_main_app', [
+			return $this->json($settings_change->run($data, fn (string $lang): string => $base_url . $router->generate('bulkgate_main_app', [
 				'reload' => $lang,
 				'_fragment' => '/dashboard'
 			], UrlGeneratorInterface::ABSOLUTE_PATH)));

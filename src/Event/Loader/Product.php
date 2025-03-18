@@ -29,14 +29,14 @@ class Product implements DataLoader
 			return;
 		}
 
-		$product = isset($parameters['product']) && $parameters['product'] instanceof \Product ? $parameters['product'] : new \Product((int)$variables['product_id'], false, null, $variables['shop_id']);
+		$product = isset($parameters['product']) && $parameters['product'] instanceof \Product ? $parameters['product'] : new \Product((int) $variables['product_id'], false, null, (int) $variables['shop_id']);
 
-		$variables['product_name'] = \Product::getProductName($product->id);
+		$variables['product_name'] = \Product::getProductName((int) $product->id);
 		$variables['product_description'] = strip_tags(is_array($product->description_short) ? $product->description_short[$variables['lang_id']] : $product->description);
 		$variables['product_manufacturer'] = $product->manufacturer_name;
 		$variables['product_price'] = $this->formatter->format('number', $product->price);
 		$variables['product_price_locale'] = $this->formatter->format('price', $product->price, $variables['shop_currency']);
-		$variables['product_quantity'] = \Product::getQuantity($product->id);
+		$variables['product_quantity'] = \Product::getQuantity((int) $product->id);
 		$variables['product_minimal_quantity'] = (int)$product->minimal_quantity;
 		$variables['product_ref'] = $product->reference;
 		$variables['product_supplier'] = \Supplier::getNameById($product->id_supplier) ?: null;

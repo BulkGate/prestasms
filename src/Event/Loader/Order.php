@@ -7,7 +7,7 @@ namespace BulkGate\PrestaSms\Event\Loader;
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\{Eshop\Language, Event\DataLoader, Event\Variables, Localization\Formatter, Strict};
+use BulkGate\Plugin\{Event\DataLoader, Event\Variables, Localization\Formatter, Strict};
 
 class Order implements DataLoader
 {
@@ -15,23 +15,22 @@ class Order implements DataLoader
 
 	private Formatter $formatter;
 
-	private Language $language;
-
-	public function __construct(Formatter $formatter, Language $language)
+	public function __construct(Formatter $formatter)
 	{
 		$this->formatter = $formatter;
-		$this->language = $language;
 	}
+
 
 	public function load(Variables $variables, array $parameters = []): void
 	{
-		if (!isset($variables['order_id'])) {
+		if (!isset($variables['order_id']))
+		{
 			return;
 		}
 
 		$order = isset($parameters['order']) && $parameters['order'] instanceof \Order ? $parameters['order'] : new \Order((int)$variables['order_id']);
 
-		$currency = \Currency::getCurrency($order->id_currency);
+		$currency = (array) \Currency::getCurrency($order->id_currency);
 
 		$variables['id_address_delivery'] = (int)$order->id_address_delivery;
 		$variables['id_address_invoice'] = (int)$order->id_address_invoice;
@@ -60,8 +59,8 @@ class Order implements DataLoader
 
 		if ($variables['carrier_id'])
 		{
-			$carrier = new \Carrier($variables['carrier_id'], $variables['lang_id']);
-			$order_carrier = new \OrderCarrier($variables['order_id'], $variables['lang_id']);
+			$carrier = new \Carrier((int) $variables['carrier_id'], (int) $variables['lang_id']);
+			$order_carrier = new \OrderCarrier((int) $variables['order_id'], (int) $variables['lang_id']);
 			$variables['order_carrier_name'] = $carrier->name;
 			$variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
 			$variables['order_carrier_delay'] = $carrier->delay;
@@ -72,7 +71,7 @@ class Order implements DataLoader
 			$variables['order_carrier_price_locale'] = $this->formatter->format('price', $order_carrier->shipping_cost_tax_incl, $variables['order_currency']);
 		}
 
-		$message = \Message::getMessagesByOrderId($variables['order_id']);
+		$message = \Message::getMessagesByOrderId((int) $variables['order_id']);
 
 		if (is_array($message) && isset($message['message']))
 		{
@@ -91,13 +90,13 @@ class Order implements DataLoader
 	{
 		$p1 = $p2 = $p3 = $p4 = $pr1 = $pr2 = $pr3 = $pr4 = [];
 
-		$list = \OrderDetail::getList($variables['order_id']);
+		$list = \OrderDetail::getList((int) $variables['order_id']);
 
 		$filter = $variables['filter_products'] ?? [];
 
 		foreach ($list as $row)
 		{
-			if (empty($filter) || in_array($row['id_order_detail'], $filter))
+			if (empty($filter) || in_array((int) $row['id_order_detail'], (array) $filter))
 			{
 				$p1[] = $row['product_quantity'] . 'x ' . $row['product_name'] . ' ' . $row['product_reference'];
 				$p2[] = $row['product_quantity'] . 'x ' . $row['product_name'];
@@ -129,9 +128,10 @@ class Order implements DataLoader
 		$variables['order_smsprinter4'] = implode(';', $pr4);
 	}
 
-	private function returnProducts(Variables $variables, \Order $order)
+
+	private function returnProducts(Variables $variables, \Order $order): void
 	{
-		$return = new \OrderReturn($variables['return_id'], $variables['lang_id'], $order->id_shop);
+		$return = new \OrderReturn((int) $variables['return_id'], (int) $variables['lang_id'], (int) $order->id_shop);
 		$return_detail = \OrderReturn::getOrdersReturnProducts($return->id, $order);
 
 		$p1 = $p2 = $p3 = $p4 = [];

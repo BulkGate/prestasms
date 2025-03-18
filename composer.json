@@ -26,7 +26,7 @@
   "scripts": {
     "tester": "tester -C tests --colors=1",
     "coverage": "tester -C --coverage=coverage.html --coverage-src=src --stop-on-fail",
-    "phpstan": "_PS_ROOT_DIR_=/var/www/html phpstan analyse -c phpstan.neon --memory-limit=1G",
+    "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G",
     "prestashop-lint": "php-cs-fixer fix"
   },
   "config": {
