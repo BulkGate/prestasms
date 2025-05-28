@@ -1,22 +1,21 @@
-version: '3.3'
-
 services:
   prestashop:
-    image: prestashop/prestashop:${PS_VERSION:-latest}
+    image: prestasms
     depends_on:
       - db
     ports:
       - "8081:80"
-#    user: www-data
     env_file:
-      - ./.env
+      - .env
     environment:
       DB_SERVER: db
       PS_DOMAIN: ${PS_DOMAIN:-localhost}
       PS_FOLDER_ADMIN: administration
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - ./:/var/www/html/modules/bg_prestasms
-      #- ./prestashop:/var/www/html
+      - ./prestashop:/var/www/html
+      - .:/var/www/html/modules/bg_prestasms
 
   db:
     image: mysql:5.7
