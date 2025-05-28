@@ -36,6 +36,7 @@ services:
   BulkGate\PrestaSms\Eshop\Configuration:
     arguments:
       $version_number: '%bulkgate_module_version%'
+      $platform_version: '%bulkgate_platform_version%'
 
   BulkGate\Plugin\Event\Loader:
     arguments:

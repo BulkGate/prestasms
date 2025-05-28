@@ -1,4 +1,7 @@
 # Defines all the parameters for services
+imports:
+  - { resource: ./constants.php }
+
 parameters:
   bulkgate_module_name: "PrestaSMS" #_BG_PRESTASMS_NAME_
   bulkgate_module_author: "TOPefekt s.r.o." #_BG_PRESTASMS_AUTHOR_

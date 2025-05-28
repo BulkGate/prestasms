@@ -11,6 +11,7 @@ use BulkGate\Plugin\User\Sign;
 use BulkGate\Plugin\Utils\Json;
 use BulkGate\PrestaSms\Ajax\Authenticate;
 use BulkGate\PrestaSms\Ajax\PluginSettingsChange;
+use BulkGate\PrestaSms\Eshop\Configuration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,12 +40,13 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function debugAction(Request $request, Requirements $requirements, Url $url, Logger $logger)
+    public function debugAction(Request $request, Requirements $requirements, Url $url, Logger $logger, Configuration $configuration)
     {
         $requirements = $requirements->run([
             $requirements->same('{"message":"BulkGate API"}', file_get_contents($url->get('api/welcome')), 'Api Connection'),
             $requirements->same(true, version_compare(_PS_VERSION_, '1.7.5', '>='), 'Prestashop ver. >= 1.7.5'),
         ]);
+		dump($configuration->version());
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/debug.html.twig', [
             'layoutTitle' => 'BulkGate SMS - debug',
