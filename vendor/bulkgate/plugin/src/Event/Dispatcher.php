@@ -40,6 +40,8 @@ class Dispatcher
 	public function dispatch(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void
 	{
 		$this->loader->load($variables, $parameters);
+		dump(['category' => $category, 'endpoint' => $endpoint, 'variables' => json_encode($variables->toArray()), 'parameters' => $parameters]);
+		return;
 
 		if ($this->check($category, $endpoint, $variables))
 		{

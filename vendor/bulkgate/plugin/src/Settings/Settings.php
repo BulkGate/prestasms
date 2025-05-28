@@ -78,12 +78,16 @@ class Settings
 	public function set(string $settings_key, $value, array $parameters): void
 	{
 		[$scope, $key] = Helpers::key($settings_key);
-
-		$this->repository->save(new Repository\Entity\Setting(array_merge($parameters, [
+		$entity = new Repository\Entity\Setting(array_merge($parameters, [
 			'scope' => $scope,
 			'key' => $key,
 			'value' => $value
-		])));
+		]));
+
+		$this->repository->save($entity);
+
+		$this->load($settings_key);
+		$this->settings[$scope][$key] = $entity;
 	}
 
 
