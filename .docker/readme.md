@@ -1,16 +1,29 @@
 # Docker image
-Tento image je určen pro účely vývoje prestaSMS modulu. Image můžete použít k napojení do IDE a také ke spuštění webové aplikace
+Tento image je určen pro účely vývoje prestaSMS modulu. Image můžete použít k napojení do IDE a také ke spuštění webové aplikace.
+Image obsahuje instalaci composeru a xdebugu. [Seznam dostupných images](https://github.com/BulkGate/prestasms/pkgs/container/prestasms).
 
-## Konfigurace
-Nastavit můžete `PRESTASHOP_VERSION` + `PHP_VERSION`.
+## 1. Konfigurace
+Nastavit můžete verzi php a prestashopu.
 
 ```
-.docker/.env
+.docker/versions.json
 ```
 
-## Vytvoření image
-Vytvoří image a současně do adresáře `prestashop` zkopíruje obsah aplikace z image.
+## 2. Vytvoření image
+Spusťte shell script.
 
 ```shell
-.docker/generate.sh
+.docker/generate.sh # vyrvori image a pushne do registru
+.docker/generate.sh --no-push # vytvori image, nebude image pushovat do registru
+```
+
+> Každé spuštění scriptu vygeneruje 2 image a to (ghcr.io/bulkgate/prestasms) pro lokální použití a (ghcr.io/bulkgate/prestasms:8.2.0-8.1) pro nahrání do registru
+
+
+## 3. Použití image
+
+
+```yaml
+prestashop:
+    image: ghcr.io/bulkgate/prestasms:8.2.0-8.1
 ```
