@@ -1,11 +1,8 @@
 <?php
 
-use BulkGate\Extensions;
-use BulkGate\Plugin\Event\Dispatcher;
-use BulkGate\Plugin\Event\Variables;
-use BulkGate\Plugin\Settings\Settings;
-use BulkGate\PrestaSms;
-use BulkGate\PrestaSms\Eshop\Order as PrestaSmsOrder;
+use BulkGate\Plugin;
+use BulkGate\PrestaSms\Event\Helpers;
+use BulkGate\PrestaSms\DI\Container;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -20,7 +17,9 @@ require_once __DIR__ . '/vendor/autoload.php';
  */
 class Bg_PrestaSms extends Module
 {
-    public $tabs = [
+    use Container;
+
+	public $tabs = [
         [
             'name' => 'BulkGate SMS',
             'class_name' => 'AdminPrestaSmsConfigure',
@@ -48,7 +47,7 @@ class Bg_PrestaSms extends Module
         parent::__construct();
 
         $this->ps_versions_compliancy = [
-            'min' => '1.7.7.0',
+            'min' => '1.7.8.0',
             'max' => _PS_VERSION_,
         ];
 
@@ -56,7 +55,6 @@ class Bg_PrestaSms extends Module
 		//Posílejte personalizované SMS zprávy, kterých si zákazník všimne! Zabraňte nepovšimnutí si důležitých notifikací mezi běžnými kanály jako email. Používejte nové kanály, jako SMS, RCS, Whatsapp a další které zajistí odlišnost a získají si pozornost zákazníků
         $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
-        PrestaSms\DI\Factory::setup(fn () => ['db' => $this->get('doctrine.dbal.default_connection')]);
     }
 
     public function getContent(): void
@@ -69,7 +67,7 @@ class Bg_PrestaSms extends Module
     {
         $install = parent::install();
 
-        PrestaSms\DI\Factory::get()->getByClass(Settings::class)->install();
+		$this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class)->install();
 
         return $install && $this->installHooks();
     }
@@ -78,7 +76,7 @@ class Bg_PrestaSms extends Module
     {
         $uninstall = parent::uninstall();
 
-        PrestaSms\DI\Factory::get()->getByClass(Settings::class)->uninstall();
+        $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class)->uninstall();
 
         return $uninstall;
     }
@@ -139,7 +137,7 @@ class Bg_PrestaSms extends Module
 
 		$order = new Order((int) $params['id_order']);
 
-		$this->runHook('order', 'change-status', new Variables([
+		$this->runHook('order', 'change-status', new Plugin\Event\Variables([
 			'order_status_id' => $params['newOrderStatus']->id,
 			'order_id' => (int) $order->id,
 			'lang_id' => (int) $order->id_lang,
@@ -168,7 +166,7 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-		$this->runHook('order', 'new', new Variables([
+		$this->runHook('order', 'new', new Plugin\Event\Variables([
 			'order_id' => (int) $params['order']->id,
 			'lang_id' => (int) $params['order']->id_lang,
 			'shop_id' => (int) $params['order']->id_shop,
@@ -196,7 +194,7 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-		$this->runHook('customer', 'new', new Variables([
+		$this->runHook('customer', 'new', new Plugin\Event\Variables([
 			'customer_id' => (int) $params['newCustomer']->id,
 			'lang_id' => (int) $params['newCustomer']->id_lang,
 			'shop_id' => (int) $params['newCustomer']->id_shop,
@@ -222,7 +220,7 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-		$this->runHook('return', 'new', new Variables([
+		$this->runHook('return', 'new', new Plugin\Event\Variables([
 			'return_id' => (int) $params['orderReturn']->id,
 			'customer_id' => (int) $params['orderReturn']->id_customer,
 			'order_id' => (int) $params['orderReturn']->id_order,
@@ -250,7 +248,7 @@ class Bg_PrestaSms extends Module
 			return;
 		}
 
-		$this->runHook('order', 'TODO_slip_add', new Variables([
+		$this->runHook('order', 'TODO_slip_add', new Plugin\Event\Variables([
 			'order_id' => (int) $params['order']->id,
 			'customer_id' => (int) $params['order']->id_customer,
 			'lang_id' => (int) $params['order']->id_lang,
@@ -280,7 +278,7 @@ class Bg_PrestaSms extends Module
 			return;
 		}
 
-		$this->runHook('order', 'tracking-number', new Variables([
+		$this->runHook('order', 'tracking-number', new Plugin\Event\Variables([
 			'order_id' => (int) $params['order']->id,
 			'customer_id' => (int) $params['order']->id_customer,
 			'lang_id' => (int) $params['order']->id_lang,
@@ -309,7 +307,7 @@ class Bg_PrestaSms extends Module
 
 		$order = new Order($params['id_order']);
 
-		$this->runHook('order', 'payment', new Variables([
+		$this->runHook('order', 'payment', new Plugin\Event\Variables([
 			'order_id' => (int) $order->id,
 			'lang_id' => (int) $order->id_lang,
 			'shop_id' => (int) $order->id_shop,
@@ -333,7 +331,7 @@ class Bg_PrestaSms extends Module
 			return;
 		}
 
-		$this->runHook('product', 'TODO_delete', new Variables([
+		$this->runHook('product', 'TODO_delete', new Plugin\Event\Variables([
 			'shop_id' => (int) $params['product']->id_shop_default,
 			'product_id' => (int) $params['product']->id,
 		]), ['product' => $params['product']]);
@@ -359,7 +357,7 @@ class Bg_PrestaSms extends Module
 		}
 
 		if ($params['quantity'] === 0) {
-			$this->runHook('product', 'out-of-stock', new Variables([
+			$this->runHook('product', 'out-of-stock', new Plugin\Event\Variables([
 				'shop_id' => $params['id_shop'],
 				'product_id' => $params['id_product'],
 				'id_product_attribute' => $params['id_product_attribute'],
@@ -402,7 +400,7 @@ class Bg_PrestaSms extends Module
 		}
 
 		//todo: tento hook se spousti ze 4 ruznych mist, viz CancellationActionType.  i v pripade hookActionOrderSlipAdd (kdyz castecne vratim produkt)
-		$this->runHook('order', 'TODO_product_cancel', new Variables([
+		$this->runHook('order', 'TODO_product_cancel', new Plugin\Event\Variables([
 			'order_id' => (int) $params['order']->id,
 			'filter_products' => [$params['id_order_detail']],
 			'customer_id' => (int) $params['order']->id_customer,
@@ -433,7 +431,7 @@ class Bg_PrestaSms extends Module
 		$customer_message = isset($params['templateVars']['{message}']) ? $params['templateVars']['{message}'] : null;
 
 		if ($customer_message !== null) {
-			$this->runHook('contact', 'form', new Variables([
+			$this->runHook('contact', 'form', new Plugin\Event\Variables([
 				'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
 				'customer_message' => $customer_message,
 				'customer_message_short_50' => substr($customer_message, 0, 50),
@@ -465,7 +463,7 @@ class Bg_PrestaSms extends Module
         $variables = $params['variables'] ?? [];
         $settings = $params['settings'] ?? [];
 
-        $hook = $this->get('bulkgate.plugin.event.hook');
+        $hook = $this->getBulkGateContainer()->getByClass(Plugin\Event\Hook::class);
 
         $hook->send('/api/2.0/advanced/transactional', [
             'number' => $number,
@@ -495,18 +493,18 @@ class Bg_PrestaSms extends Module
     {
         ['id_order' => $id] = $params;
 
-        $settings = $this->get('bulkgate.plugin.settings.settings');
+        $settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
 		if (!$settings->load('static:application_token')) { // todo: isModuleLoggedIn
 			return null;
 		}
 
-        $sign = $this->get('bulkgate.plugin.user.sign');
-        $url = $this->get('bulkgate.plugin.io.url');
-		$loader = $this->get('bulkgate.plugin.event.loader');
+        $sign = $this->getBulkGateContainer()->getByClass(Plugin\User\Sign::class);
+        $url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
+		$loader = $this->getBulkGateContainer()->getByClass(Plugin\Event\Loader::class);
 
 		$order = new \Order($id);
-		$variables = new Variables([
+		$variables = new Plugin\Event\Variables([
 			'order_id' => $order->id,
 			'customer_id' => $order->id_customer,
 			'lang_id' => $order->id_lang,
@@ -521,10 +519,10 @@ class Bg_PrestaSms extends Module
 			'variables' => [
 				...$variables->toArray(),
 				// these variables are for web component
-				'first_name' => PrestaSms\Event\Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
-				'last_name' => PrestaSms\Event\Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
-				'phone_mobile' => PrestaSms\Event\Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
-				'phone_number_iso' => PrestaSms\Event\Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables)
+				'first_name' => Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
+				'last_name' => Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
+				'phone_mobile' => Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
+				'phone_number_iso' => Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables)
 			],
 		]);
     }
@@ -532,7 +530,7 @@ class Bg_PrestaSms extends Module
 	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks */
 	public function hookActionListModules()
 	{
-		$settings = $this->get('bulkgate.plugin.settings.settings');
+		$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
 		if ($settings->load('static:application_token') === null) {
 			$this->warning = 'You must be logged in to BulkGate to start sending SMS!';
@@ -557,7 +555,7 @@ class Bg_PrestaSms extends Module
 	/** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/additionalcustomerformfields */
 	public function hookAdditionalCustomerFormFields(array $params)
 	{
-		$settings = $this->get('bulkgate.plugin.settings.settings');
+		$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
 		if (!$settings->load('main:marketing_message_opt_in_enabled')) {
 			return null;
@@ -621,19 +619,18 @@ class Bg_PrestaSms extends Module
         return sprintf('@Modules/%s/views/templates/admin/', $this->name);
     }
 
-    private function runHook(string $category, string $endpoint, Variables $variables, array $parameters = [], ?callable $success_callback = null): void
+    private function runHook(string $category, string $endpoint, Plugin\Event\Variables $variables, array $parameters = [], ?callable $success_callback = null): void
     {
-        /** @var Dispatcher */
-        $dispatcher = $this->get('bulkgate.plugin.event.dispatcher');
+        $dispatcher = $this->getBulkGateContainer()->getByClass(Plugin\Event\Dispatcher::class);
 
         $dispatcher->dispatch($category, $endpoint, $variables, $parameters, $success_callback);
     }
 
     private function asynchronousAsset()
     {
-		$settings = $this->get('bulkgate.plugin.settings.settings');
+		$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
-        if (in_array($settings->load('main:dispatcher'), [Dispatcher::Asset, Dispatcher::Cron])) {
+        if (in_array($settings->load('main:dispatcher'), [Plugin\Event\Dispatcher::Asset, Plugin\Event\Dispatcher::Cron])) {
             return '<script type="text/javascript" src="' . $this->context->link->getModuleLink($this->name, 'AsynchronousAsset') . '" async></script>';
         }
     }

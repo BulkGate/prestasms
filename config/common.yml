@@ -1,0 +1,28 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  # Adapter classes services
+
+  PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider:
+    class: PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider
+  PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider:
+    class: PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider
+  PrestaShop\PrestaShop\Adapter\Shop\Context:
+    class: PrestaShop\PrestaShop\Adapter\Shop\Context
+  PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider:
+    class: PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+  PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider:
+    class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().employee'
+
+  # Symfony Controller - https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
+
+  BulkGate\PrestaSms\Controller\AdminController:
+    class: BulkGate\PrestaSms\Controller\AdminController
+    tags: [ controller.service_arguments ]

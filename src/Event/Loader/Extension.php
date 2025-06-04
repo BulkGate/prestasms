@@ -12,7 +12,7 @@ namespace BulkGate\PrestaSms\Event\Loader;
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;
 use BulkGate\Plugin\Strict;
-use BulkGate\PrestaSms\Database\Connection;
+use BulkGate\Plugin\Database\Connection;
 
 class Extension implements DataLoader
 {

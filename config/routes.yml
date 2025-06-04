@@ -8,7 +8,7 @@ bulkgate_main_app:
     _legacy_link: AdminPrestaSmsConfigure
 
 bulkgate_proxy:
-  path: prestasms/proxy-{action<[\w-]+>}
+  path: prestasms/proxy-{action}
   methods: [POST]
   defaults:
     _controller: 'BulkGate\PrestaSms\Controller\AdminController::proxyAction'
