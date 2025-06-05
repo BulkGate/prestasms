@@ -91,6 +91,7 @@ return array(
     'BulkGate\\PrestaSms\\Ajax\\Authenticate' => $baseDir . '/src/Ajax/Authenticate.php',
     'BulkGate\\PrestaSms\\Ajax\\PluginSettingsChange' => $baseDir . '/src/Ajax/PluginSettingsChange.php',
     'BulkGate\\PrestaSms\\Controller\\AdminController' => $baseDir . '/src/Controller/AdminController.php',
+    'BulkGate\\PrestaSms\\DI\\Container' => $baseDir . '/src/DI/Container.php',
     'BulkGate\\PrestaSms\\DI\\Factory' => $baseDir . '/src/DI/Factory.php',
     'BulkGate\\PrestaSms\\Database\\Connection' => $baseDir . '/src/Database/Connection.php',
     'BulkGate\\PrestaSms\\Eshop\\Configuration' => $baseDir . '/src/Eshop/Configuration.php',

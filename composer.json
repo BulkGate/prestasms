@@ -16,9 +16,9 @@
     "friendsofphp/php-cs-fixer": "^3.63"
   },
   "autoload": {
-    "psr-4": {
-      "BulkGate\\PrestaSms\\": "src/"
-    }
+    "classmap": [
+      "src/"
+    ]
   },
   "scripts": {
     "tester": "tester -C tests --colors=1",

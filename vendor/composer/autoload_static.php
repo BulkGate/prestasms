@@ -82,10 +82,6 @@ class ComposerStaticInit56dfe34347b2eea857961f4f09451533
             'Composer\\Pcre\\' => 14,
             'Clue\\React\\NDJson\\' => 18,
         ),
-        'B' => 
-        array (
-            'BulkGate\\PrestaSms\\Controller\\' => 30,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -237,10 +233,6 @@ class ComposerStaticInit56dfe34347b2eea857961f4f09451533
         array (
             0 => __DIR__ . '/..' . '/clue/ndjson-react/src',
         ),
-        'BulkGate\\PrestaSms\\Controller\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/Controller',
-        ),
     );
 
     public static $classMap = array (
@@ -329,6 +321,7 @@ class ComposerStaticInit56dfe34347b2eea857961f4f09451533
         'BulkGate\\PrestaSms\\Ajax\\Authenticate' => __DIR__ . '/../..' . '/src/Ajax/Authenticate.php',
         'BulkGate\\PrestaSms\\Ajax\\PluginSettingsChange' => __DIR__ . '/../..' . '/src/Ajax/PluginSettingsChange.php',
         'BulkGate\\PrestaSms\\Controller\\AdminController' => __DIR__ . '/../..' . '/src/Controller/AdminController.php',
+        'BulkGate\\PrestaSms\\DI\\Container' => __DIR__ . '/../..' . '/src/DI/Container.php',
         'BulkGate\\PrestaSms\\DI\\Factory' => __DIR__ . '/../..' . '/src/DI/Factory.php',
         'BulkGate\\PrestaSms\\Database\\Connection' => __DIR__ . '/../..' . '/src/Database/Connection.php',
         'BulkGate\\PrestaSms\\Eshop\\Configuration' => __DIR__ . '/../..' . '/src/Eshop/Configuration.php',
