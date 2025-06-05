@@ -1,37 +1,38 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/*
- * @author Lukáš Piják 2023 TOPefekt s.r.o.
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
-use BulkGate\Plugin\Eshop;
-use BulkGate\Plugin\Strict;
+use BulkGate\Plugin\{Eshop, Strict};
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 class MultiStore implements Eshop\MultiStore
 {
-    use Strict;
+	use Strict;
 
-    private MultistoreContextCheckerInterface $multistore;
+	private MultistoreContextCheckerInterface $multistore;
 
-    public function __construct(MultistoreContextCheckerInterface $multistore)
-    {
-        $this->multistore = $multistore;
-    }
+	public function __construct(MultistoreContextCheckerInterface $multistore)
+	{
+		$this->multistore = $multistore;
+	}
 
-    public function load(): array
-    {
-        $output = [];
+	public function load(): array
+	{
+		$output = [];
 
-        foreach ($this->multistore->getShops() as ['id_shop' => $id, 'name' => $name]) {
-            $output[$id] = $name;
-        }
+		/**
+		 * @phpstan-ignore-next-line
+		 */
+		foreach ($this->multistore->getShops() as ['id_shop' => $id, 'name' => $name])
+		{
+			$output[$id] = $name;
+		}
 
-        return $output;
-    }
+		return $output;
+	}
 }

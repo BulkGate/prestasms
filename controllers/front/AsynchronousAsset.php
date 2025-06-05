@@ -1,20 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 
 use BulkGate\Plugin;
 use BulkGate\PrestaSms\DI\Container;
+
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ * @link https://www.bulkgate.com/
+ */
 
 class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontController
 {
 	use Container;
 
-    public function initContent()
+    public function initContent(): void
     {
         header('Content-Type: application/javascript');
         header('Cache-Control: no-store');
         parent::initContent();
     }
 
-    public function display()
+    public function display(): bool
     {
 		$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
@@ -25,5 +30,7 @@ class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontCont
         } else {
             echo '// Asynchronous task consumer is disabled';
         }
+
+		return true;
     }
 }

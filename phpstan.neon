@@ -2,5 +2,11 @@ parameters:
   level: 8
   paths:
     - src
+    - controllers
   scanDirectories:
     - /var/www/html
+
+  # required by PS 1.7.x
+  bootstrapFiles:
+    - /var/www/html/autoload.php
+    - /var/www/html/vendor/autoload.php

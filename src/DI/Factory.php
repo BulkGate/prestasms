@@ -1,11 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\DI;
 
-/*
- * @author Lukáš Piják 2023 TOPefekt s.r.o.
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
@@ -22,8 +20,6 @@ class Factory implements Plugin\DI\Factory
 
     /**
      * @param array<string, mixed> $parameters
-     *
-     * @throws Plugin\Exception
      */
     protected static function createContainer(array $parameters = []): Plugin\DI\Container
     {

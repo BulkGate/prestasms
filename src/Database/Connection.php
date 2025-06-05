@@ -1,11 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Database;
 
-/*
- * @author Lukáš Piják 2023 TOPefekt s.r.o.
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  * @link https://www.bulkgate.com/
  */
 
@@ -20,7 +18,10 @@ class Connection implements Database\Connection
 
     private DBAL\Connection $db;
 
-    private array $prepare_parameters = [];
+	/**
+	 * @var array<array-key, mixed>
+	 */
+	private array $prepare_parameters = [];
 
     /**
      * @var list<string>
@@ -60,13 +61,25 @@ class Connection implements Database\Connection
 
     public function lastId()
     {
-        return $this->db->lastInsertId();
+        $id = $this->db->lastInsertId();
+
+		if (!is_string($id) && !is_int($id))
+		{
+			return 0;
+		}
+
+		return $id;
     }
 
-    public function prefix(): string
-    {
-        return _DB_PREFIX_;
-    }
+	public function prefix(): string
+	{
+		/**
+		 * @var literal-string $prefix
+		 */
+		$prefix = _DB_PREFIX_;
+
+		return $prefix;
+	}
 
     public function getSqlList(): array
     {
@@ -78,16 +91,29 @@ class Connection implements Database\Connection
         return $this->prefix() . $table;
     }
 
-    public function prepare(string $sql, ...$parameters): string
-    {
-        $this->prepare_parameters = $parameters;
+	/**
+	 * @param mixed ...$parameters
+	 */
+	public function prepare(string $sql, ...$parameters): string
+	{
+		$this->prepare_parameters = $parameters;
 
-        // plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
-        return str_replace('%s', '?', $sql);
-    }
+		// plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
+		/**
+		 * @var literal-string $s
+		 */
+		$s = str_replace('%s', '?', $sql);
 
-    public function escape(string $string): string
-    {
-        return $string;
-    }
+		return $s;
+	}
+
+	public function escape(string $string): string
+	{
+		/**
+		 * @var literal-string $s
+		 */
+		$s = (string) $this->db->quote($string);
+
+		return $s;
+	}
 }

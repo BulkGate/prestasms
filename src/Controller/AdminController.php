@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Controller;
 
@@ -6,9 +6,7 @@ use BulkGate\Plugin;
 use BulkGate\PrestaSms\Ajax;
 use BulkGate\PrestaSms\DI\Container;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\{HttpFoundation\JsonResponse, HttpFoundation\Request, HttpFoundation\Response, Routing\Generator\UrlGeneratorInterface};
 
 /**
  * @author Lukáš Piják 2018 TOPefekt s.r.o.
@@ -19,7 +17,7 @@ class AdminController extends FrameworkBundleAdminController
 {
     use Container;
 
-	public function indexAction()
+	public function indexAction(): Response
     {
 		$sign = $this->getBulkGateContainer()->getByClass(Plugin\User\Sign::class);
 		$url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
@@ -41,7 +39,7 @@ class AdminController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function debugAction()
+    public function debugAction(): Response
     {
 		$requirements = $this->getBulkGateContainer()->getByClass(Plugin\Debug\Requirements::class);
 		$url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
@@ -72,19 +70,38 @@ class AdminController extends FrameworkBundleAdminController
 
 		$base_url = $request->getSchemeAndHttpHost();
 
-		switch ($action) {
-            case 'login':
-                ['email' => $email, 'password' => $password] = Plugin\Utils\Json::decode($request->getContent());
+		if ($action === 'login')
+		{
+			['email' => $email, 'password' => $password] = Plugin\Utils\Json::decode((string) $request->getContent());
 
-                return $this->json($sign->in($email, $password, $base_url . $router->generate('bulkgate_main_app', ['reload' => time(), '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_PATH)));
-            case 'logout':
-                return $this->json($sign->out('/sign/in'));
-            case 'authenticate':
-                return $this->json($authenticate->run('/sign/in'));
-            case 'module-settings':
-                $data = Plugin\Utils\Json::decode($request->getContent());
+			return $this->json($sign->in($email, $password, $base_url . $router->generate('bulkgate_main_app', [
+					'reload' => time(),
+					'_fragment' => '/dashboard'
+				], UrlGeneratorInterface::ABSOLUTE_PATH)));
+		}
+		else if ($action === 'logout')
+		{
+			return $this->json($sign->out('/sign/in'));
+		}
+		else if ($action === 'authenticate')
+		{
+			return $this->json($authenticate->run('/sign/in'));
+		}
+		else if ($action === 'module-settings')
+		{
+			$data = Plugin\Utils\Json::decode((string) $request->getContent());
 
-                return $this->json($settings_change->run($data, fn(string $lang) => $base_url . $router->generate('bulkgate_main_app', ['reload' => $lang, '_fragment' => '/dashboard'], UrlGeneratorInterface::ABSOLUTE_PATH)));
-        }
+			return $this->json($settings_change->run($data, fn (string $lang): string => $base_url . $router->generate('bulkgate_main_app', [
+					'reload' => $lang,
+					'_fragment' => '/dashboard'
+				], UrlGeneratorInterface::ABSOLUTE_PATH)));
+		}
+		else
+		{
+			return $this->json([
+				'status' => 'error',
+				'message' => 'Unknown action',
+			]);
+		}
     }
 }
