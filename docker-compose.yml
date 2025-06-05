@@ -1,6 +1,6 @@
 services:
   prestashop:
-    image: prestasms
+    image: ghcr.io/bulkgate/prestasms:8.2.0-7.4
     depends_on:
       - db
     ports:
