@@ -193,10 +193,24 @@ abstract class ContainerBase implements ArrayAccess, Countable
 				}
 				else if ($parameter_type !== null && (class_exists($parameter_type) || interface_exists($parameter_type)))
 				{
-					/**
-					 * @var class-string<object> $parameter_type
-					 */
-					$parameters[] = $this->getByClass($parameter_type);
+					try
+					{
+						/**
+						 * @var class-string<object> $parameter_type
+						 */
+						$parameters[] = $this->getByClass($parameter_type);
+					}
+					catch (MissingServiceException $e)
+					{
+						if (isset($service['factory_method']))
+						{
+							$parameters[] = null;
+						}
+						else
+						{
+							throw $e;
+						}
+					}
 				}
 				else
 				{
