@@ -1,14 +1,6 @@
-includes:
-  - %currentWorkingDirectory%/vendor/prestashop/php-dev-tools/phpstan/ps-module-extension.neon
-    
 parameters:
+  level: 8
   paths:
-    - ./
-  excludePaths:
-    - vendor/
-  # We consider that the extension file will be stored the folder test/phpstan
-  # From Phpstan 0.12, paths are relative to the .neon file.
-  # - ../../classes
-  # - ../../controllers
-  reportUnmatchedIgnoredErrors: false
-  level: max
+    - src
+  scanDirectories:
+    - /var/www/html
