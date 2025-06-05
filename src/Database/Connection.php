@@ -18,7 +18,7 @@ class Connection implements Database\Connection
 {
     use Strict;
 
-    private $db;
+    private DBAL\Connection $db;
 
     private array $prepare_parameters = [];
 
@@ -38,7 +38,17 @@ class Connection implements Database\Connection
 
         $this->sql[] = $sql;
 
-        $result = $this->db->executeQuery($sql, $this->prepare_parameters)->fetchAllAssociative();
+        $query = $this->db->executeQuery($sql, $this->prepare_parameters);
+
+		if (method_exists($query, 'fetchAllAssoc'))
+		{
+			$result = $query->fetchAllAssoc();
+		}
+		else
+		{
+			$result = $query->fetchAll(\PDO::FETCH_ASSOC);
+		}
+
         $this->prepare_parameters = [];
 
         foreach ($result as $key => $item) {
@@ -50,7 +60,7 @@ class Connection implements Database\Connection
 
     public function lastId()
     {
-        return $this->db->Insert_ID();
+        return $this->db->lastInsertId();
     }
 
     public function prefix(): string
