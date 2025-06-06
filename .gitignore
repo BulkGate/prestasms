@@ -8,3 +8,4 @@ config/includes/*.local.yml
 *.cache
 .env
 prestashop
+vendor
