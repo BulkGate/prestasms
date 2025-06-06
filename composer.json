@@ -17,7 +17,8 @@
   },
   "autoload": {
     "classmap": [
-      "src/"
+      "src/",
+      "distribution.php"
     ]
   },
   "scripts": {

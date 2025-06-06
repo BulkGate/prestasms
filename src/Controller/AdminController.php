@@ -48,7 +48,7 @@ class AdminController extends FrameworkBundleAdminController
 
 		$requirements = $requirements->run([
             $requirements->same('{"message":"BulkGate API"}', file_get_contents($url->get('api/welcome')), 'Api Connection'),
-            $requirements->same(true, version_compare(_PS_VERSION_, '1.7.5', '>='), 'Prestashop ver. >= 1.7.5'),
+			$requirements->same(true, version_compare($logger->platform_version, BulkGateMinimalPrestashopVersion, '>='), 'Prestashop ver. >= ' . BulkGateMinimalPrestashopVersion),
         ]);
 		dump($configuration->version());
 
@@ -56,6 +56,8 @@ class AdminController extends FrameworkBundleAdminController
             'layoutTitle' => 'BulkGate SMS - debug',
             'php_version' => phpversion(),
             'prestashop_version' => _PS_VERSION_,
+			'platform_version' => $logger->platform_version,
+			'module_version' => $logger->module_version,
 			'url' => $url->get(),
             'requirements' => $requirements,
             'errors' => array_reverse($logger->getList()),

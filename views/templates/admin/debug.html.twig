@@ -23,10 +23,18 @@
             </tr>
             <tr>
                 <td>
-                    <b>PrestaShop Version</b>
+                    <b>Platform Version (Prestashop)</b>
                 </td>
                 <td>
-                    <b style="background: none;font-weight: 900;">{{ prestashop_version }}</b>
+                    <b style="background: none;font-weight: 900;">{{ platform_version }}</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Module Version</b>
+                </td>
+                <td>
+                    <b style="background: none;font-weight: 900;">{{ module_version }}</b>
                 </td>
             </tr>
             <tr>
@@ -54,14 +62,29 @@
         {% if errors %}
             <div style="overflow: auto;">
                 <table id="bulkgate-log-table" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 150px;">Date</th>
+                        <th class="desc">Message</th>
+                        <th class="desc">Version</th>
+                    </tr>
                     <tbody>
                     {% for error in errors %}
                         <tr>
                             <td>
-                                <b>{{ error.created | date('d.m. Y H:i:s') }}</b>
+                                {{ error.created | date('d.m. Y H:i:s') }}
                             </td>
-                            <td class="desc">
-                                <code style="background: none;">{{ error.message }}</code>
+                            <td class="desc" style="color: red;">
+                                {{ error.message }}
+                            </td>
+                            <td>
+                                {% if error.parameters %}
+                                    <span {{ (error.parameters.platform_version == platform_version ? 'style="color: limegreen"' : 'style="color: darkgrey"') }} title="{{ error.parameters.platform_version }}">platform</span>
+                                    <hr style="margin: 8px 0;">
+                                    <span {{ (error.parameters.module_version == module_version ? 'style="color: limegreen"' : 'style="color: darkgrey"') }} title="{{ error.parameters.module_version }}">module</span>
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

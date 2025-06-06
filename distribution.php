@@ -18,4 +18,5 @@ const BulkGateAffiliateId = '';
 /** Internals */
 
 const BulkGateModuleVersion = '6.0.0';
+const BulkGateMinimalPrestashopVersion = '1.7.8.0';
 const BulkGateApiVersion = '1.0';

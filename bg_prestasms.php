@@ -40,14 +40,14 @@ class Bg_PrestaSms extends Module
     {
         $this->name = 'bg_prestasms';
         $this->tab = 'emailing';
-        $this->version = '5.0.10';
+        $this->version = BulkGateModuleVersion;
         $this->author = 'BulkGate';
         $this->author_uri = 'https://www.bulkgate.com/';
 
         parent::__construct();
 
         $this->ps_versions_compliancy = [
-            'min' => '1.7.8.0',
+            'min' => BulkGateMinimalPrestashopVersion,
             'max' => _PS_VERSION_,
         ];
 
