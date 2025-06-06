@@ -4,8 +4,6 @@ namespace BulkGate\PrestaSms\DI;
 
 use BulkGate\Plugin;
 
-require_once __DIR__ . '/../../distribution.php';
-
 trait Container
 {
 	protected ?Plugin\DI\Container $bulkgate_container = null;
