@@ -4,6 +4,8 @@ namespace BulkGate\PrestaSms\DI;
 
 use BulkGate\Plugin;
 
+require_once __DIR__ . '/../../distribution.php';
+
 trait Container
 {
 	protected ?Plugin\DI\Container $bulkgate_container = null;
@@ -18,11 +20,10 @@ trait Container
 
 		Factory::setup(fn () => [
 			'symfony_di' => $symfony_di,
-			'api_version' => '1.0',
-			'module_version' => '6.0.0',
+			'api_version' => BulkGateApiVersion,
+			'module_version' => BulkGateModuleVersion,
 			'platform_version' => _PS_VERSION_,
-			/** @phpstan-ignore property.notFound */
-			'gate_url' => 'http://192.168.16.1', //BulkGateWhiteLabelUrl,
+			'gate_url' => BulkGateWhiteLabelUrl,
 			'default_settings' => [
 				"main:dispatcher" => 'asset',
 				"main:synchronization" => 'all',

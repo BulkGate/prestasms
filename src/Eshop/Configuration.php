@@ -16,16 +16,13 @@ class Configuration implements Eshop\Configuration
 
     private string $version_number;
 
-	private string $platform_version;
-
     private string $site_url;
 
     private string $site_name;
 
-    public function __construct(string $version_number, string $platform_version, Shop\Url\BaseUrlProvider $url, Shop\Context $shop)
+    public function __construct(string $version_number, Shop\Url\BaseUrlProvider $url, Shop\Context $shop)
     {
         $this->version_number = $version_number;
-		$this->platform_version = $platform_version;
         $this->site_url = $url->getUrl();
         $this->site_name = $shop->getShopName();
     }
@@ -42,7 +39,7 @@ class Configuration implements Eshop\Configuration
 
     public function version(): string
     {
-        return "$this->version_number:$this->platform_version";
+        return $this->version_number;
     }
 
     public function name(): string

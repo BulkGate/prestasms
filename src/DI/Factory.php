@@ -38,7 +38,7 @@ class Factory implements Plugin\DI\Factory
 
 			return $logger;
 		}];
-		$container['debug.logger'] = Plugin\Debug\Logger::class;
+		$container['debug.logger'] = ['factory' => Plugin\Debug\Logger::class, 'parameters' => [ 'platform_version' => $parameters['platform_version'], 'module_version' => $parameters['module_version'] ]];
 		$container['debug.requirements'] = Plugin\Debug\Requirements::class;
 
 		// Ajax
@@ -48,7 +48,6 @@ class Factory implements Plugin\DI\Factory
 		// Eshop
 		$container['eshop.configuration'] = ['factory' => Eshop\Configuration::class, 'factory_method' => fn() => new Eshop\Configuration(
 			$parameters['module_version'],
-			$parameters['platform_version'],
 			$symfony_di->get('PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'),
 			$symfony_di->get('PrestaShop\PrestaShop\Adapter\Shop\Context')
 		)];
