@@ -35,6 +35,7 @@ class Language implements Eshop\Language
 			return 'en';
 		}
 
+		/** @var mixed $iso*/
 		$iso = PrestaShopLanguage::getIsoById($id);
 
 		if (is_string($iso))

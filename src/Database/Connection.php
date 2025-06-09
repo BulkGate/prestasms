@@ -61,7 +61,8 @@ class Connection implements Database\Connection
 
     public function lastId()
     {
-        $id = $this->db->lastInsertId();
+        /** @var mixed $id*/
+		$id = $this->db->lastInsertId();
 
 		if (!is_string($id) && !is_int($id))
 		{

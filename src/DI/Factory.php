@@ -99,7 +99,7 @@ class Factory implements Plugin\DI\Factory
 		$container['io.url'] = ['factory' => Plugin\IO\Url::class, 'parameters' => ['url' => $parameters['gate_url'] ?? 'https://portal.bulkgate.com']];
 
 		// Localization
-		$iso = \Language::getLocaleById($symfony_di->get("prestashop.adapter.legacy.context")->getLanguage()->getId()); //pozor! bezi v ruznych kontextech FO a BO
+		$iso = $container->getByClass(Eshop\Language::class)->get($symfony_di->get("prestashop.adapter.legacy.context")->getLanguage()->getId()); //pozor! bezi v ruznych kontextech FO a BO
 		$container['localization.language'] = ['factory' => Plugin\Localization\LanguageSettings::class, 'parameters' => ['iso' => $iso]];
 		$container['localization.translator'] = Plugin\Localization\TranslatorSettings::class;
 		$container['localization.formatter'] = extension_loaded('intl') ? ['factory' => Plugin\Localization\FormatterIntl::class, 'factory_method' => fn () => new Plugin\Localization\FormatterIntl($iso)] : Plugin\Localization\FormatterBasic::class;
