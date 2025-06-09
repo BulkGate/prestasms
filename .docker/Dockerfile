@@ -26,6 +26,8 @@ RUN pecl install xdebug$(php -r "echo(version_compare(getenv('PHP_VERSION'), '8'
 
 COPY config-files/post-install.sh /tmp/post-install-scripts/
 
+RUN git config --system --add safe.directory '*'
+
 RUN chmod +x /tmp/post-install-scripts/post-install.sh
 
 WORKDIR /var/www/html
