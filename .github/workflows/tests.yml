@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - .docker/**
       - .github/**
-      - !.github/workflows/tests.yml
+      - '!.github/workflows/tests.yml'
 
 jobs:
   tests:
