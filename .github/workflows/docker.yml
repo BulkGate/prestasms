@@ -3,8 +3,8 @@ name: Build docker images
 on:
   push:
     paths:
-      - .docker/**
-      - .github/workflows/docker.yml
+      - '.docker/**'
+      - '.github/workflows/docker.yml'
     tags-ignore:
       - '**'
 
