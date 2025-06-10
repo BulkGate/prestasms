@@ -7,6 +7,7 @@ on:
 jobs:
   bundle:
     runs-on: ubuntu-latest
+    container: ghcr.io/bulkgate/prestasms:8.2.1-8.1
     env:
       GH_TOKEN: ${{github.token}} #required by gh cli
     steps:
