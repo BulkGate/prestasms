@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - .docker/**
+      - .github/workflows/docker.yml
 
 jobs:
   init-matrix:
