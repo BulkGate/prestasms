@@ -32,5 +32,12 @@ jobs:
       - name: Prepare executable
         run: chmod +x .docker/generate.sh
 
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build image
         run: .docker/generate.sh --no-emit-version --php-version ${{ matrix.php }} --prestashop-version ${{ matrix.prestashop }}
