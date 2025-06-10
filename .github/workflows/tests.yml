@@ -6,6 +6,8 @@ on:
       - .docker/**
       - .github/**
       - '!.github/workflows/tests.yml'
+    tags-ignore:
+      - '*'
 
 jobs:
   tests:
