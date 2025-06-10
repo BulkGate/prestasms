@@ -33,4 +33,4 @@ jobs:
         run: chmod +x .docker/generate.sh
 
       - name: Build image
-        run: .docker/generate.sh --no-emit-version --no-push --php-version ${{ matrix.php }} --prestashop-version ${{ matrix.prestashop }}
+        run: .docker/generate.sh --no-emit-version --php-version ${{ matrix.php }} --prestashop-version ${{ matrix.prestashop }}
