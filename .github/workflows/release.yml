@@ -1,0 +1,34 @@
+name: Release application
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{github.token}} #required by gh cli
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install packages
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Apply code style
+        run: composer run prestashop-lint
+
+      - name: Keep only production dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-dev
+
+      - name: Create plugin directory
+        run: mkdir -p /tmp/bg_prestasms
+
+      - name: Copy plugin files
+        run: cp -r config controllers img src translations vendor views logo.png LICENSE *.php composer.json  /tmp/bg_prestasms
+
+      - name: Create plugin zip
+        run: cd /tmp && zip -r bg_prestasms.zip bg_prestasms
+
+      - name: Add zip to release
+        run: gh release upload ${{github.ref_name}} /tmp/bg_prestasms.zip
