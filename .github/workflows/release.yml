@@ -26,7 +26,7 @@ jobs:
         run: mkdir -p /tmp/bg_prestasms
 
       - name: Copy plugin files
-        run: cp -r config controllers img src translations vendor views logo.png LICENSE *.php composer.json  /tmp/bg_prestasms
+        run: cp -r config controllers src translations vendor views logo.png LICENSE *.php composer.json  /tmp/bg_prestasms
 
       - name: Create plugin zip
         run: cd /tmp && zip -r bg_prestasms.zip bg_prestasms
