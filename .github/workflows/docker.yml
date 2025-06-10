@@ -33,3 +33,4 @@ jobs:
 
       - name: Build image
         run: ./docker/generate.sh --no-emit-version --no-push --php-version ${{ matrix.php }} --prestashop-version ${{ matrix.prestashop }}
+        shell: bash
