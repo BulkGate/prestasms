@@ -62,10 +62,6 @@ if [[ -n "$PHP_VERSION" && -n "$PRESTASHOP_VERSION" ]]; then
     BUILD_ARGS="$BUILD_ARGS --build-arg PHP_VERSION=$PHP_VERSION --build-arg PRESTASHOP_VERSION=$PRESTASHOP_VERSION"
 fi
 
-echo "Build args: $BUILD_ARGS"
-
-exit
-
 # build image
 docker build $BUILD_ARGS "$SCRIPT_DIR" -t ghcr.io/bulkgate/prestasms
 VERSION=$(docker inspect --format '{{ .Config.Labels.version }}' ghcr.io/bulkgate/prestasms)
