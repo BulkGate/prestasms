@@ -30,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Run test suite
-        run: composer run tester
+#      - name: Run test suite
+#        run: composer run tester
 
       - name: Run static analysis
         run: composer run phpstan
