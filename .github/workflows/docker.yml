@@ -1,0 +1,35 @@
+name: Build docker images
+
+on:
+  push:
+    paths:
+      - .docker/**
+
+jobs:
+  init-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Read version matrix
+        id: set-matrix
+        run: echo "matrix=$(jq -c . < .docker/versions.json)" >> $GITHUB_OUTPUT
+
+  build:
+    needs: init-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.init-matrix.outputs.matrix) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare executable
+        run: chmod +x .docker/generate.sh
+
+      - name: Build image
+        run: ./docker/generate.sh --no-emit-version --no-push --php-version ${{ matrix.php }} --prestashop-version ${{ matrix.prestashop }}
