@@ -1,7 +1,6 @@
 name: Release application
 
 on:
-  push:
   release:
     types: [created]
 
