@@ -3,11 +3,9 @@ name: Run application tests
 on:
   push:
     paths-ignore:
-      - .docker/**
-      - .github/**
+      - '.docker/**'
+      - '.github/**'
       - '!.github/workflows/tests.yml'
-    tags-ignore:
-      - '*'
 
 jobs:
   tests:
