@@ -2,6 +2,10 @@ name: Run application tests
 
 on:
   push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
     paths-ignore:
       - '.docker/**'
       - '.github/**'
