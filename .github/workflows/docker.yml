@@ -5,8 +5,6 @@ on:
     paths:
       - '.docker/**'
       - '.github/workflows/docker.yml'
-    tags-ignore:
-      - '**'
 
 jobs:
   init-matrix:
