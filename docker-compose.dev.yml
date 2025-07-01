@@ -1,0 +1,4 @@
+services:
+  prestashop:
+    volumes:
+      - ./prestashop:/var/www/html #napovidani IDE

@@ -1,24 +1,23 @@
 # PrestaSMS module
 http://www.presta-sms.com/
 
-# Development
-
-## Customizace prostředí
-Vytvoř **.env** soubor v kořenovém adresáři (jako inspiraci použij soubor **.env.template**). Můžeš přizpůsobit například verzi prestashopu, doménu a další viz. [docker image](https://hub.docker.com/r/prestashop/prestashop)
-
+# Lokální vývoj a konfigurace
+Pro úpravu parametrů prostředí (např. verze PrestaShopu, doména, port) vytvoř v kořenovém adresáři soubor *.env* podle vzoru *.env.template*. Hodnoty v tomto souboru se použijí při spuštění kontejnerů:
+```shell
+cp .env.template .env
+docker compose up -d 
 ```
-docker compose up
-```
-## Prestashop source code
-Aby ti fungovalo napovídání v IDE, musíš namountovat instalaci prestashopu z kontejneru na disk.
 
-```yaml
-services:
-  prestashop:
-    volumes:
-      - ./prestashop:/var/www/html
+Pokud potřebuješ spustit více instancí s různými verzemi nebo parametry najednou, nastav proměnné prostředí přímo v příkazové řádce (inline):
+```shell
+MYSQL_DATABASE=prestashop_7 ADMINER_PORT=9070 PRESTASHOP_IMAGE_VERSION=1.7.8.0-7.4 PRESTASHOP_DOMAIN=ps7.dev.bulkgate.com:8070 PRESTASHOP_PORT=8070 docker compose --project-name ps_1_7 up -d
+MYSQL_DATABASE=prestashop_8 ADMINER_PORT=9080 PRESTASHOP_IMAGE_VERSION=8.2.1-7.4 PRESTASHOP_DOMAIN=ps8.dev.bulkgate.com:8080 PRESTASHOP_PORT=8080 docker compose --project-name ps_8_2 up -d
 ```
-> Může se stát, že ti kontejner nebude s mountem fungovat. V takovém případě mount zakomentuj a spusť znovu `docker compose up`
+
+Aby ti fungovalo napovídání v IDE (prestashop source code), musíš namountovat instalaci prestashopu z kontejneru na disk.
+```shell
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
 
 # Tester guide
 Otevři si prohlížeč na http://localhost (default) a nebo podle hodnoty env proměnné PS_DOMAIN, pokud si ji uvedl v soubor **.env**.

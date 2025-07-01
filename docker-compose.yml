@@ -1,26 +1,24 @@
 services:
   prestashop:
-    image: ghcr.io/bulkgate/prestasms:8.2.0-7.4
+    image: ghcr.io/bulkgate/prestasms:${PRESTASHOP_IMAGE_VERSION:-8.2.1-8.1}
     depends_on:
       - db
     ports:
-      - "8081:80"
-    env_file:
-      - .env
+      - ${PRESTASHOP_PORT:-80}:80
     environment:
+      PS_DOMAIN: ${PRESTASHOP_DOMAIN:-localhost}
       DB_SERVER: db
-      PS_DOMAIN: ${PS_DOMAIN:-localhost}
+      DB_NAME: ${MYSQL_DATABASE:-prestashop}
       PS_FOLDER_ADMIN: administration
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./prestashop:/var/www/html
       - .:/var/www/html/modules/bg_prestasms
 
   db:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: prestashop
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-prestashop}
       MYSQL_ROOT_PASSWORD: admin
     volumes:
       - db:/var/lib/mysql
@@ -31,7 +29,7 @@ services:
       ADMINER_DESIGN: "nette"
       ADMINER_DEFAULT_SERVER: "db"
     ports:
-      - "8090:8080"
+      - ${ADMINER_PORT:-9000}:8080
 
 volumes:
   db:
