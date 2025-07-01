@@ -16,7 +16,7 @@ services:
       - .:/var/www/html/modules/bg_prestasms
 
   db:
-    image: mysql:5.7
+    image: mariadb:10
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-prestashop}
       MYSQL_ROOT_PASSWORD: admin
