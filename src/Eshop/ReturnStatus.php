@@ -1,40 +1,42 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
+use BulkGate\Plugin\Eshop;
+use BulkGate\Plugin\Strict;
+use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
+use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
+
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
+ *
+ * @see https://www.bulkgate.com/
  */
-
-use BulkGate\Plugin\{Eshop, Strict};
-use PrestaShop\PrestaShop\Adapter\{Employee\ContextEmployeeProvider, OrderReturnState\OrderReturnStateDataProvider};
-
 class ReturnStatus implements Eshop\ReturnStatus
 {
-	use Strict;
+    use Strict;
 
-	private OrderReturnStateDataProvider $order_state;
+    private OrderReturnStateDataProvider $order_state;
 
-	private ContextEmployeeProvider $employee;
+    private ContextEmployeeProvider $employee;
 
-	public function __construct(OrderReturnStateDataProvider $order_state, ContextEmployeeProvider $employee)
-	{
-		$this->order_state = $order_state;
-		$this->employee = $employee;
-	}
+    public function __construct(OrderReturnStateDataProvider $order_state, ContextEmployeeProvider $employee)
+    {
+        $this->order_state = $order_state;
+        $this->employee = $employee;
+    }
 
+    public function load(): array
+    {
+        $output = [];
+        $list = $this->order_state->getOrderReturnStates($this->employee->getLanguageId());
 
-	public function load(): array
-	{
-		$output = [];
-		$list = $this->order_state->getOrderReturnStates($this->employee->getLanguageId());
+        foreach ($list as ['id_order_return_state' => $state_id, 'name' => $name]) {
+            $output[$state_id] = $name;
+        }
 
-		foreach ($list as ['id_order_return_state' => $state_id, 'name' => $name])
-		{
-			$output[$state_id] = $name;
-		}
-
-		return $output;
-	}
+        return $output;
+    }
 }

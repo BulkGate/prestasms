@@ -1,13 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
+ *
+ * @see https://www.bulkgate.com/
  * @see https://devdocs.prestashop-project.org/8/modules/concepts/controllers/front-controllers/#using-a-front-controller-as-a-cron-task
  */
-
 $_GET['fc'] = 'module';
 $_GET['module'] = 'bg_prestasms';
 $_GET['controller'] = 'Cron';
 
-require_once __DIR__ . '/../../index.php'; //require
+require_once __DIR__ . '/../../index.php'; // require
