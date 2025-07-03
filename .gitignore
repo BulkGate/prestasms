@@ -1,7 +1,7 @@
 debug.php
 .idea
 coverage.html
-config.xml
+config*.xml
 tests/**/output/*.actual
 tests/**/output/*.expected
 config/includes/*.local.yml
