@@ -1,15 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
-/**
- * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
- */
-
-use BulkGate\Plugin\{Eshop, Strict};
+use BulkGate\Plugin\Eshop;
+use BulkGate\Plugin\Strict;
 use PrestaShop\PrestaShop\Adapter\Shop;
 
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ *
+ * @see https://www.bulkgate.com/
+ */
 class Configuration implements Eshop\Configuration
 {
     use Strict;

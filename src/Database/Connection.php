@@ -1,27 +1,29 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Database;
-
-/**
- * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
- */
 
 use BulkGate\Plugin\Database;
 use BulkGate\Plugin\Database\ResultCollection;
 use BulkGate\Plugin\Strict;
 use Doctrine\DBAL;
 
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ *
+ * @see https://www.bulkgate.com/
+ */
 class Connection implements Database\Connection
 {
     use Strict;
 
     private DBAL\Connection $db;
 
-	/**
-	 * @var array<array-key, mixed>
-	 */
-	private array $prepare_parameters = [];
+    /**
+     * @var array<array-key, mixed>
+     */
+    private array $prepare_parameters = [];
 
     /**
      * @var list<string>
@@ -41,14 +43,11 @@ class Connection implements Database\Connection
 
         $query = $this->db->executeQuery($sql, $this->prepare_parameters);
 
-		if (method_exists($query, 'fetchAllAssoc'))
-		{
-			$result = $query->fetchAllAssoc();
-		}
-		else
-		{
-			$result = $query->fetchAll(\PDO::FETCH_ASSOC);
-		}
+        if (method_exists($query, 'fetchAllAssoc')) {
+            $result = $query->fetchAllAssoc();
+        } else {
+            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+        }
 
         $this->prepare_parameters = [];
 
@@ -61,26 +60,25 @@ class Connection implements Database\Connection
 
     public function lastId()
     {
-        /** @var mixed $id*/
-		$id = $this->db->lastInsertId();
+        /** @var mixed $id */
+        $id = $this->db->lastInsertId();
 
-		if (!is_string($id) && !is_int($id))
-		{
-			return 0;
-		}
+        if (!is_string($id) && !is_int($id)) {
+            return 0;
+        }
 
-		return $id;
+        return $id;
     }
 
-	public function prefix(): string
-	{
-		/**
-		 * @var literal-string $prefix
-		 */
-		$prefix = _DB_PREFIX_;
+    public function prefix(): string
+    {
+        /**
+         * @var literal-string $prefix
+         */
+        $prefix = _DB_PREFIX_;
 
-		return $prefix;
-	}
+        return $prefix;
+    }
 
     public function getSqlList(): array
     {
@@ -92,29 +90,29 @@ class Connection implements Database\Connection
         return $this->prefix() . $table;
     }
 
-	/**
-	 * @param mixed ...$parameters
-	 */
-	public function prepare(string $sql, ...$parameters): string
-	{
-		$this->prepare_parameters = $parameters;
+    /**
+     * @param mixed ...$parameters
+     */
+    public function prepare(string $sql, ...$parameters): string
+    {
+        $this->prepare_parameters = $parameters;
 
-		// plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
-		/**
-		 * @var literal-string $s
-		 */
-		$s = str_replace('%s', '?', $sql);
+        // plugin's SQL queries are using %s for placeholder values, but Doctrine uses "?" character as placeholder
+        /**
+         * @var literal-string $s
+         */
+        $s = str_replace('%s', '?', $sql);
 
-		return $s;
-	}
+        return $s;
+    }
 
-	public function escape(string $string): string
-	{
-		/**
-		 * @var literal-string $s
-		 */
-		$s = (string) $this->db->quote($string);
+    public function escape(string $string): string
+    {
+        /**
+         * @var literal-string $s
+         */
+        $s = (string) $this->db->quote($string);
 
-		return $s;
-	}
+        return $s;
+    }
 }

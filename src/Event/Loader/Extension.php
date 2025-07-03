@@ -1,35 +1,35 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Event\Loader;
 
-/**
- * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
- */
-
-use Hook;
+use BulkGate\Plugin\Database\Connection;
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;
 use BulkGate\Plugin\Strict;
-use BulkGate\Plugin\Database\Connection;
 
+/**
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
+ *
+ * @see https://www.bulkgate.com/
+ */
 class Extension implements DataLoader
 {
-	use Strict;
+    use Strict;
 
-	private Connection $database;
+    private Connection $database;
 
-	public function __construct(Connection $database)
-	{
-		$this->database = $database;
-	}
+    public function __construct(Connection $database)
+    {
+        $this->database = $database;
+    }
 
-
-	public function load(Variables $variables, array $parameters = []): void
-	{
-		Hook::exec('actionPrestaSmsExtendsVariables', [
-			'variables' => $variables,
-			'database' => $this->database,
-		], null, false, true, false, (int) $variables['shop_id']);
-	}
+    public function load(Variables $variables, array $parameters = []): void
+    {
+        \Hook::exec('actionPrestaSmsExtendsVariables', [
+            'variables' => $variables,
+            'database' => $this->database,
+        ], null, false, true, false, (int) $variables['shop_id']);
+    }
 }

@@ -1,54 +1,51 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace BulkGate\PrestaSms\Eshop;
 
+use BulkGate\Plugin\Eshop;
+use BulkGate\Plugin\Strict;
+use Language as PrestaShopLanguage;
+
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
- * @link https://www.bulkgate.com/
+ *
+ * @see https://www.bulkgate.com/
  */
-
-use BulkGate\Plugin\{Eshop, Strict};
-use Language as PrestaShopLanguage;
-use function is_string;
-
 class Language implements Eshop\Language
 {
-	use Strict;
+    use Strict;
 
-	public function load(): array
-	{
-		$output = [];
+    public function load(): array
+    {
+        $output = [];
 
-		foreach (PrestaShopLanguage::getLanguages() as ['iso_code' => $iso, 'name' => $name])
-		{
-			$output[$iso] = $name;
-		}
+        foreach (PrestaShopLanguage::getLanguages() as ['iso_code' => $iso, 'name' => $name]) {
+            $output[$iso] = $name;
+        }
 
-		return $output;
-	}
+        return $output;
+    }
 
+    public function get(?int $id = null): string
+    {
+        if ($id === null) {
+            return 'en';
+        }
 
-	public function get(?int $id = null): string
-	{
-		if ($id === null)
-		{
-			return 'en';
-		}
+        /** @var mixed $iso */
+        $iso = PrestaShopLanguage::getIsoById($id);
 
-		/** @var mixed $iso*/
-		$iso = PrestaShopLanguage::getIsoById($id);
+        if (\is_string($iso)) {
+            return $iso;
+        }
 
-		if (is_string($iso))
-		{
-			return $iso;
-		}
+        return 'en';
+    }
 
-		return 'en';
-	}
-
-
-	public function hasMultiLanguageSupport(): bool
-	{
-		return true;
-	}
+    public function hasMultiLanguageSupport(): bool
+    {
+        return true;
+    }
 }
