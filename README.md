@@ -16,7 +16,26 @@ MYSQL_DATABASE=prestashop_8 ADMINER_PORT=9080 PRESTASHOP_IMAGE_VERSION=8.2.1-7.4
 
 Aby ti fungovalo napovídání v IDE (prestashop source code), musíš namountovat instalaci prestashopu z kontejneru na disk.
 ```shell
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d 
+```
+Pokud používáš oba compose soubory, tak pred kazdou zmenou konfigurace bysi mel spustit:
+```shell
+rm -rf prestashop config*.xml
+```
+
+> Je to z toho duvodu, ze prestashop je v tuto chvili persistentne ulozen v adresari prestashop na tvojem disku a image by tak pri startupu neprovedl instalaci! 
+> Soubory config.xml vznikaji prave pri instalaci modulu a je lepsi je take odstranit.
+
+## Known bugs
+
+### Auto instalace modulu
+Instalace modulu probehne v poradku (podle vypisu z console behem startupu kontejneru), ale modul nefunguje.
+```text
+You have requested a non-existent service "PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider"
+```
+Toto se vyresi jednoduse tak, ze v kontejneru spustis:
+```shell
+/tmp/post-install-scripts/post-install.sh
 ```
 
 # Tester guide
