@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Event\Loader;
+namespace BulkGate\PrestaShop\Event\Loader;
 
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;
@@ -75,7 +75,7 @@ class Order implements DataLoader
 
         $message = \Message::getMessagesByOrderId((int) $variables['order_id']);
 
-        if (is_array($message) && isset($message['message'])) {
+        if (isset($message['message'])) {
             $variables['order_message'] = $message['message'];
         }
 

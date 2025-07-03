@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Controller;
+namespace BulkGate\PrestaShop\Controller;
 
 use BulkGate\Plugin;
-use BulkGate\PrestaSms\Ajax;
-use BulkGate\PrestaSms\DI\Container;
+use BulkGate\PrestaShop\Ajax;
+use BulkGate\PrestaShop\DI\Container;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

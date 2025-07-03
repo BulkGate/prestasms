@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Localization;
+namespace BulkGate\PrestaShop\Localization;
 
 use BulkGate\Plugin\Localization\Formatter;
 use BulkGate\Plugin\Localization\FormatterBasic;

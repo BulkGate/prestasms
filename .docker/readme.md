@@ -1,5 +1,5 @@
 # Docker image
-Tento image je určen pro účely vývoje prestaSMS modulu. Image můžete použít k napojení do IDE a také ke spuštění webové aplikace.
+Tento image je určen pro účely vývoje BulkGate PrestaShop SMS modulu. Image můžete použít k napojení do IDE a také ke spuštění webové aplikace.
 Image obsahuje instalaci composeru a xdebugu. [Seznam dostupných images](https://github.com/BulkGate/prestasms/pkgs/container/prestasms).
 
 ## 1. Definování matice verzí

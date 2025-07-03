@@ -1,4 +1,4 @@
-# PrestaSMS module
+# BulkGate PrestaShop SMS module
 http://www.presta-sms.com/
 
 # Lokální vývoj a konfigurace
@@ -34,7 +34,7 @@ Shop parameters > general > Enable multistore ![img_1.png](img/enable_multistore
 International > Localization ![img.png](img/localization.png)
 
 ## Variables (BulkGate\Plugin\Event\DataLoader interface)
-### BulkGate\PrestaSms\Event\Loader\Shop
+### BulkGate\PrestaShop\Event\Loader\Shop
 
 #### shop_email, shop_phone
 Shop parameters > contact > stores ![img.png](img/contacts_multistore.png)
@@ -45,7 +45,7 @@ Advanced parameters > multistore ![img.png](img/multistore_shop_name.png)
 #### shop_domain
 Advanced parameters > multistore ![img.png](img/multistore_domain.png)
 
-### BulkGate\PrestaSms\Event\Loader\Product
+### BulkGate\PrestaShop\Event\Loader\Product
 
 #### product_name, product_description
 Catalog > products ![img.png](img/product_name.png)
@@ -56,7 +56,7 @@ Catalog > products > details ![img.png](img/product_ref.png)
 #### product_supplier
 Catalog > Brands & Suppliers > Suppliers ![img.png](img/product_supplier.png)
 
-### BulkGate\PrestaSms\Event\Loader\Customer
+### BulkGate\PrestaShop\Event\Loader\Customer
 Customers > {ITEM} > addresses ![img.png](img/customer_detail.png)
 
 #### customer_address, customer_city, customer_company, customer_country, customer_country_id, customer_email, customer_firstname, customer_id, customer_lastname, customer_mobile, customer_phone, customer_postcode, customer_vat_number 
@@ -65,7 +65,7 @@ Addresses > {ITEM} ![img.png](img/customer_address.png)
 #### customer_invoice_address, customer_invoice_city, customer_invoice_company, customer_invoice_country, customer_invoice_country_id, customer_invoice_firstname, customer_invoice_lastname, customer_invoice_mobile, customer_invoice_phone, customer_invoice_postcode, customer_invoice_vat_number
 Tyto proměnné jsou generovány pouze v případě, že je předané **id_address_invoice**
 
-### BulkGate\PrestaSms\Event\Loader\Order
+### BulkGate\PrestaShop\Event\Loader\Order
 Customer service > Merchandise returns ![img.png](img/product_return_settings.png)
 Orders > {ITEM} > return products ![img.png](img/product_return.png)
 [product return](https://help-center.prestashop.com/en/articles/115000586771-make-a-product-return-in-the-back-office)

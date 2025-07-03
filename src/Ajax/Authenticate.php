@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Ajax;
+namespace BulkGate\PrestaShop\Ajax;
 
 use BulkGate\Plugin\Settings\Settings;
 use BulkGate\Plugin\Strict;

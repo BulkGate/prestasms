@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\DI;
+namespace BulkGate\PrestaShop\DI;
 
 use BulkGate\Plugin;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -22,6 +22,9 @@ trait Container
             return $this->bulkgate_container;
         }
 
+        /**
+         * @phpstan-ignore function.alreadyNarrowedType
+         */
         $symfony_di = SymfonyContainer::getInstance() ?? (method_exists($this, 'getContainer') ? $this->getContainer() : $this->container);
 
         Factory::setup(fn () => [

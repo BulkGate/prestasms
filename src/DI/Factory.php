@@ -2,13 +2,18 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\DI;
+namespace BulkGate\PrestaShop\DI;
 
 use BulkGate\Plugin;
-use BulkGate\PrestaSms\Ajax;
-use BulkGate\PrestaSms\Database\Connection;
-use BulkGate\PrestaSms\Eshop;
-use BulkGate\PrestaSms\Event;
+use BulkGate\PrestaShop\Ajax;
+use BulkGate\PrestaShop\Database\Connection;
+use BulkGate\PrestaShop\Eshop;
+use BulkGate\PrestaShop\Event;
+use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
+use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
+use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider;
+use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
@@ -25,6 +30,9 @@ class Factory implements Plugin\DI\Factory
      */
     protected static function createContainer(array $parameters = []): Plugin\DI\Container
     {
+        /**
+         * @var SymfonyContainer $symfony_di
+         */
         ['symfony_di' => $symfony_di] = $parameters;
 
         $container = new Plugin\DI\Container($parameters['mode'] ?? 'strict');
@@ -33,6 +41,9 @@ class Factory implements Plugin\DI\Factory
         $container['database.connection'] = ['factory' => Connection::class, 'parameters' => ['db' => $symfony_di->get('doctrine.dbal.default_connection')]];
 
         // Debug
+        /*
+         * @phpstan-ignore offsetAssign.valueType
+         */
         $container['debug.repository.logger'] = ['factory' => Plugin\Debug\Repository\LoggerSettings::class, 'factory_method' => function () use ($container, $parameters): Plugin\Debug\Repository\LoggerSettings {
             $logger = new Plugin\Debug\Repository\LoggerSettings($container->getByClass(Plugin\Settings\Settings::class));
             $logger->setup(is_int($parameters['logger_limit'] ?? null) ? $parameters['logger_limit'] : 100);
@@ -49,21 +60,21 @@ class Factory implements Plugin\DI\Factory
         // Eshop
         $container['eshop.configuration'] = ['factory' => Eshop\Configuration::class, 'factory_method' => fn () => new Eshop\Configuration(
             $parameters['module_version'],
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'),
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\Shop\Context')
+            $symfony_di->get(BaseUrlProvider::class),
+            $symfony_di->get('prestashop.adapter.shop.context')
         )];
         $container['eshop.synchronizer'] = Plugin\Eshop\EshopSynchronizer::class;
         $container['eshop.order_status'] = ['factory' => Eshop\OrderStatus::class, 'factory_method' => fn () => new Eshop\OrderStatus(
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider'),
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider')
+            $symfony_di->get(OrderStateDataProvider::class),
+            $symfony_di->get(ContextEmployeeProvider::class)
         )];
         $container['eshop.return_status'] = ['factory' => Eshop\ReturnStatus::class, 'factory_method' => fn () => new Eshop\ReturnStatus(
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider'),
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider')
+            $symfony_di->get(OrderReturnStateDataProvider::class),
+            $symfony_di->get(ContextEmployeeProvider::class)
         )];
         $container['eshop.language'] = Eshop\Language::class;
         $container['eshop.multistore'] = ['factory' => Eshop\MultiStore::class, 'factory_method' => fn () => new Eshop\MultiStore(
-            $symfony_di->get('PrestaShop\PrestaShop\Adapter\Shop\Context')
+            $symfony_di->get('prestashop.adapter.shop.context')
         )];
 
         // Event loaders

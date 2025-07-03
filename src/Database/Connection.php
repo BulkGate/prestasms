@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Database;
+namespace BulkGate\PrestaShop\Database;
 
 use BulkGate\Plugin\Database;
 use BulkGate\Plugin\Database\ResultCollection;

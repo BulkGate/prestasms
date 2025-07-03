@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Ajax;
+namespace BulkGate\PrestaShop\Ajax;
 
 use BulkGate\Plugin\Settings\Helpers;
 use BulkGate\Plugin\Settings\Settings as SettingsPlugin;
@@ -68,6 +68,8 @@ class PluginSettingsChange
     /**
      * @param array<array-key, mixed> $unsafe_data
      * @param array<array-key, string> $output
+     *
+     * @param-out array<array-key, mixed> $output
      */
     private function change(string $key, array $unsafe_data, array &$output, string $type = 'string'): void
     {

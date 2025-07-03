@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Event;
+namespace BulkGate\PrestaShop\Event;
 
 use BulkGate\Plugin\Strict;
 
