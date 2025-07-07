@@ -41,9 +41,6 @@ class Factory implements Plugin\DI\Factory
         $container['database.connection'] = ['factory' => Connection::class, 'parameters' => ['db' => $symfony_di->get('doctrine.dbal.default_connection')]];
 
         // Debug
-        /*
-         * @phpstan-ignore offsetAssign.valueType
-         */
         $container['debug.repository.logger'] = ['factory' => Plugin\Debug\Repository\LoggerSettings::class, 'factory_method' => function () use ($container, $parameters): Plugin\Debug\Repository\LoggerSettings {
             $logger = new Plugin\Debug\Repository\LoggerSettings($container->getByClass(Plugin\Settings\Settings::class));
             $logger->setup(is_int($parameters['logger_limit'] ?? null) ? $parameters['logger_limit'] : 100);

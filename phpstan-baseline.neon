@@ -1,18 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^BulkGate\\Plugin\\DI\\Container does not accept array\<string, \(Closure\)\|string\>\.$#'
-			identifier: offsetAssign.valueType
-			count: 9
-			path: src/DI/Factory.php
-
-		-
-			message: '#^BulkGate\\Plugin\\DI\\Container does not accept array\<string, \(Closure\)\|string\>\|string\.$#'
-			identifier: offsetAssign.valueType
-			count: 1
-			path: src/DI/Factory.php
-
-		-
 			message: '#^Cannot call method getLanguage\(\) on object\|null\.$#'
 			identifier: method.nonObject
 			count: 1
