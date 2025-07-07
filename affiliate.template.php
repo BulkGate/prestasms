@@ -7,4 +7,4 @@ declare(strict_types=1);
  *
  * @see https://www.bulkgate.com/
  */
-const BulkGateAffiliateId = null;
+const BulkGateRefererId = null;

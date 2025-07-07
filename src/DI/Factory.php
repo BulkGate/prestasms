@@ -136,7 +136,7 @@ class Factory implements Plugin\DI\Factory
                 $container->getByClass(Plugin\Localization\Language::class),
                 $container->getByClass(Plugin\Debug\Logger::class),
             );
-            $sign->setDefaultParameters(['affiliate_id' => $parameters['affiliate_id'] ?? null]);
+            $sign->setDefaultParameters(['referer_id' => $parameters['referer_id'] ?? null]);
 
             return $sign;
         }];

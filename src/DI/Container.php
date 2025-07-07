@@ -33,7 +33,7 @@ trait Container
             'module_version' => BulkGateModuleVersion,
             'platform_version' => _PS_VERSION_,
             'gate_url' => BulkGateWhiteLabelUrl,
-            'affiliate_id' => BulkGateAffiliateId,
+            'referer_id' => BulkGateRefererId,
             'default_settings' => [
                 'main:dispatcher' => 'asset',
                 'main:synchronization' => 'all',
