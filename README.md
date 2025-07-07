@@ -1,5 +1,4 @@
 # BulkGate PrestaShop SMS module
-http://www.presta-sms.com/
 
 # Lokální vývoj a konfigurace
 Pro úpravu parametrů prostředí (např. verze PrestaShopu, doména, port) vytvoř v kořenovém adresáři soubor *.env* podle vzoru *.env.template*. Hodnoty v tomto souboru se použijí při spuštění kontejnerů:
