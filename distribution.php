@@ -33,6 +33,6 @@ if (file_exists(__DIR__ . '/affiliate.php')) {
     require_once __DIR__ . '/affiliate.php';
 }
 
-if (!defined('BulkGateAffiliateId')) {
-    define('BulkGateAffiliateId', null);
+if (!defined('BulkGateRefererId')) {
+    define('BulkGateRefererId', null);
 }
