@@ -127,7 +127,19 @@ class Factory implements Plugin\DI\Factory
         $container['settings.synchronizer'] = Plugin\Settings\Synchronizer::class;
 
         // User
-        $container['user.sign'] = Plugin\User\Sign::class;
+        $container['user.sign'] = ['factory' => Plugin\User\Sign::class, 'factory_method' => function () use ($container, $parameters): Plugin\User\Sign {
+            $sign = new Plugin\User\Sign(
+                $container->getByClass(Plugin\Settings\Settings::class),
+                $container->getByClass(Plugin\IO\Connection::class),
+                $container->getByClass(Plugin\IO\Url::class),
+                $container->getByClass(Eshop\Configuration::class),
+                $container->getByClass(Plugin\Localization\Language::class),
+                $container->getByClass(Plugin\Debug\Logger::class),
+            );
+            $sign->setDefaultParameters(['affiliate_id' => $parameters['affiliate_id'] ?? null]);
+
+            return $sign;
+        }];
 
         return $container;
     }

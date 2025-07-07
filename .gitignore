@@ -1,4 +1,3 @@
-debug.php
 .idea
 coverage.html
 config*.xml
@@ -9,3 +8,4 @@ config/includes/*.local.yml
 .env
 prestashop
 vendor
+affiliate.php

@@ -35,7 +35,7 @@ class AdminController extends FrameworkBundleAdminController
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/index.html.twig', [
-            'layoutTitle' => 'BulkGate SMS',
+            'layoutTitle' => BulkGateWhiteLabel . ' SMS',
             'showContentHeader' => false,
             'token' => $token,
             'url' => $url,

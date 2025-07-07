@@ -21,14 +21,14 @@ class Bg_PrestaSms extends Module
 
     public $tabs = [
         [
-            'name' => 'BulkGate SMS',
+            'name' => BulkGateWhiteLabel . ' SMS',
             'class_name' => 'AdminBulkGateConfigure',
             'parent_class_name' => 'SELL',
             'visible' => true,
             'icon' => 'send',
         ],
         [
-            'name' => 'BulkGate Debug',
+            'name' => BulkGateWhiteLabel . ' Debug',
             'class_name' => 'AdminBulkGateDebug',
             'parent_class_name' => 'CONFIGURE',
             'visible' => true,
@@ -41,7 +41,7 @@ class Bg_PrestaSms extends Module
         $this->name = 'bg_prestasms';
         $this->tab = 'emailing';
         $this->version = BulkGateModuleVersion;
-        $this->author = 'BulkGate';
+        $this->author = BulkGateWhiteLabel;
         $this->author_uri = 'https://www.bulkgate.com/';
 
         parent::__construct();
@@ -51,7 +51,7 @@ class Bg_PrestaSms extends Module
             'max' => _PS_VERSION_,
         ];
 
-        $this->displayName = 'BulkGate SMS';
+        $this->displayName = BulkGateWhiteLabel . ' SMS';
         $this->description = $this->l('Send personalized SMS messages that your customers will notice! Prevent important notifications from being overlooked among common channels like email. Use new channels such as SMS, RCS, WhatsApp, and others to stand out and capture your customers\' attention.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
     }
