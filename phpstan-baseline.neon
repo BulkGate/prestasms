@@ -3,7 +3,7 @@ parameters:
 		-
 			message: '#^BulkGate\\Plugin\\DI\\Container does not accept array\<string, \(Closure\)\|string\>\.$#'
 			identifier: offsetAssign.valueType
-			count: 8
+			count: 9
 			path: src/DI/Factory.php
 
 		-

@@ -7,7 +7,9 @@ parameters:
     - src
     - controllers
   scanDirectories:
-    - /var/www/html
+  	- prestashop
+  scanFiles:
+  	- distribution.php
 
   # required by PS 1.7.x
   bootstrapFiles:
