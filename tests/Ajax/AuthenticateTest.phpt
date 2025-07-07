@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace BulkGate\WooSms\Ajax\Test;
+namespace BulkGate\PrestaShop\Ajax\Test;
+
+require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery;
 use Tester\{Assert, TestCase};
 use BulkGate\{Plugin\User\Sign, Plugin\Utils\JsonResponse, Plugin\Settings\Settings, PrestaShop\Ajax\Authenticate};
-
-require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @author Lukáš Piják 2025 TOPefekt s.r.o.

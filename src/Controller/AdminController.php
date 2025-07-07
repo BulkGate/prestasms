@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @author Lukáš Piják 2025 TOPefekt s.r.o.
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  *
  * @see https://www.bulkgate.com/
  */
@@ -49,13 +49,11 @@ class AdminController extends FrameworkBundleAdminController
         $requirements = $this->getBulkGateContainer()->getByClass(Plugin\Debug\Requirements::class);
         $url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
         $logger = $this->getBulkGateContainer()->getByClass(Plugin\Debug\Logger::class);
-        // $configuration = $this->getBulkGateContainer()->getByClass(Plugin\Eshop\Configuration::class);
 
         $requirements = $requirements->run([
             $requirements->same('{"message":"BulkGate API"}', file_get_contents($url->get('api/welcome')), 'Api Connection'),
             $requirements->same(true, version_compare($logger->platform_version, BulkGateMinimalPrestashopVersion, '>='), 'Prestashop ver. >= ' . BulkGateMinimalPrestashopVersion),
         ]);
-        // dump($configuration->version());
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/debug.html.twig', [
             'layoutTitle' => 'BulkGate SMS - debug',

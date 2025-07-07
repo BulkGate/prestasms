@@ -2,11 +2,11 @@
 
 namespace BulkGate\PrestaShop\Ajax\Test;
 
+require_once __DIR__ . '/../bootstrap.php';
+
 use Mockery;
 use Tester\{Assert, TestCase};
 use BulkGate\{Plugin\Settings\Synchronizer, Plugin\Settings\Settings, PrestaShop\Ajax\PluginSettingsChange};
-
-require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @author Lukáš Piják 2025 TOPefekt s.r.o.
