@@ -7,7 +7,7 @@ parameters:
     - src
     - controllers
   scanDirectories:
-  	- prestashop
+  	- /var/www/html
   scanFiles:
   	- distribution.php
 
