@@ -1,4 +1,6 @@
 services:
   prestashop:
+    environment:
+      PS_DEV_MODE: 1
     volumes:
       - ./prestashop:/var/www/html #napovidani IDE
