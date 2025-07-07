@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Event\Loader;
+namespace BulkGate\PrestaShop\Event\Loader;
 
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;

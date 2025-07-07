@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Controller;
+namespace BulkGate\PrestaShop\Controller;
 
 use BulkGate\Plugin;
-use BulkGate\PrestaSms\Ajax;
-use BulkGate\PrestaSms\DI\Container;
+use BulkGate\PrestaShop\Ajax;
+use BulkGate\PrestaShop\DI\Container;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @author Lukáš Piják 2025 TOPefekt s.r.o.
+ * @author Martin Kreizl 2025 TOPefekt s.r.o.
  *
  * @see https://www.bulkgate.com/
  */
@@ -35,7 +35,7 @@ class AdminController extends FrameworkBundleAdminController
         $token = $sign->authenticate(false, ['expire' => time() + 300]);
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/index.html.twig', [
-            'layoutTitle' => 'BulkGate SMS',
+            'layoutTitle' => BulkGateWhiteLabel . ' SMS',
             'showContentHeader' => false,
             'token' => $token,
             'url' => $url,
@@ -49,13 +49,11 @@ class AdminController extends FrameworkBundleAdminController
         $requirements = $this->getBulkGateContainer()->getByClass(Plugin\Debug\Requirements::class);
         $url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
         $logger = $this->getBulkGateContainer()->getByClass(Plugin\Debug\Logger::class);
-        // $configuration = $this->getBulkGateContainer()->getByClass(Plugin\Eshop\Configuration::class);
 
         $requirements = $requirements->run([
             $requirements->same('{"message":"BulkGate API"}', file_get_contents($url->get('api/welcome')), 'Api Connection'),
             $requirements->same(true, version_compare($logger->platform_version, BulkGateMinimalPrestashopVersion, '>='), 'Prestashop ver. >= ' . BulkGateMinimalPrestashopVersion),
         ]);
-        // dump($configuration->version());
 
         return $this->render('@Modules/bg_prestasms/views/templates/admin/debug.html.twig', [
             'layoutTitle' => 'BulkGate SMS - debug',

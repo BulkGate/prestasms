@@ -1,21 +1,38 @@
 <?php
 
-/** WhiteLabel re-branding */
+declare(strict_types=1);
 
-// Your module's whitelabel name.
+/**
+ * @author Lukáš Piják 2025 TOPefekt s.r.o.
+ *
+ * @see https://www.bulkgate.com/
+ */
+
+/**
+ * WhiteLabel re-branding
+ */
 const BulkGateWhiteLabel = 'BulkGate';
 
 const BulkGateWhiteLabelUrl = 'https://portal.bulkgate.com';
 
-// Your module's product page.
 const BulkGateWhiteLabelModuleWebsite = 'https://www.bulkgate.com/en/integrations/prestasms-sms-module-for-prestashop/';
 
-/** Affiliate program */
-
-// Your BulkGate's Affilitate ID. This can be found in your BulkGate account > Affiliate program.
-const BulkGateAffiliateId = '';
-
-/** Internals */
+/**
+ * Internals
+ */
 const BulkGateModuleVersion = '6.0.0';
+
 const BulkGateMinimalPrestashopVersion = '1.7.8.0';
+
 const BulkGateApiVersion = '1.0';
+
+/**
+ * Affiliate program
+ */
+if (file_exists(__DIR__ . '/affiliate.php')) {
+    require_once __DIR__ . '/affiliate.php';
+}
+
+if (!defined('BulkGateRefererId')) {
+    define('BulkGateRefererId', null);
+}

@@ -1,8 +1,8 @@
 <?php
 
 use BulkGate\Plugin;
-use BulkGate\PrestaSms\DI\Container;
-use BulkGate\PrestaSms\Event\Helpers;
+use BulkGate\PrestaShop\DI\Container;
+use BulkGate\PrestaShop\Event\Helpers;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -11,7 +11,7 @@ if (!defined('_PS_VERSION_')) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
- * @author Lukáš Piják 2018 TOPefekt s.r.o.
+ * @author Lukáš Piják 2025 TOPefekt s.r.o.
  *
  * @see https://www.bulkgate.com/
  */
@@ -21,18 +21,18 @@ class Bg_PrestaSms extends Module
 
     public $tabs = [
         [
-            'name' => 'BulkGate SMS',
-            'class_name' => 'AdminPrestaSmsConfigure',
-            'parent_class_name' => 'CONFIGURE',
+            'name' => BulkGateWhiteLabel . ' SMS',
+            'class_name' => 'AdminBulkGateConfigure',
+            'parent_class_name' => 'SELL',
             'visible' => true,
-            'icon' => 'send_to_mobile',
+            'icon' => 'send',
         ],
         [
-            'name' => 'Debug',
-            'class_name' => 'AdminPrestaSmsDebug',
-            'parent_class_name' => 'AdminPrestaSmsConfigure',
+            'name' => BulkGateWhiteLabel . ' Debug',
+            'class_name' => 'AdminBulkGateDebug',
+            'parent_class_name' => 'CONFIGURE',
             'visible' => true,
-            'icon' => 'debug',
+            'icon' => 'bug_report',
         ],
     ];
 
@@ -41,7 +41,7 @@ class Bg_PrestaSms extends Module
         $this->name = 'bg_prestasms';
         $this->tab = 'emailing';
         $this->version = BulkGateModuleVersion;
-        $this->author = 'BulkGate';
+        $this->author = BulkGateWhiteLabel;
         $this->author_uri = 'https://www.bulkgate.com/';
 
         parent::__construct();
@@ -51,9 +51,8 @@ class Bg_PrestaSms extends Module
             'max' => _PS_VERSION_,
         ];
 
-        $this->displayName = 'PrestaSMS';
-        // Posílejte personalizované SMS zprávy, kterých si zákazník všimne! Zabraňte nepovšimnutí si důležitých notifikací mezi běžnými kanály jako email. Používejte nové kanály, jako SMS, RCS, Whatsapp a další které zajistí odlišnost a získají si pozornost zákazníků
-        $this->description = $this->l('Extend your PrestaShop store capabilities. Send personalized bulk SMS messages. Notify your customers about order status via customer SMS notifications. Receive order updates via Admin SMS notifications.');
+        $this->displayName = BulkGateWhiteLabel . ' SMS';
+        $this->description = $this->l('Send personalized SMS messages that your customers will notice! Prevent important notifications from being overlooked among common channels like email. Use new channels such as SMS, RCS, WhatsApp, and others to stand out and capture your customers\' attention.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
     }
 

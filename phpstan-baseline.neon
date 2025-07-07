@@ -1,0 +1,49 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot call method getLanguage\(\) on object\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$multistore of class BulkGate\\PrestaShop\\Eshop\\MultiStore constructor expects PrestaShop\\PrestaShop\\Core\\Multistore\\MultistoreContextCheckerInterface, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$order_state of class BulkGate\\PrestaShop\\Eshop\\OrderStatus constructor expects PrestaShop\\PrestaShop\\Adapter\\OrderState\\OrderStateDataProvider, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$order_state of class BulkGate\\PrestaShop\\Eshop\\ReturnStatus constructor expects PrestaShop\\PrestaShop\\Adapter\\OrderReturnState\\OrderReturnStateDataProvider, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#2 \$employee of class BulkGate\\PrestaShop\\Eshop\\OrderStatus constructor expects PrestaShop\\PrestaShop\\Adapter\\Employee\\ContextEmployeeProvider, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#2 \$employee of class BulkGate\\PrestaShop\\Eshop\\ReturnStatus constructor expects PrestaShop\\PrestaShop\\Adapter\\Employee\\ContextEmployeeProvider, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#2 \$url_provider of class BulkGate\\PrestaShop\\Eshop\\Configuration constructor expects PrestaShop\\PrestaShop\\Adapter\\Shop\\Url\\BaseUrlProvider, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#3 \$shop of class BulkGate\\PrestaShop\\Eshop\\Configuration constructor expects PrestaShop\\PrestaShop\\Adapter\\Shop\\Context, object\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php

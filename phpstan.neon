@@ -1,10 +1,15 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
   level: 8
   paths:
     - src
     - controllers
   scanDirectories:
-    - /var/www/html
+  	- /var/www/html
+  scanFiles:
+  	- distribution.php
 
   # required by PS 1.7.x
   bootstrapFiles:

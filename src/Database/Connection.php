@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Database;
+namespace BulkGate\PrestaShop\Database;
 
 use BulkGate\Plugin\Database;
 use BulkGate\Plugin\Database\ResultCollection;
@@ -43,11 +43,7 @@ class Connection implements Database\Connection
 
         $query = $this->db->executeQuery($sql, $this->prepare_parameters);
 
-        if (method_exists($query, 'fetchAllAssoc')) {
-            $result = $query->fetchAllAssoc();
-        } else {
-            $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-        }
+        $result = \method_exists($query, 'fetchAllAssoc') ? $query->fetchAllAssoc() : $query->fetchAll(\PDO::FETCH_ASSOC);
 
         $this->prepare_parameters = [];
 
@@ -60,7 +56,9 @@ class Connection implements Database\Connection
 
     public function lastId()
     {
-        /** @var mixed $id */
+        /**
+         * @var mixed $id
+         */
         $id = $this->db->lastInsertId();
 
         if (!is_string($id) && !is_int($id)) {

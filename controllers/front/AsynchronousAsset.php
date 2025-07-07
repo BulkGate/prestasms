@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use BulkGate\Plugin;
-use BulkGate\PrestaSms\DI\Container;
+use BulkGate\PrestaShop\DI\Container;
 
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.

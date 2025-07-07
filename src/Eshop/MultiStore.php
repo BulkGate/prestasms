@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Eshop;
+namespace BulkGate\PrestaShop\Eshop;
 
 use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\Strict;

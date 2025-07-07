@@ -3,20 +3,20 @@ bulkgate_main_app:
   path: prestasms
   methods: [GET]
   defaults:
-    _controller: 'BulkGate\PrestaSms\Controller\AdminController::indexAction'
-    _legacy_controller: AdminPrestaSmsConfigure
-    _legacy_link: AdminPrestaSmsConfigure
+    _controller: 'BulkGate\PrestaShop\Controller\AdminController::indexAction'
+    _legacy_controller: AdminBulkGateConfigure
+    _legacy_link: AdminBulkGateConfigure
 
 bulkgate_proxy:
   path: prestasms/proxy-{action}
   methods: [POST]
   defaults:
-    _controller: 'BulkGate\PrestaSms\Controller\AdminController::proxyAction'
+    _controller: 'BulkGate\PrestaShop\Controller\AdminController::proxyAction'
 
 bulkgate_debug:
   path: prestasms/debug
   methods: [GET]
   defaults:
-    _controller: 'BulkGate\PrestaSms\Controller\AdminController::debugAction'
-    _legacy_controller: AdminPrestaSmsDebug
-    _legacy_link: AdminPrestaSmsDebug
+    _controller: 'BulkGate\PrestaShop\Controller\AdminController::debugAction'
+    _legacy_controller: AdminBulkGateDebug
+    _legacy_link: AdminBulkGateDebug

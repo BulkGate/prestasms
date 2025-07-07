@@ -1,4 +1,3 @@
-debug.php
 .idea
 coverage.html
 config*.xml
@@ -8,4 +7,6 @@ config/includes/*.local.yml
 *.cache
 .env
 prestashop
+composer.lock
 vendor
+affiliate.php

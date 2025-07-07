@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BulkGate\PrestaSms\Event\Loader;
+namespace BulkGate\PrestaShop\Event\Loader;
 
 use BulkGate\Plugin\Event\DataLoader;
 use BulkGate\Plugin\Event\Variables;
@@ -19,9 +19,11 @@ class OrderStatus implements DataLoader
 
     public function load(Variables $variables, array $parameters = []): void
     {
-        if (isset($variables['order_status_id'])) {
-            $status = new \OrderState((int) $variables['order_status_id'], (int) $variables['lang_id']);
-            $variables['order_status'] = $status->name;
+        if (!isset($variables['order_status_id'])) {
+            return;
         }
+
+        $status = new \OrderState((int) $variables['order_status_id'], (int) $variables['lang_id']);
+        $variables['order_status'] = $status->name;
     }
 }
