@@ -7,13 +7,14 @@ services:
       - ${PRESTASHOP_PORT:-80}:80
     environment:
       PS_DOMAIN: ${PRESTASHOP_DOMAIN:-localhost}
+      PS_FOLDER_ADMIN: administration
       DB_SERVER: db
       DB_NAME: ${MYSQL_DATABASE:-prestashop}
-      PS_FOLDER_ADMIN: administration
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
       - .:/var/www/html/modules/bg_prestasms
+      - /var/www/html/modules/bg_prestasms/vendor # volume mount override - not mounting vendor
 
   db:
     image: mariadb:10

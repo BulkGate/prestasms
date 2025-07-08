@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - '.docker/**'
       - '.github/**'
+      - 'README.md'
       - '!.github/workflows/tests.yml'
 
 jobs:

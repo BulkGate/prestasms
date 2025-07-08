@@ -25,14 +25,15 @@ RUN pecl install xdebug$(php -r "echo(version_compare(getenv('PHP_VERSION'), '8'
     echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.client_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini # this is address of default docker bridge network
 
+COPY config-files/pre-install.sh /tmp/pre-install-scripts/
 COPY config-files/post-install.sh /tmp/post-install-scripts/
 
 RUN git config --system --add safe.directory '*'
 
-RUN chmod +x /tmp/post-install-scripts/post-install.sh
+RUN chmod +x /tmp/pre-install-scripts/pre-install.sh && \
+    chmod +x /tmp/post-install-scripts/post-install.sh
 
 WORKDIR /var/www/html
 
-ENV PS_DEV_MODE=1 \
-    PS_INSTALL_AUTO=1
+ENV PS_INSTALL_AUTO=1
 
