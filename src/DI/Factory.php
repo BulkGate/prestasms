@@ -12,6 +12,7 @@ use BulkGate\PrestaShop\Event;
 use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
 use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
 use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 
@@ -58,7 +59,7 @@ class Factory implements Plugin\DI\Factory
         $container['eshop.configuration'] = ['factory' => Eshop\Configuration::class, 'factory_method' => fn () => new Eshop\Configuration(
             $parameters['module_version'],
             $symfony_di->get(BaseUrlProvider::class),
-            $symfony_di->get('prestashop.adapter.shop.context')
+            $symfony_di->get(Context::class)
         )];
         $container['eshop.synchronizer'] = Plugin\Eshop\EshopSynchronizer::class;
         $container['eshop.order_status'] = ['factory' => Eshop\OrderStatus::class, 'factory_method' => fn () => new Eshop\OrderStatus(
@@ -71,7 +72,7 @@ class Factory implements Plugin\DI\Factory
         )];
         $container['eshop.language'] = Eshop\Language::class;
         $container['eshop.multistore'] = ['factory' => Eshop\MultiStore::class, 'factory_method' => fn () => new Eshop\MultiStore(
-            $symfony_di->get('prestashop.adapter.shop.context')
+            $symfony_di->get(Context::class)
         )];
 
         // Event loaders
@@ -107,7 +108,7 @@ class Factory implements Plugin\DI\Factory
         $container['io.url'] = ['factory' => Plugin\IO\Url::class, 'parameters' => ['url' => $parameters['gate_url'] ?? 'https://portal.bulkgate.com']];
 
         // Localization
-        $iso = $container->getByClass(Eshop\Language::class)->get($symfony_di->get('prestashop.adapter.legacy.context')->getLanguage()->getId()); // pozor! bezi v ruznych kontextech FO a BO
+        $iso = $container->getByClass(Eshop\Language::class)->get($symfony_di->get(Context::class)->getLanguage()->getId()); // pozor! bezi v ruznych kontextech FO a BO
         $container['localization.language'] = ['factory' => Plugin\Localization\LanguageSettings::class, 'parameters' => ['iso' => $iso]];
         $container['localization.translator'] = Plugin\Localization\TranslatorSettings::class;
         $container['localization.formatter'] = extension_loaded('intl') ? ['factory' => Plugin\Localization\FormatterIntl::class, 'factory_method' => fn () => new Plugin\Localization\FormatterIntl($iso)] : Plugin\Localization\FormatterBasic::class;

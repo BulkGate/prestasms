@@ -26,7 +26,7 @@ const BulkGateMinimalPrestashopVersion = '1.7.8.0';
 
 const BulkGateApiVersion = '1.0';
 
-/**
+/*
  * Affiliate program
  */
 if (file_exists(__DIR__ . '/affiliate.php')) {
