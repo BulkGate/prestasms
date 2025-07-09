@@ -512,14 +512,16 @@ class Bg_PrestaSms extends Module
         return $this->render($this->getModuleTemplatePath() . 'send-message.html.twig', [
             'token' => $token,
             'url' => $url,
-            'variables' => [
-                ...$variables->toArray(),
-                // these variables are for web component
-                'first_name' => Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
-                'last_name' => Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
-                'phone_mobile' => Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
-                'phone_number_iso' => Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables),
-            ],
+            'variables' => array_merge(
+                $variables->toArray(),
+				[
+	                // these variables are for web component
+	                'first_name' => Helpers::priorityValues(['customer_firstname', 'customer_invoice_firstname'], $variables),
+	                'last_name' => Helpers::priorityValues(['customer_lastname', 'customer_invoice_lastname'], $variables),
+	                'phone_mobile' => Helpers::priorityValues(['customer_mobile', 'customer_phone', 'customer_invoice_mobile', 'customer_invoice_phone'], $variables),
+	                'phone_number_iso' => Helpers::priorityValues(['customer_country_id', 'customer_invoice_country_id'], $variables),
+	            ]
+            ),
         ]);
     }
 
