@@ -3,6 +3,7 @@
 use BulkGate\Plugin;
 use BulkGate\PrestaShop\DI\Container;
 use BulkGate\PrestaShop\Event\Helpers;
+use Twig\Environment as Twig;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -19,6 +20,9 @@ class Bg_PrestaSms extends Module
 {
     use Container;
 
+	/**
+	 * @var array<array-key, mixed>
+	 */
     public $tabs = [
         [
             'name' => BulkGateWhiteLabel . ' SMS',
@@ -35,6 +39,7 @@ class Bg_PrestaSms extends Module
             'icon' => 'bug_report',
         ],
     ];
+
 
     public function __construct()
     {
@@ -56,11 +61,13 @@ class Bg_PrestaSms extends Module
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
     }
 
+
     public function getContent(): void
     {
         // we have dedicated controller.
         Tools::redirectAdmin($this->get('router')->generate('bulkgate_main_app', []));
     }
+
 
     public function install(): bool
     {
@@ -71,7 +78,8 @@ class Bg_PrestaSms extends Module
         return $install && $this->installHooks();
     }
 
-    public function uninstall()
+
+    public function uninstall(): bool
     {
         $uninstall = parent::uninstall();
 
@@ -80,54 +88,14 @@ class Bg_PrestaSms extends Module
         return $uninstall;
     }
 
-    private function installHooks(): bool
-    {
-        $this->installAdminCustomerSmsHooks();
-        $this->installBackOfficeHooks();
-        $this->installFrontOfficeHooks();
 
-        return true;
-    }
+	/* AdminCustomerSms hooks */
 
-    private function installAdminCustomerSmsHooks(): bool
-    {
-        $this->registerHook('actionOrderStatusPostUpdate');
-        $this->registerHook('actionValidateOrder');
-        $this->registerHook('actionCustomerAccountAdd');
-        $this->registerHook('actionOrderReturn');
-        $this->registerHook('actionOrderSlipAdd');
-        $this->registerHook('actionAdminOrdersTrackingNumberUpdate');
-        $this->registerHook('actionPaymentConfirmation');
-        $this->registerHook('actionProductDelete');
-        // $this->registerHook('actionProductOutOfStock');
-        $this->registerHook('actionProductCancel');
-        $this->registerHook('actionEmailSendBefore');
-        $this->registerHook('actionPrestaSmsSendSms');
-        $this->registerHook('actionPrestaSmsExtendsVariables');
-
-        return true;
-    }
-
-    private function installFrontOfficeHooks(): bool
-    {
-        $this->registerHook('displayHeader');
-        $this->registerHook('additionalCustomerFormFields');
-
-        return true;
-    }
-
-    private function installBackOfficeHooks(): bool
-    {
-        $this->registerHook('displayAdminOrderSide');
-        $this->registerHook('displayBackOfficeHeader');
-        $this->registerHook('actionListModules');
-
-        return true;
-    }
-
-    /* AdminCustomerSms hooks */
-
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderstatuspostupdate */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderstatuspostupdate
+     */
     public function hookActionOrderStatusPostUpdate(array $params)
     {
         if (!isset($params['id_order']) || !isset($params['newOrderStatus'])) {
@@ -139,26 +107,30 @@ class Bg_PrestaSms extends Module
         $this->runHook('order', 'change-status', new Plugin\Event\Variables([
             'order_status_id' => $params['newOrderStatus']->id,
             'order_id' => (int) $order->id,
-            'lang_id' => (int) $order->id_lang,
+            'lang_id' => $order->id_lang,
             'shop_id' => (int) $order->id_shop,
-            'customer_id' => (int) $order->id_customer,
+            'customer_id' => $order->id_customer,
         ]), ['order' => $order]);
     }
 
-    public function testHookActionOrderStatusPostUpdate()
-    {
-        $newOrderStatus = new OrderState(2);
+	/* public function testHookActionOrderStatusPostUpdate()
+	 {
+		 $newOrderStatus = new OrderState(2);
 
-        // should invoke
-        $this->hookActionOrderStatusPostUpdate(['id_order' => 7, 'newOrderStatus' => $newOrderStatus]);
+		 // should invoke
+		 $this->hookActionOrderStatusPostUpdate(['id_order' => 7, 'newOrderStatus' => $newOrderStatus]);
 
-        // should not invoke
-        $this->hookActionOrderStatusPostUpdate(['id_order' => 7]);
-        $this->hookActionOrderStatusPostUpdate(['newOrderStatus' => $newOrderStatus]);
-        $this->hookActionOrderStatusPostUpdate([]);
-    }
+		 // should not invoke
+		 $this->hookActionOrderStatusPostUpdate(['id_order' => 7]);
+		 $this->hookActionOrderStatusPostUpdate(['newOrderStatus' => $newOrderStatus]);
+		 $this->hookActionOrderStatusPostUpdate([]);
+	 }*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionvalidateorder */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionvalidateorder
+     */
     public function hookActionValidateOrder(array $params)
     {
         if (!isset($params['order']) || !$params['order'] instanceof Order) {
@@ -173,19 +145,23 @@ class Bg_PrestaSms extends Module
         ]), ['order' => $params['order']]);
     }
 
-    private function testHookActionValidateOrder()
-    {
-        $order = new Order(8); // 7 - CZC | 8 - Alza
+	/*private function testHookActionValidateOrder()
+	{
+		$order = new Order(8); // 7 - CZC | 8 - Alza
 
-        // should invoke
-        $this->hookActionValidateOrder(['order' => $order]);
+		// should invoke
+		$this->hookActionValidateOrder(['order' => $order]);
 
-        // should not invoke
-        $this->hookActionValidateOrder(['order' => new stdClass()]);
-        $this->hookActionValidateOrder([]);
-    }
+		// should not invoke
+		$this->hookActionValidateOrder(['order' => new stdClass()]);
+		$this->hookActionValidateOrder([]);
+	}*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actioncustomeraccountadd */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actioncustomeraccountadd
+     */
     public function hookActionCustomerAccountAdd(array $params)
     {
         if (!isset($params['newCustomer']) || !$params['newCustomer'] instanceof Customer) {
@@ -199,19 +175,23 @@ class Bg_PrestaSms extends Module
         ]), ['customer' => $params['newCustomer']]);
     }
 
-    private function testHookActionCustomerAccountAdd()
-    {
-        $customer = new Customer(5); // 2 - CZC | 5 - Alza
+	/*private function testHookActionCustomerAccountAdd()
+	{
+		$customer = new Customer(5); // 2 - CZC | 5 - Alza
 
-        // should invoke
-        $this->hookActionCustomerAccountAdd(['newCustomer' => $customer]);
+		// should invoke
+		$this->hookActionCustomerAccountAdd(['newCustomer' => $customer]);
 
-        // should not invoke
-        $this->hookActionCustomerAccountAdd(['newCustomer' => new stdClass()]);
-        $this->hookActionCustomerAccountAdd([]);
-    }
+		// should not invoke
+		$this->hookActionCustomerAccountAdd(['newCustomer' => new stdClass()]);
+		$this->hookActionCustomerAccountAdd([]);
+	}*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderreturn */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderreturn
+     */
     public function hookActionOrderReturn(array $params)
     {
         if (!isset($params['orderReturn']) || !$params['orderReturn'] instanceof OrderReturn) {
@@ -227,19 +207,23 @@ class Bg_PrestaSms extends Module
         ]));
     }
 
-    public function testHookActionOrderReturn()
-    {
-        $order_return = new OrderReturn(1);
+	/*public function testHookActionOrderReturn()
+	{
+		$order_return = new OrderReturn(1);
 
-        // should invoke
-        $this->hookActionOrderReturn(['orderReturn' => $order_return]);
+		// should invoke
+		$this->hookActionOrderReturn(['orderReturn' => $order_return]);
 
-        // should not invoke
-        $this->hookActionOrderReturn(['orderReturn' => new stdClass()]);
-        $this->hookActionOrderReturn([]);
-    }
+		// should not invoke
+		$this->hookActionOrderReturn(['orderReturn' => new stdClass()]);
+		$this->hookActionOrderReturn([]);
+	}*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderslipadd */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionorderslipadd
+     */
     public function hookActionOrderSlipAdd(array $params)
     {
         if (!isset($params['order']) || !$params['order'] instanceof Order) {
@@ -255,21 +239,25 @@ class Bg_PrestaSms extends Module
         ]), ['order' => $params['order']]);
     }
 
-    public function testHookActionOrderSlipAdd()
-    {
-        $order = new Order(2); // 7 - CZC | 8 - Alza
+	/*public function testHookActionOrderSlipAdd()
+	{
+		$order = new Order(2); // 7 - CZC | 8 - Alza
 
-        // should invoke
-        $this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1]]);
-        $this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1, 4 => 1]]);
+		// should invoke
+		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1]]);
+		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1, 4 => 1]]);
 
-        // should not invoke
-        $this->hookActionOrderSlipAdd(['order' => new stdClass(), 'qtyList' => [3 => 1, 4 => 1]]);
-        $this->hookActionOrderSlipAdd(['order' => new stdClass()]);
-        $this->hookActionOrderSlipAdd([]);
-    }
+		// should not invoke
+		$this->hookActionOrderSlipAdd(['order' => new stdClass(), 'qtyList' => [3 => 1, 4 => 1]]);
+		$this->hookActionOrderSlipAdd(['order' => new stdClass()]);
+		$this->hookActionOrderSlipAdd([]);
+	}*/
 
-    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionadminorderstrackingnumberupdate */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionadminorderstrackingnumberupdate
+     */
     public function hookActionAdminOrdersTrackingNumberUpdate(array $params)
     {
         if (!isset($params['order']) || !$params['order'] instanceof Order) {
@@ -284,19 +272,23 @@ class Bg_PrestaSms extends Module
         ]), ['order' => $params['order']]);
     }
 
-    public function testHookActionAdminOrdersTrackingNumberPostUpdate()
-    {
-        $order = new Order(2); // 7 - CZC | 8 - Alza
+	/*public function testHookActionAdminOrdersTrackingNumberPostUpdate()
+	{
+		$order = new Order(2); // 7 - CZC | 8 - Alza
 
-        // should invoke
-        $this->hookActionAdminOrdersTrackingNumberUpdate(['order' => $order]);
+		// should invoke
+		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => $order]);
 
-        // should not invoke
-        $this->hookActionAdminOrdersTrackingNumberUpdate(['order' => new stdClass()]);
-        $this->hookActionAdminOrdersTrackingNumberUpdate([]);
-    }
+		// should not invoke
+		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => new stdClass()]);
+		$this->hookActionAdminOrdersTrackingNumberUpdate([]);
+	}*/
 
-    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionpaymentconfirmation */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionpaymentconfirmation
+     */
     public function hookActionPaymentConfirmation(array $params)
     {
         if (!isset($params['id_order'])) {
@@ -307,22 +299,26 @@ class Bg_PrestaSms extends Module
 
         $this->runHook('order', 'payment', new Plugin\Event\Variables([
             'order_id' => (int) $order->id,
-            'lang_id' => (int) $order->id_lang,
+            'lang_id' => $order->id_lang,
             'shop_id' => (int) $order->id_shop,
-            'customer_id' => (int) $order->id_customer,
+            'customer_id' => $order->id_customer,
         ]), ['order' => $order]);
     }
 
-    public function testHookActionPaymentConfirmation()
-    {
-        // should invoke
-        $this->hookActionPaymentConfirmation(['id_order' => 2]);
+	/*public function testHookActionPaymentConfirmation()
+	{
+		// should invoke
+		$this->hookActionPaymentConfirmation(['id_order' => 2]);
 
-        // should not invoke
-        $this->hookActionPaymentConfirmation([]);
-    }
+		// should not invoke
+		$this->hookActionPaymentConfirmation([]);
+	}*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductdelete */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductdelete
+     */
     public function hookActionProductDelete(array $params)
     {
         if (!isset($params['product']) || !$params['product'] instanceof Product) {
@@ -335,19 +331,23 @@ class Bg_PrestaSms extends Module
         ]), ['product' => $params['product']]);
     }
 
-    public function testHookActionProductDelete()
-    {
-        $product = new Product(4);
+	/*public function testHookActionProductDelete()
+	{
+		$product = new Product(4);
 
-        // should invoke
-        $this->hookActionProductDelete(['product' => $product]);
+		// should invoke
+		$this->hookActionProductDelete(['product' => $product]);
 
-        // should not invoke
-        $this->hookActionProductDelete(['product' => new stdClass()]);
-        $this->hookActionProductDelete([]);
-    }
+		// should not invoke
+		$this->hookActionProductDelete(['product' => new stdClass()]);
+		$this->hookActionProductDelete([]);
+	}*/
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionupdatequantity */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionupdatequantity
+     */
     public function hookActionUpdateQuantity(array $params)
     {
         if (!isset($params['id_product'])) {
@@ -363,34 +363,39 @@ class Bg_PrestaSms extends Module
         }
     }
 
-    private function testHookActionUpdateQuantity()
-    {
-        // should invoke
-        $this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 0, 'id_product_attribute' => 0]);
 
-        // should not invoke
-        $this->hookActionUpdateQuantity(['id_shop' => 2, 'quantity' => 5, 'id_product_attribute' => 0]);
-        $this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 5, 'id_product_attribute' => 0]);
-    }
+	/*private function testHookActionUpdateQuantity()
+	{
+		// should invoke
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 0, 'id_product_attribute' => 0]);
 
-    /*public function hookActionProductOutOfStock(array $params)
-    {
-        if(isset($params['product']) && $params['product'] instanceof Product)
-        {
-            if((int) $params['product']->quantity <= (int) $params['product']->minimal_quantity)
-            {
-                if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
-                {
-                    $this->runHook('product', 'out-of-stock', new Variables([
-                        'shop_id' => (int) $params['product']->id_shop_default,
-                        'product_id' => (int) $params['product']->id,
-                    ]), ['product' => $params['product']]);
-                }
-            }
-        }
-    }*/
+		// should not invoke
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'quantity' => 5, 'id_product_attribute' => 0]);
+		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 5, 'id_product_attribute' => 0]);
+	}*/
 
-    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductcancel */
+	/*public function hookActionProductOutOfStock(array $params)
+	{
+		if(isset($params['product']) && $params['product'] instanceof Product)
+		{
+			if((int) $params['product']->quantity <= (int) $params['product']->minimal_quantity)
+			{
+				if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
+				{
+					$this->runHook('product', 'out-of-stock', new Variables([
+						'shop_id' => (int) $params['product']->id_shop_default,
+						'product_id' => (int) $params['product']->id,
+					]), ['product' => $params['product']]);
+				}
+			}
+		}
+	}*/
+
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionproductcancel
+     */
     public function hookActionProductCancel(array $params)
     {
         if (!isset($params['order']) || !$params['order'] instanceof Order) {
@@ -407,30 +412,34 @@ class Bg_PrestaSms extends Module
         ]), ['order' => $params['order']]);
     }
 
-    public function testHookActionProductCancel()
-    {
-        $order = new Order(2);
+	/*public function testHookActionProductCancel()
+	{
+		$order = new Order(2);
 
-        // should invoke
-        $this->hookActionProductCancel(['order' => $order, 'id_order_detail' => 3]);
+		// should invoke
+		$this->hookActionProductCancel(['order' => $order, 'id_order_detail' => 3]);
 
-        // should not invoke
-        $this->hookActionProductCancel(['order' => new stdClass(), 'id_order_detail' => 3]);
-        $this->hookActionProductCancel(['id_order_detail' => 3]);
-    }
+		// should not invoke
+		$this->hookActionProductCancel(['order' => new stdClass(), 'id_order_detail' => 3]);
+		$this->hookActionProductCancel(['id_order_detail' => 3]);
+	}*/
 
-    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionemailsendbefore */
+	/**
+     * @param array<array-key, mixed> $params
+     * @return void
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/actionemailsendbefore
+     */
     public function hookActionEmailSendBefore(array $params)
     {
         if (!isset($params['templateVars']) || !isset($params['template']) || $params['template'] !== 'contact') {
             return;
         }
 
-        $customer_message = isset($params['templateVars']['{message}']) ? $params['templateVars']['{message}'] : null;
+        $customer_message = $params['templateVars']['{message}'] ?? null;
 
         if ($customer_message !== null) {
             $this->runHook('contact', 'form', new Plugin\Event\Variables([
-                'customer_email' => isset($params['templateVars']['{email}']) ? $params['templateVars']['{email}'] : null,
+                'customer_email' => $params['templateVars']['{email}'] ?? null,
                 'customer_message' => $customer_message,
                 'customer_message_short_50' => substr($customer_message, 0, 50),
                 'customer_message_short_80' => substr($customer_message, 0, 80),
@@ -442,16 +451,20 @@ class Bg_PrestaSms extends Module
         }
     }
 
-    public function testHookActionEmailSendBefore()
-    {
-        // should invoke
-        $this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world', '{email}' => 'john.doe@example.com'], 'template' => 'contact']);
-        $this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world'], 'template' => 'contact']);
+	/*public function testHookActionEmailSendBefore()
+	{
+		// should invoke
+		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world', '{email}' => 'john.doe@example.com'], 'template' => 'contact']);
+		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world'], 'template' => 'contact']);
 
-        // should not invoke
-        $this->hookActionEmailSendBefore(['templateVars' => [], 'template' => 'contact']);
-    }
+		// should not invoke
+		$this->hookActionEmailSendBefore(['templateVars' => [], 'template' => 'contact']);
+	}*/
 
+	/**
+	 * @param array<array-key, mixed> $params
+	 * @return void
+	 */
     public function hookActionPrestaSmsSendSms(array $params)
     {
         $number = $params['number'] ?? null;
@@ -478,40 +491,48 @@ class Bg_PrestaSms extends Module
         ]);
     }
 
+
+	/**
+	 * @param array<array-key, mixed> $params
+	 * @return void
+	 */
     public function hookActionPrestaSmsExtendsVariables(array $params)
     {
     }
 
-    /* BackOffice hooks */
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayadminorderside */
-    public function hookDisplayAdminOrderSide(array $params)
+	/* BackOffice hooks */
+
+
+	/**
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayadminorderside
+     * @param array<array-key, mixed> $params
+     */
+    public function hookDisplayAdminOrderSide(array $params): string
     {
         ['id_order' => $id] = $params;
 
         $settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
-        if (!$settings->load('static:application_token')) { // todo: isModuleLoggedIn
-            return null;
+        if (!$settings->load('static:application_token')) {
+            return '';
         }
 
-        $sign = $this->getBulkGateContainer()->getByClass(Plugin\User\Sign::class);
-        $url = $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class);
-        $loader = $this->getBulkGateContainer()->getByClass(Plugin\Event\Loader::class);
-
         $order = new Order($id);
-        $variables = new Plugin\Event\Variables([
-            'order_id' => $order->id,
-            'customer_id' => $order->id_customer,
-            'lang_id' => $order->id_lang,
-            'order_status_id' => $order->current_state,
-        ]);
-        $loader->load($variables);
-        $token = $sign->authenticate();
+
+	    $this->getBulkGateContainer()
+		    ->getByClass(Plugin\Event\Loader::class)
+		    ->load($variables = new Plugin\Event\Variables([
+		        'order_id' => $order->id,
+		        'customer_id' => $order->id_customer,
+		        'lang_id' => $order->id_lang,
+		        'order_status_id' => $order->current_state,
+	        ])
+	    );
 
         return $this->render($this->getModuleTemplatePath() . 'send-message.html.twig', [
-            'token' => $token,
-            'url' => $url,
+            'token' => $this->getBulkGateContainer()->getByClass(Plugin\User\Sign::class)->authenticate(),
+            'url' => $this->getBulkGateContainer()->getByClass(Plugin\IO\Url::class),
             'variables' => array_merge(
                 $variables->toArray(),
 				[
@@ -525,7 +546,10 @@ class Bg_PrestaSms extends Module
         ]);
     }
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks */
+	/**
+	 * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks
+	 * @return void
+	 */
     public function hookActionListModules()
     {
         $settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
@@ -535,22 +559,33 @@ class Bg_PrestaSms extends Module
         }
     }
 
-    /** https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displaybackofficeheader */
+
+	/**
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displaybackofficeheader
+     * @return string
+     */
     public function hookDisplayBackOfficeHeader()
     {
-        // $this->test();
         return $this->asynchronousAsset();
     }
 
-    /* FrontOffice hooks */
+	/* FrontOffice hooks */
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayheader */
+	/**
+     * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/displayheader
+     * @return string
+     */
     public function hookDisplayHeader()
     {
         return $this->asynchronousAsset();
     }
 
-    /** @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/additionalcustomerformfields */
+
+	/**
+	 * @see https://devdocs.prestashop-project.org/8/modules/concepts/hooks/list-of-hooks/additionalcustomerformfields
+	 * @param array<array-key, mixed> $params
+	 * @return array<FormField>|null
+	 */
     public function hookAdditionalCustomerFormFields(array $params)
     {
         $settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
@@ -582,33 +617,88 @@ class Bg_PrestaSms extends Module
         ];
     }
 
-    private function test()
-    {
-        $this->testHookActionOrderStatusPostUpdate();
-        $this->testHookActionValidateOrder();
-        $this->testHookActionCustomerAccountAdd();
-        $this->testHookActionOrderReturn();
-        $this->testHookActionOrderSlipAdd();
-        $this->testHookActionAdminOrdersTrackingNumberPostUpdate();
-        $this->testHookActionPaymentConfirmation();
-        $this->testHookActionProductDelete();
-        $this->testHookActionUpdateQuantity();
-        $this->testHookActionProductCancel();
-        $this->testHookActionEmailSendBefore();
-    }
 
-    /**
+	/*private function test()
+	{
+		$this->testHookActionOrderStatusPostUpdate();
+		$this->testHookActionValidateOrder();
+		$this->testHookActionCustomerAccountAdd();
+		$this->testHookActionOrderReturn();
+		$this->testHookActionOrderSlipAdd();
+		$this->testHookActionAdminOrdersTrackingNumberPostUpdate();
+		$this->testHookActionPaymentConfirmation();
+		$this->testHookActionProductDelete();
+		$this->testHookActionUpdateQuantity();
+		$this->testHookActionProductCancel();
+		$this->testHookActionEmailSendBefore();
+	}*/
+
+	private function installHooks(): bool
+	{
+		$this->installAdminCustomerSmsHooks();
+		$this->installBackOfficeHooks();
+		$this->installFrontOfficeHooks();
+
+		return true;
+	}
+
+
+	private function installAdminCustomerSmsHooks(): bool
+	{
+		$this->registerHook('actionOrderStatusPostUpdate');
+		$this->registerHook('actionValidateOrder');
+		$this->registerHook('actionCustomerAccountAdd');
+		$this->registerHook('actionOrderReturn');
+		$this->registerHook('actionOrderSlipAdd');
+		$this->registerHook('actionAdminOrdersTrackingNumberUpdate');
+		$this->registerHook('actionPaymentConfirmation');
+		$this->registerHook('actionProductDelete');
+		// $this->registerHook('actionProductOutOfStock');
+		$this->registerHook('actionProductCancel');
+		$this->registerHook('actionEmailSendBefore');
+		$this->registerHook('actionPrestaSmsSendSms');
+		$this->registerHook('actionPrestaSmsExtendsVariables');
+
+		return true;
+	}
+
+
+	private function installFrontOfficeHooks(): bool
+	{
+		$this->registerHook('displayHeader');
+		$this->registerHook('additionalCustomerFormFields');
+
+		return true;
+	}
+
+
+	private function installBackOfficeHooks(): bool
+	{
+		$this->registerHook('displayAdminOrderSide');
+		$this->registerHook('displayBackOfficeHeader');
+		$this->registerHook('actionListModules');
+
+		return true;
+	}
+
+	/**
      * Render a twig template.
      */
     private function render(string $template, array $params = []): string
     {
-        /** @var Twig_Environment $twig */
+        /**
+         * @var Twig|false $twig
+         */
         $twig = $this->get('twig');
 
-        return $twig->render($template, $params);
+		if ($twig)
+		{
+			return $twig->render($template, $params);
+		}
+		return '';
     }
 
-    /**
+	/**
      * Get path to this module's template directory
      */
     private function getModuleTemplatePath(): string
@@ -616,19 +706,25 @@ class Bg_PrestaSms extends Module
         return sprintf('@Modules/%s/views/templates/admin/', $this->name);
     }
 
+
+	/**
+	 * @param array<array-key, mixed> $parameters
+	 * @param (callable(): mixed)|null $success_callback
+	 */
     private function runHook(string $category, string $endpoint, Plugin\Event\Variables $variables, array $parameters = [], ?callable $success_callback = null): void
     {
-        $dispatcher = $this->getBulkGateContainer()->getByClass(Plugin\Event\Dispatcher::class);
+        $this->getBulkGateContainer()->getByClass(Plugin\Event\Dispatcher::class)->dispatch($category, $endpoint, $variables, $parameters, $success_callback);
+	}
 
-        $dispatcher->dispatch($category, $endpoint, $variables, $parameters, $success_callback);
-    }
 
-    private function asynchronousAsset()
+	private function asynchronousAsset(): string
     {
         $settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
 
         if (in_array($settings->load('main:dispatcher'), [Plugin\Event\Dispatcher::Asset, Plugin\Event\Dispatcher::Cron])) {
             return '<script type="text/javascript" src="' . $this->context->link->getModuleLink($this->name, 'AsynchronousAsset') . '" async></script>';
         }
+
+		return '';
     }
 }

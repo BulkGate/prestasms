@@ -6,6 +6,7 @@ namespace BulkGate\PrestaShop\DI;
 
 use BulkGate\Plugin;
 use BulkGate\PrestaShop\Ajax;
+use BulkGate\Plugin\Event\Dispatcher;
 use BulkGate\PrestaShop\Database\Connection;
 use BulkGate\PrestaShop\Eshop;
 use BulkGate\PrestaShop\Event;
@@ -92,6 +93,12 @@ class Factory implements Plugin\DI\Factory
             $container->getByClass(Event\Loader\Post::class),
             $container->getByClass(Event\Loader\Extension::class),
         ])];
+	    $container['event.dispatcher'] = Dispatcher::class;
+
+	    if (in_array($parameters['dispatcher'] ?? null, [Dispatcher::Asset, Dispatcher::Cron, Dispatcher::Direct], true))
+	    {
+		    Dispatcher::$default_dispatcher = $parameters['dispatcher'];
+	    }
 
         // Event
         $container['event.hook'] = ['factory' => Plugin\Event\Hook::class, 'parameters' => ['version' => $parameters['api_version'] ?? '1.0']];
