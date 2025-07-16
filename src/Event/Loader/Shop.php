@@ -38,7 +38,7 @@ class Shop implements DataLoader
         $variables['shop_currency'] = \Currency::getIsoCodeById((int) \Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop->id));
         $variables['shop_name'] = $shop->name;
         $variables['shop_domain'] = $shop->getBaseURL();
-        $variables['lang_id'] ??= \Configuration::get('PS_LANG_DEFAULT', null, null, $shop->id); // $shop->getAssociatedLanguage()->getId();
-        $variables['lang_iso'] = $this->language->get((int) $variables['lang_id']);
+        $variables['lang_id'] ??= \Configuration::get('PS_LANG_DEFAULT', null, null, $shop->id);
+        $variables['language'] = $this->language->get((int) $variables['lang_id']);
     }
 }

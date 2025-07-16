@@ -35,6 +35,7 @@ class Order implements DataLoader
 
         $currency = (array) \Currency::getCurrency($order->id_currency);
 
+        $variables['lang_id'] ??= $order->id_lang;
         $variables['id_address_delivery'] = (int) $order->id_address_delivery;
         $variables['id_address_invoice'] = (int) $order->id_address_invoice;
 

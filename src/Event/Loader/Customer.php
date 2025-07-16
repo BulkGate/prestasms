@@ -36,6 +36,7 @@ class Customer implements DataLoader
             return;
         }
 
+        $variables['lang_id'] ??= $customer->id_lang;
         $variables['customer_firstname'] = $customer->firstname;
         $variables['customer_lastname'] = $customer->lastname;
         $variables['customer_email'] = $customer->email;
