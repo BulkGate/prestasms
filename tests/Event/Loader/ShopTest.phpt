@@ -45,7 +45,7 @@ class ShopTest extends TestCase
 			'shop_name' => 'PrestaShop Development',
 			'shop_domain' => 'https://bulkgate.com/',
 			'lang_id' => '8',
-			'lang_iso' => 'cs',
+			'language' => 'cs',
 		], $variables->toArray());
 	}
 
