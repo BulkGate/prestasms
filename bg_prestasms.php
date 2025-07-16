@@ -230,7 +230,7 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-        $this->runHook('order', 'TODO_slip_add', new Plugin\Event\Variables([
+        $this->runHook('order', 'slip-add', new Plugin\Event\Variables([
             'order_id' => (int) $params['order']->id,
             'customer_id' => (int) $params['order']->id_customer,
             'lang_id' => (int) $params['order']->id_lang,
@@ -325,7 +325,7 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-        $this->runHook('product', 'TODO_delete', new Plugin\Event\Variables([
+        $this->runHook('product', 'delete', new Plugin\Event\Variables([
             'shop_id' => (int) $params['product']->id_shop_default,
             'product_id' => (int) $params['product']->id,
         ]), ['product' => $params['product']]);
@@ -360,6 +360,12 @@ class Bg_PrestaSms extends Module
                 'product_id' => $params['id_product'],
                 'id_product_attribute' => $params['id_product_attribute'],
             ]));
+        } else {
+	        $this->runHook('product', 'update-quantity', new Plugin\Event\Variables([
+		        'shop_id' => $params['id_shop'],
+		        'product_id' => $params['id_product'],
+		        'id_product_attribute' => $params['id_product_attribute'],
+	        ]));
         }
     }
 
@@ -402,8 +408,8 @@ class Bg_PrestaSms extends Module
             return;
         }
 
-        // todo: tento hook se spousti ze 4 ruznych mist, viz CancellationActionType.  i v pripade hookActionOrderSlipAdd (kdyz castecne vratim produkt)
-        $this->runHook('order', 'TODO_product_cancel', new Plugin\Event\Variables([
+        // tento hook se spousti ze 4 ruznych mist, viz CancellationActionType.  i v pripade hookActionOrderSlipAdd (kdyz castecne vratim produkt)
+        $this->runHook('order', 'product-cancel', new Plugin\Event\Variables([
             'order_id' => (int) $params['order']->id,
             'filter_products' => [$params['id_order_detail']],
             'customer_id' => (int) $params['order']->id_customer,
