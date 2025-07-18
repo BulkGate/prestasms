@@ -48,9 +48,9 @@ class Order implements DataLoader
         $variables['order_total_locale'] = $this->formatter->format('price', $order->total_paid, $variables['order_currency']);
         $variables['order_reference'] = $order->reference;
 
-        $variables['order_datetime'] = $this->formatter->format('datetime', $order->date_add);
+        $variables['order_datetime'] = $order->date_add ? $this->formatter->format('datetime', $order->date_add) : '-';
         $variables['order_date'] = $this->formatter->format('date', $order->date_add);
-        $date = new \DateTime($order->date_add);
+        $date = new \DateTime($order->date_add ?? 'now');
         $variables['order_date1'] = $date->format('d.m.Y');
         $variables['order_date2'] = $date->format('d/m/Y');
         $variables['order_date3'] = $date->format('d-m-Y');
