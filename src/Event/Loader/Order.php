@@ -68,7 +68,7 @@ class Order implements DataLoader
             $variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
             $variables['order_carrier_delay'] = $carrier->delay;
             $variables['order_carrier_tracking_number'] = $order_carrier->tracking_number;
-            $variables['order_carrier_tracking_date'] = $this->formatter->format('datetime', $order_carrier->date_add);
+            $variables['order_carrier_tracking_date'] = $order_carrier->date_add ? $this->formatter->format('datetime', $order_carrier->date_add) : '-';
             $variables['order_carrier_price'] = $this->formatter->format('number', $order_carrier->shipping_cost_tax_incl);
             $variables['order_carrier_weight'] = $this->formatter->format('number', $order_carrier->weight);
             $variables['order_carrier_price_locale'] = $this->formatter->format('price', $order_carrier->shipping_cost_tax_incl, $variables['order_currency']);
