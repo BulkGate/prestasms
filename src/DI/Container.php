@@ -35,7 +35,7 @@ trait Container
             'gate_url' => BulkGateWhiteLabelUrl,
             'referer_id' => BulkGateRefererId,
             'default_settings' => [
-                'main:dispatcher' => 'asset',
+                'main:dispatcher' => Plugin\Event\Dispatcher::$default_dispatcher,
                 'main:synchronization' => 'all',
                 'main:language' => 'auto',
                 'main:language_mutation' => false,

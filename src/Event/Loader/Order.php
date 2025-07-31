@@ -50,7 +50,7 @@ class Order implements DataLoader
 
         $variables['order_datetime'] = $order->date_add ? $this->formatter->format('datetime', $order->date_add) : '-';
         $variables['order_date'] = $this->formatter->format('date', $order->date_add);
-        $date = new \DateTime($order->date_add ?? 'now');
+        $date = new \DateTime((string) $order->date_add);
         $variables['order_date1'] = $date->format('d.m.Y');
         $variables['order_date2'] = $date->format('d/m/Y');
         $variables['order_date3'] = $date->format('d-m-Y');
