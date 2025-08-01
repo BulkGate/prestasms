@@ -64,7 +64,6 @@ class Bg_PrestaSms extends Module
 
 	public function getContent(): void
 	{
-		// we have dedicated controller.
 		Tools::redirectAdmin($this->get('router')->generate('bulkgate_main_app', []));
 	}
 
@@ -113,18 +112,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $order]);
 	}
 
-	/* public function testHookActionOrderStatusPostUpdate()
-	 {
-		 $newOrderStatus = new OrderState(2);
-
-		 // should invoke
-		 $this->hookActionOrderStatusPostUpdate(['id_order' => 7, 'newOrderStatus' => $newOrderStatus]);
-
-		 // should not invoke
-		 $this->hookActionOrderStatusPostUpdate(['id_order' => 7]);
-		 $this->hookActionOrderStatusPostUpdate(['newOrderStatus' => $newOrderStatus]);
-		 $this->hookActionOrderStatusPostUpdate([]);
-	 }*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -145,17 +132,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $params['order']]);
 	}
 
-	/*private function testHookActionValidateOrder()
-	{
-		$order = new Order(8); // 7 - CZC | 8 - Alza
-
-		// should invoke
-		$this->hookActionValidateOrder(['order' => $order]);
-
-		// should not invoke
-		$this->hookActionValidateOrder(['order' => new stdClass()]);
-		$this->hookActionValidateOrder([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -175,17 +151,6 @@ class Bg_PrestaSms extends Module
 		]), ['customer' => $params['newCustomer']]);
 	}
 
-	/*private function testHookActionCustomerAccountAdd()
-	{
-		$customer = new Customer(5); // 2 - CZC | 5 - Alza
-
-		// should invoke
-		$this->hookActionCustomerAccountAdd(['newCustomer' => $customer]);
-
-		// should not invoke
-		$this->hookActionCustomerAccountAdd(['newCustomer' => new stdClass()]);
-		$this->hookActionCustomerAccountAdd([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -207,17 +172,6 @@ class Bg_PrestaSms extends Module
 		]));
 	}
 
-	/*public function testHookActionOrderReturn()
-	{
-		$order_return = new OrderReturn(1);
-
-		// should invoke
-		$this->hookActionOrderReturn(['orderReturn' => $order_return]);
-
-		// should not invoke
-		$this->hookActionOrderReturn(['orderReturn' => new stdClass()]);
-		$this->hookActionOrderReturn([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -239,19 +193,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $params['order']]);
 	}
 
-	/*public function testHookActionOrderSlipAdd()
-	{
-		$order = new Order(2); // 7 - CZC | 8 - Alza
-
-		// should invoke
-		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1]]);
-		$this->hookActionOrderSlipAdd(['order' => $order, 'qtyList' => [3 => 1, 4 => 1]]);
-
-		// should not invoke
-		$this->hookActionOrderSlipAdd(['order' => new stdClass(), 'qtyList' => [3 => 1, 4 => 1]]);
-		$this->hookActionOrderSlipAdd(['order' => new stdClass()]);
-		$this->hookActionOrderSlipAdd([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -272,17 +213,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $params['order']]);
 	}
 
-	/*public function testHookActionAdminOrdersTrackingNumberPostUpdate()
-	{
-		$order = new Order(2); // 7 - CZC | 8 - Alza
-
-		// should invoke
-		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => $order]);
-
-		// should not invoke
-		$this->hookActionAdminOrdersTrackingNumberUpdate(['order' => new stdClass()]);
-		$this->hookActionAdminOrdersTrackingNumberUpdate([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -305,14 +235,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $order]);
 	}
 
-	/*public function testHookActionPaymentConfirmation()
-	{
-		// should invoke
-		$this->hookActionPaymentConfirmation(['id_order' => 2]);
-
-		// should not invoke
-		$this->hookActionPaymentConfirmation([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -331,17 +253,6 @@ class Bg_PrestaSms extends Module
 		]), ['product' => $params['product']]);
 	}
 
-	/*public function testHookActionProductDelete()
-	{
-		$product = new Product(4);
-
-		// should invoke
-		$this->hookActionProductDelete(['product' => $product]);
-
-		// should not invoke
-		$this->hookActionProductDelete(['product' => new stdClass()]);
-		$this->hookActionProductDelete([]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -370,33 +281,6 @@ class Bg_PrestaSms extends Module
 	}
 
 
-	/*private function testHookActionUpdateQuantity()
-	{
-		// should invoke
-		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 0, 'id_product_attribute' => 0]);
-
-		// should not invoke
-		$this->hookActionUpdateQuantity(['id_shop' => 2, 'quantity' => 5, 'id_product_attribute' => 0]);
-		$this->hookActionUpdateQuantity(['id_shop' => 2, 'id_product' => 19, 'quantity' => 5, 'id_product_attribute' => 0]);
-	}*/
-
-	/*public function hookActionProductOutOfStock(array $params)
-	{
-		if(isset($params['product']) && $params['product'] instanceof Product)
-		{
-			if((int) $params['product']->quantity <= (int) $params['product']->minimal_quantity)
-			{
-				if(Extensions\Helpers::outOfStockCheck($this->settings, (int) $params['product']->id))
-				{
-					$this->runHook('product', 'out-of-stock', new Variables([
-						'shop_id' => (int) $params['product']->id_shop_default,
-						'product_id' => (int) $params['product']->id,
-					]), ['product' => $params['product']]);
-				}
-			}
-		}
-	}*/
-
 	/**
 	 * @param array<array-key, mixed> $params
 	 * @return void
@@ -418,17 +302,6 @@ class Bg_PrestaSms extends Module
 		]), ['order' => $params['order']]);
 	}
 
-	/*public function testHookActionProductCancel()
-	{
-		$order = new Order(2);
-
-		// should invoke
-		$this->hookActionProductCancel(['order' => $order, 'id_order_detail' => 3]);
-
-		// should not invoke
-		$this->hookActionProductCancel(['order' => new stdClass(), 'id_order_detail' => 3]);
-		$this->hookActionProductCancel(['id_order_detail' => 3]);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -457,15 +330,6 @@ class Bg_PrestaSms extends Module
 		}
 	}
 
-	/*public function testHookActionEmailSendBefore()
-	{
-		// should invoke
-		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world', '{email}' => 'john.doe@example.com'], 'template' => 'contact']);
-		$this->hookActionEmailSendBefore(['templateVars' => ['{message}' => 'Hello world'], 'template' => 'contact']);
-
-		// should not invoke
-		$this->hookActionEmailSendBefore(['templateVars' => [], 'template' => 'contact']);
-	}*/
 
 	/**
 	 * @param array<array-key, mixed> $params
@@ -624,21 +488,6 @@ class Bg_PrestaSms extends Module
 	}
 
 
-	/*private function test()
-	{
-		$this->testHookActionOrderStatusPostUpdate();
-		$this->testHookActionValidateOrder();
-		$this->testHookActionCustomerAccountAdd();
-		$this->testHookActionOrderReturn();
-		$this->testHookActionOrderSlipAdd();
-		$this->testHookActionAdminOrdersTrackingNumberPostUpdate();
-		$this->testHookActionPaymentConfirmation();
-		$this->testHookActionProductDelete();
-		$this->testHookActionUpdateQuantity();
-		$this->testHookActionProductCancel();
-		$this->testHookActionEmailSendBefore();
-	}*/
-
 	private function installHooks(): bool
 	{
 		$this->installAdminCustomerSmsHooks();
@@ -659,7 +508,6 @@ class Bg_PrestaSms extends Module
 		$this->registerHook('actionAdminOrdersTrackingNumberUpdate');
 		$this->registerHook('actionPaymentConfirmation');
 		$this->registerHook('actionProductDelete');
-		// $this->registerHook('actionProductOutOfStock');
 		$this->registerHook('actionProductCancel');
 		$this->registerHook('actionEmailSendBefore');
 		$this->registerHook('actionPrestaSmsSendSms');
