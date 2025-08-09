@@ -10,11 +10,11 @@ use BulkGate\Plugin\Event\Dispatcher;
 use BulkGate\PrestaShop\Database\Connection;
 use BulkGate\PrestaShop\Eshop;
 use BulkGate\PrestaShop\Event;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderReturnStateDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
-use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
-use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
-use PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 
 /**
@@ -59,17 +59,17 @@ class Factory implements Plugin\DI\Factory
         // Eshop
         $container['eshop.configuration'] = ['factory' => Eshop\Configuration::class, 'factory_method' => fn () => new Eshop\Configuration(
             $parameters['module_version'],
-            $symfony_di->get(BaseUrlProvider::class),
+            $symfony_di->get(UrlProviderInterface::class),
 	        $symfony_di->get(Context::class)
         )];
         $container['eshop.synchronizer'] = Plugin\Eshop\EshopSynchronizer::class;
         $container['eshop.order_status'] = ['factory' => Eshop\OrderStatus::class, 'factory_method' => fn () => new Eshop\OrderStatus(
-            $symfony_di->get(OrderStateDataProvider::class),
-            $symfony_di->get(ContextEmployeeProvider::class)
+            $symfony_di->get(OrderStateDataProviderInterface::class),
+            $symfony_di->get(ContextEmployeeProviderInterface::class)
         )];
         $container['eshop.return_status'] = ['factory' => Eshop\ReturnStatus::class, 'factory_method' => fn () => new Eshop\ReturnStatus(
-            $symfony_di->get(OrderReturnStateDataProvider::class),
-            $symfony_di->get(ContextEmployeeProvider::class)
+            $symfony_di->get(OrderReturnStateDataProviderInterface::class),
+            $symfony_di->get(ContextEmployeeProviderInterface::class)
         )];
         $container['eshop.language'] = Eshop\Language::class;
         $container['eshop.multistore'] = ['factory' => Eshop\MultiStore::class, 'factory_method' => fn () => new Eshop\MultiStore(

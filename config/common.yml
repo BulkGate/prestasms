@@ -6,20 +6,20 @@ services:
 
   # Adapter classes services
 
-  PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider:
+  PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface:
     class: PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider
-  PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider:
+  PrestaShop\PrestaShop\Core\Order\OrderReturnStateDataProviderInterface:
     class: PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider
-  PrestaShop\PrestaShop\Adapter\Shop\Context:
-    class: PrestaShop\PrestaShop\Adapter\Shop\Context
-  PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider:
+  PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface:
     class: PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider
     arguments:
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
-  PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider:
+  PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface:
     class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().employee'
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee"
+  PrestaShop\PrestaShop\Adapter\Shop\Context:
+    class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
   # Symfony Controller - https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
 
