@@ -25,4 +25,5 @@ services:
 
   BulkGate\PrestaShop\Controller\AdminController:
     class: BulkGate\PrestaShop\Controller\AdminController
+    autowire: false
     tags: [ controller.service_arguments ]

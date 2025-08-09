@@ -14,13 +14,13 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Install packages
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Apply code style
         run: composer run prestashop-lint
 
       - name: Keep only production dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest --no-dev
+        run: composer install --prefer-dist --no-progress --no-dev
 
       - name: Create plugin directory
         run: mkdir -p /tmp/bg_prestasms

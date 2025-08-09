@@ -1,6 +1,6 @@
 {
   "name": "bulkgate/prestasms",
-  "type": "project",
+  "type": "prestashop-module",
   "minimum-stability": "RC",
   "require": {
     "php": ">= 7.4",
