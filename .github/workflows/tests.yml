@@ -41,7 +41,16 @@ jobs:
         run: composer run tester
 
       - name: Run static analysis
-        run: composer run phpstan
+        run: |
+          if [[ "${{ matrix.prestashop }}" == 1.7.* ]]; then
+            composer run phpstan -- -c phpstan7.neon
+          elif [[ "${{ matrix.prestashop }}" == 8.* ]]; then
+            composer run phpstan -- -c phpstan8.neon
+          elif [[ "${{ matrix.prestashop }}" == 9.* ]]; then
+            composer run phpstan -- -c phpstan9.neon
+          else
+            composer run phpstan
+          fi
 
   coverage:
     runs-on: ubuntu-latest
