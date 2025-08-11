@@ -11,6 +11,7 @@ Pokud potřebuješ spustit více instancí s různými verzemi nebo parametry na
 ```shell
 MYSQL_DATABASE=prestashop_7 ADMINER_PORT=9070 PRESTASHOP_IMAGE_VERSION=1.7.8.0-7.4 PRESTASHOP_DOMAIN=ps7.dev.bulkgate.com:8070 PRESTASHOP_PORT=8070 docker compose --project-name ps_1_7 up -d
 MYSQL_DATABASE=prestashop_8 ADMINER_PORT=9080 PRESTASHOP_IMAGE_VERSION=8.2.1-7.4 PRESTASHOP_DOMAIN=ps8.dev.bulkgate.com:8080 PRESTASHOP_PORT=8080 docker compose --project-name ps_8_2 up -d
+MYSQL_DATABASE=prestashop_9 ADMINER_PORT=9090 PRESTASHOP_IMAGE_VERSION=9.0.0-1.0-classic-8.4 PRESTASHOP_DOMAIN=localhost:8090 PRESTASHOP_PORT=8090 docker compose --project-name ps_9_0 up -d
 ```
 
 Aby ti fungovalo napovídání v IDE (prestashop source code), musíš namountovat instalaci prestashopu z kontejneru na disk.
