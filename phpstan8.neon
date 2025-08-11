@@ -1,0 +1,3 @@
+includes:
+	- phpstan.neon
+	- phpstan-baseline8.neon
