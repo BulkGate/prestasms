@@ -41,6 +41,7 @@ jobs:
         run: composer run tester
 
       - name: Run static analysis
+        shell: bash
         run: |
           if [[ "${{ matrix.prestashop }}" == 1.7.* ]]; then
             composer run phpstan -- -c phpstan7.neon
