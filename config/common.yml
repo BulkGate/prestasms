@@ -1,28 +1,6 @@
 services:
-  _defaults:
-    autowire: true
-    autoconfigure: true
-    public: true
-
-  # Adapter classes services
-
-  PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface:
-    class: PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider
-  PrestaShop\PrestaShop\Core\Order\OrderReturnStateDataProviderInterface:
-    class: PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider
-  PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface:
-    class: PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().link"
-  PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface:
-    class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee"
-  PrestaShop\PrestaShop\Adapter\Shop\Context:
-    class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
   # Symfony Controller - https://devdocs.prestashop-project.org/1.7/modules/concepts/controllers/admin-controllers/#how-to-declare-a-new-controller
-
   BulkGate\PrestaShop\Controller\AdminController:
     class: BulkGate\PrestaShop\Controller\AdminController
     autowire: false
