@@ -38,13 +38,18 @@ class Factory implements Plugin\DI\Factory
 		 */
 		['symfony_di' => $symfony_di] = $parameters;
 
+		/**
+		 * @var LegacyContext $legacy_context
+		 */
+		$legacy_context = $symfony_di->get('prestashop.adapter.legacy.context');
+
 		$container = new Plugin\DI\Container($parameters['mode'] ?? 'strict');
 
 		$container['prestashop.adapter.shop.context'] = Context::class;
 		$container['prestashop.adapter.order.state'] = OrderStateDataProvider::class;
 		$container['prestashop.adapter.order.return_state'] = OrderReturnStateDataProvider::class;
-		$container['prestashop.adapter.shop.base_url'] = ['factory' => BaseUrlProvider::class, 'factory_method' => fn() => new BaseUrlProvider($symfony_di->get('prestashop.adapter.legacy.context')->getContext()->link)];
-		$container['prestashop.adapter.employee.context'] = ['factory' => ContextEmployeeProvider::class, 'factory_method' => fn() => new ContextEmployeeProvider($symfony_di->get('prestashop.adapter.legacy.context')->getContext()->employee)];
+		$container['prestashop.adapter.shop.base_url'] = ['factory' => BaseUrlProvider::class, 'factory_method' => fn() => new BaseUrlProvider($legacy_context->getContext()->link)];
+		$container['prestashop.adapter.employee.context'] = ['factory' => ContextEmployeeProvider::class, 'factory_method' => fn() => new ContextEmployeeProvider($legacy_context->getContext()->employee)];
 
 		// Database
 		$container['database.connection'] = ['factory' => Connection::class, 'parameters' => ['db' => $symfony_di->get('doctrine.dbal.default_connection')]];
@@ -121,7 +126,7 @@ class Factory implements Plugin\DI\Factory
 		$container['io.url'] = ['factory' => Plugin\IO\Url::class, 'parameters' => ['url' => $parameters['gate_url'] ?? 'https://portal.bulkgate.com']];
 
 		// Localization
-		$iso = $container->getByClass(Eshop\Language::class)->get($symfony_di->get('prestashop.adapter.legacy.context')->getLanguage()->getId()); // pozor! bezi v ruznych kontextech FO a BO
+		$iso = $container->getByClass(Eshop\Language::class)->get($legacy_context->getLanguage()->getId()); // pozor! bezi v ruznych kontextech FO a BO
 		$container['localization.language'] = ['factory' => Plugin\Localization\LanguageSettings::class, 'parameters' => ['iso' => $iso]];
 		$container['localization.translator'] = Plugin\Localization\TranslatorSettings::class;
 		$container['localization.formatter'] = extension_loaded('intl') ? ['factory' => Plugin\Localization\FormatterIntl::class, 'factory_method' => fn () => new Plugin\Localization\FormatterIntl($iso)] : Plugin\Localization\FormatterBasic::class;
