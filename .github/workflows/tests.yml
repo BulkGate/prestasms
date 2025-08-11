@@ -26,6 +26,8 @@ jobs:
             prestashop: 8.2.1
           - php: 8.1
             prestashop: 8.2.1
+          - php: 8.4
+            prestashop: 9.0.0-1.0-classic
 
     container: ghcr.io/bulkgate/prestasms:${{ matrix.prestashop }}-${{ matrix.php }}
 
@@ -44,7 +46,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
 
-    container: ghcr.io/bulkgate/prestasms:8.2.1-8.1
+    container: ghcr.io/bulkgate/prestasms:9.0.0-1.0-classic-8.4
 
     steps:
       - uses: actions/checkout@v2
