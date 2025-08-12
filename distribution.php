@@ -20,7 +20,7 @@ const BulkGateWhiteLabelModuleWebsite = 'https://www.bulkgate.com/en/integration
 /**
  * Internals
  */
-const BulkGateModuleVersion = '6.0.0';
+const BulkGateModuleVersion = '6.0.0-RC3';
 
 const BulkGateMinimalPrestashopVersion = '1.7.8.0';
 
