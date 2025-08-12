@@ -10,7 +10,7 @@ use BulkGate\PrestaShop\DI\Container;
  *
  * @see https://www.bulkgate.com/
  */
-class bg_prestasmsAsynchronousAssetModuleFrontController extends ModuleFrontController
+class bulkgate_sms_module_for_prestashopAsynchronousAssetModuleFrontController extends ModuleFrontController
 {
     use Container;
 

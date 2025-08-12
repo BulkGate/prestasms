@@ -13,8 +13,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - .:/var/www/html/modules/bg_prestasms
-      - /var/www/html/modules/bg_prestasms/vendor # volume mount override - not mounting vendor
+      - .:/var/www/html/modules/bulkgate_sms_module_for_prestashop
+      - /var/www/html/modules/bulkgate_sms_module_for_prestashop/vendor # volume mount override - not mounting vendor
 
   db:
     image: mariadb:10

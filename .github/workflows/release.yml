@@ -23,13 +23,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-dev
 
       - name: Create plugin directory
-        run: mkdir -p /tmp/bg_prestasms
+        run: mkdir -p /tmp/bulkgate_sms_module_for_prestashop
 
       - name: Copy plugin files
-        run: cp -r config controllers src translations vendor views logo.png LICENSE *.php composer.json  /tmp/bg_prestasms
+        run: cp -r config controllers src translations vendor views logo.png LICENSE *.php composer.json  /tmp/bulkgate_sms_module_for_prestashop
 
       - name: Create plugin zip
-        run: cd /tmp && zip -r bg_prestasms.zip bg_prestasms
+        run: cd /tmp && zip -r bulkgate_sms_module_for_prestashop.zip bulkgate_sms_module_for_prestashop
 
       - name: Install GitHub CLI
         run: |
@@ -42,4 +42,4 @@ jobs:
           apt-get install -y gh
 
       - name: Add zip to release
-        run: gh release upload ${{github.ref_name}} /tmp/bg_prestasms.zip
+        run: gh release upload ${{github.ref_name}} /tmp/bulkgate_sms_module_for_prestashop.zip
