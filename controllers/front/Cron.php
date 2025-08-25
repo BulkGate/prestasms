@@ -10,7 +10,7 @@ use BulkGate\PrestaShop\DI\Container;
  *
  * @see https://www.bulkgate.com/
  */
-class bg_prestasmsCronModuleFrontController extends ModuleFrontController
+class bulkgate_sms_module_for_prestashopCronModuleFrontController extends ModuleFrontController
 {
     use Container;
     public $auth = false;

@@ -1,6 +1,6 @@
 {
   "name": "bulkgate/prestasms",
-  "type": "project",
+  "type": "prestashop-module",
   "minimum-stability": "RC",
   "require": {
     "php": ">= 7.4",
@@ -25,9 +25,8 @@
   },
   "scripts": {
     "tester": "tester -C tests --colors=1",
-    "coverage": "tester -C tests --coverage=coverage.html --coverage-src=src --stop-on-fail -o console-lines",
+    "coverage": "tester -C tests --coverage=coverage.html --coverage-src=src --stop-on-fail -o console",
     "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G",
-    "phpstan-baseline": "phpstan analyse -c phpstan.neon --memory-limit=1G --generate-baseline",
     "prestashop-lint": "php-cs-fixer fix"
   },
   "config": {

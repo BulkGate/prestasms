@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$contextEmployee of class PrestaShop\\PrestaShop\\Adapter\\Employee\\ContextEmployeeProvider constructor expects Employee, Employee\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php
+
+		-
+			message: '#^Parameter \#1 \$link of class PrestaShop\\PrestaShop\\Adapter\\Shop\\Url\\BaseUrlProvider constructor expects Link, Link\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php

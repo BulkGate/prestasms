@@ -6,8 +6,8 @@ namespace BulkGate\PrestaShop\Eshop;
 
 use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\Strict;
-use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
-use PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
@@ -18,11 +18,11 @@ class OrderStatus implements Eshop\OrderStatus
 {
     use Strict;
 
-    private OrderStateDataProvider $order_state;
+    private OrderStateDataProviderInterface $order_state;
 
-    private ContextEmployeeProvider $employee;
+    private ContextEmployeeProviderInterface $employee;
 
-    public function __construct(OrderStateDataProvider $order_state, ContextEmployeeProvider $employee)
+    public function __construct(OrderStateDataProviderInterface $order_state, ContextEmployeeProviderInterface $employee)
     {
         $this->order_state = $order_state;
         $this->employee = $employee;

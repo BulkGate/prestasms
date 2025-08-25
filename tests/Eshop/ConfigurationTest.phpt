@@ -7,7 +7,8 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Tester\{Assert, TestCase};
 use BulkGate\PrestaShop\Eshop\Configuration;
-use PrestaShop\PrestaShop\Adapter\{Shop\Context, Shop\Url\BaseUrlProvider};
+use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
+use PrestaShop\PrestaShop\Adapter\{Shop\Context};
 
 /**
  * @author Lukáš Piják 2025 TOPefekt s.r.o.
@@ -18,7 +19,7 @@ class ConfigurationTest extends TestCase
 {
 	public function testConfiguration(): void
 	{
-		$url_provider = Mockery::mock(BaseUrlProvider::class);
+		$url_provider = Mockery::mock(UrlProviderInterface::class);
 		$shop = Mockery::mock(Context::class);
 		$url_provider->shouldReceive('getUrl')->once()->andReturn('https://eshop.cz/');
 		$shop->shouldReceive('getShopName')->once()->andReturn('Můj Eshop');

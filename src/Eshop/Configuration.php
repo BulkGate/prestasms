@@ -6,6 +6,7 @@ namespace BulkGate\PrestaShop\Eshop;
 
 use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\Strict;
+use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Shop;
 
 /**
@@ -23,7 +24,7 @@ class Configuration implements Eshop\Configuration
 
     private string $site_name;
 
-    public function __construct(string $version_number, Shop\Url\BaseUrlProvider $url_provider, Shop\Context $shop)
+    public function __construct(string $version_number, UrlProviderInterface $url_provider, Shop\Context $shop)
     {
         $this->version_number = $version_number;
         $this->site_url = $url_provider->getUrl();

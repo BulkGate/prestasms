@@ -18,5 +18,9 @@
     {
         "php": "8.1",
         "prestashop": "8.2.1"
+    },
+    {
+        "php": "8.4",
+        "prestashop": "9.0.0-1.0-classic"
     }
 ]
