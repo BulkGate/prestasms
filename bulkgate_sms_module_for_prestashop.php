@@ -394,6 +394,7 @@ class BulkGate_Sms_Module_For_Prestashop extends Module
 			->getByClass(Plugin\Event\Loader::class)
 			->load($variables = new Plugin\Event\Variables([
 				'order_id' => $order->id,
+				'shop_id' => $order->id_shop,
 				'customer_id' => $order->id_customer,
 				'lang_id' => $order->id_lang,
 				'order_status_id' => $order->current_state,
