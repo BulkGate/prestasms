@@ -21,6 +21,9 @@ class Language implements Eshop\Language
     {
         $output = [];
 
+	    /**
+	     * @phpstan-ignore offsetAccess.nonArray
+	     */
         foreach (PrestaShopLanguage::getLanguages() as ['iso_code' => $iso, 'name' => $name]) {
             $output[$iso] = $name;
         }
