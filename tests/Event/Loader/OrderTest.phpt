@@ -19,6 +19,7 @@ class OrderTest extends TestCase
 	{
 		$order = Mockery::mock('overload:Order');
 		$order->shouldReceive('__construct')->with(123)->set('id', 123)->set('id_currency', 7)->set('id_address_delivery', 1)->set('id_address_invoice', 2)->set('id_cart', 10)->set('id_carrier', 20)->set('payment', 'Bankwire')->set('total_paid', 999.99)->set('reference', 'ORD123')->set('date_add', '2025-07-04 12:34:56')->set('id_shop', 451);
+		$order->shouldReceive('getIdOrderCarrier')->andReturn(456);
 
 		$currency = Mockery::mock('overload:Currency');
 		$currency->shouldReceive('getCurrency')->with(7)->andReturn(['iso_code' => 'CZK']);
@@ -33,7 +34,7 @@ class OrderTest extends TestCase
 		$carrier = Mockery::mock('overload:Carrier');
 		$carrier->shouldReceive('__construct')->with(20, 8)->set('name', 'PPL')->set('url', 'https://track/@')->set('delay', 'Next day');
 		$order_carrier = Mockery::mock('overload:OrderCarrier');
-		$order_carrier->shouldReceive('__construct')->with(123, 8)->set('tracking_number', 'TRACK123')->set('date_add', '2025-07-04 13:00:00')->set('shipping_cost_tax_incl', 100.0)->set('weight', 2.5);
+		$order_carrier->shouldReceive('__construct')->with(456)->set('tracking_number', 'TRACK123')->set('date_add', '2025-07-04 13:00:00')->set('shipping_cost_tax_incl', 100.0)->set('weight', 2.5);
 		$formatter->shouldReceive('format')->with('datetime', '2025-07-04 13:00:00')->andReturn('4.7.2025 13:00');
 		$formatter->shouldReceive('format')->with('number', 100.0)->andReturn('100,00');
 		$formatter->shouldReceive('format')->with('number', 2.5)->andReturn('2,50');
@@ -123,6 +124,7 @@ class OrderTest extends TestCase
 	{
 		$order = Mockery::mock('overload:Order');
 		$order->shouldReceive('__construct')->with(123)->set('id', 123)->set('id_currency', 7)->set('id_address_delivery', 1)->set('id_address_invoice', 2)->set('id_cart', 10)->set('id_carrier', 20)->set('payment', 'Bankwire')->set('total_paid', 999.99)->set('reference', 'ORD123')->set('date_add', '2025-07-04 12:34:56')->set('id_shop', 451);
+		$order->shouldReceive('getIdOrderCarrier')->andReturn(456);
 
 		$currency = Mockery::mock('overload:Currency');
 		$currency->shouldReceive('getCurrency')->with(7)->andReturn(['iso_code' => 'CZK']);
@@ -137,7 +139,7 @@ class OrderTest extends TestCase
 		$carrier = Mockery::mock('overload:Carrier');
 		$carrier->shouldReceive('__construct')->with(20, 8)->set('name', 'PPL')->set('url', 'https://track/@')->set('delay', 'Next day');
 		$order_carrier = Mockery::mock('overload:OrderCarrier');
-		$order_carrier->shouldReceive('__construct')->with(123, 8)->set('tracking_number', 'TRACK123')->set('date_add', '2025-07-04 13:00:00')->set('shipping_cost_tax_incl', 100.0)->set('weight', 2.5);
+		$order_carrier->shouldReceive('__construct')->with(456)->set('tracking_number', 'TRACK123')->set('date_add', '2025-07-04 13:00:00')->set('shipping_cost_tax_incl', 100.0)->set('weight', 2.5);
 		$formatter->shouldReceive('format')->with('datetime', '2025-07-04 13:00:00')->andReturn('4.7.2025 13:00');
 		$formatter->shouldReceive('format')->with('number', 100.0)->andReturn('100,00');
 		$formatter->shouldReceive('format')->with('number', 2.5)->andReturn('2,50');

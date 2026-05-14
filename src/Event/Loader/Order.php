@@ -63,7 +63,7 @@ class Order implements DataLoader
 
         if ($variables['carrier_id']) {
             $carrier = new \Carrier((int) $variables['carrier_id'], (int) $variables['lang_id']);
-            $order_carrier = new \OrderCarrier((int) $variables['order_id'], (int) $variables['lang_id']);
+            $order_carrier = new \OrderCarrier((int) $order->getIdOrderCarrier());
             $variables['order_carrier_name'] = $carrier->name;
             $variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
             $variables['order_carrier_delay'] = $carrier->delay;
