@@ -26,6 +26,8 @@ jobs:
             prestashop: 8.2.1
           - php: 8.1
             prestashop: 8.2.1
+          - php: 8.4
+            prestashop: 9.0.0-1.0-classic
 
     container: ghcr.io/bulkgate/prestasms:${{ matrix.prestashop }}-${{ matrix.php }}
 
@@ -39,12 +41,22 @@ jobs:
         run: composer run tester
 
       - name: Run static analysis
-        run: composer run phpstan
+        shell: bash
+        run: |
+          if [[ "${{ matrix.prestashop }}" == 1.7.* ]]; then
+            composer run phpstan -- -c phpstan7.neon
+          elif [[ "${{ matrix.prestashop }}" == 8.* ]]; then
+            composer run phpstan -- -c phpstan8.neon
+          elif [[ "${{ matrix.prestashop }}" == 9.* ]]; then
+            composer run phpstan -- -c phpstan9.neon
+          else
+            composer run phpstan
+          fi
 
   coverage:
     runs-on: ubuntu-latest
 
-    container: ghcr.io/bulkgate/prestasms:8.2.1-8.1
+    container: ghcr.io/bulkgate/prestasms:9.0.0-1.0-classic-8.4
 
     steps:
       - uses: actions/checkout@v2

@@ -6,8 +6,8 @@ namespace BulkGate\PrestaShop\Eshop;
 
 use BulkGate\Plugin\Eshop;
 use BulkGate\Plugin\Strict;
-use PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider;
-use PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderReturnStateDataProviderInterface;
 
 /**
  * @author Martin Kreizl 2025 TOPefekt s.r.o.
@@ -18,11 +18,11 @@ class ReturnStatus implements Eshop\ReturnStatus
 {
     use Strict;
 
-    private OrderReturnStateDataProvider $order_state;
+    private OrderReturnStateDataProviderInterface $order_state;
 
-    private ContextEmployeeProvider $employee;
+    private ContextEmployeeProviderInterface $employee;
 
-    public function __construct(OrderReturnStateDataProvider $order_state, ContextEmployeeProvider $employee)
+    public function __construct(OrderReturnStateDataProviderInterface $order_state, ContextEmployeeProviderInterface $employee)
     {
         $this->order_state = $order_state;
         $this->employee = $employee;

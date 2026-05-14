@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$link of class PrestaShop\\PrestaShop\\Adapter\\Shop\\Url\\BaseUrlProvider constructor expects Link, Link\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DI/Factory.php

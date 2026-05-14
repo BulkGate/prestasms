@@ -25,7 +25,7 @@ class Helpers
     public static function priorityValues(array $priority, \ArrayAccess $values, $default = null)
     {
         foreach ($priority as $key) {
-            if (isset($values[$key])) {
+            if (!empty($values[$key])) {
                 return $values[$key];
             }
         }

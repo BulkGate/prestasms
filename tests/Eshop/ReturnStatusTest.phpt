@@ -7,7 +7,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Tester\{Assert, TestCase};
 use BulkGate\PrestaShop\Eshop\ReturnStatus;
-use PrestaShop\PrestaShop\Adapter\{OrderReturnState\OrderReturnStateDataProvider, Employee\ContextEmployeeProvider};
+use PrestaShop\PrestaShop\Core\{Employee\ContextEmployeeProviderInterface, Order\OrderReturnStateDataProviderInterface};
 
 /**
  * @author Lukáš Piják 2025 TOPefekt s.r.o.
@@ -18,7 +18,7 @@ class ReturnStatusTest extends TestCase
 {
 	public function testLoad(): void
 	{
-		$returnStatus = new ReturnStatus($return_state = Mockery::mock(OrderReturnStateDataProvider::class), $employee = Mockery::mock(ContextEmployeeProvider::class));
+		$returnStatus = new ReturnStatus($return_state = Mockery::mock(OrderReturnStateDataProviderInterface::class), $employee = Mockery::mock(ContextEmployeeProviderInterface::class));
 		$employee->shouldReceive('getLanguageId')->once()->andReturn(8);
 		$return_state->shouldReceive('getOrderReturnStates')->with(8)->once()->andReturn([
 			['id_order_return_state' => 1, 'name' => 'Čeká na schválení'],

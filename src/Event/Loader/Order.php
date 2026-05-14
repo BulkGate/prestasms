@@ -65,7 +65,8 @@ class Order implements DataLoader
             $carrier = new \Carrier((int) $variables['carrier_id'], (int) $variables['lang_id']);
             $order_carrier = new \OrderCarrier((int) $order->getIdOrderCarrier());
             $variables['order_carrier_name'] = $carrier->name;
-            $variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number, $carrier->url);
+			/** @phpstan-ignore nullCoalesce.property */
+            $variables['order_carrier_url'] = str_replace('@', $order_carrier->tracking_number ?? "", $carrier->url);
             $variables['order_carrier_delay'] = $carrier->delay;
             $variables['order_carrier_tracking_number'] = $order_carrier->tracking_number;
             $variables['order_carrier_tracking_date'] = $order_carrier->date_add ? $this->formatter->format('datetime', $order_carrier->date_add) : '-';

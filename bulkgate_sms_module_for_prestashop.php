@@ -16,7 +16,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @see https://www.bulkgate.com/
  */
-class Bg_PrestaSms extends Module
+class BulkGate_Sms_Module_For_Prestashop extends Module
 {
 	use Container;
 
@@ -43,7 +43,7 @@ class Bg_PrestaSms extends Module
 
 	public function __construct()
 	{
-		$this->name = 'bg_prestasms';
+		$this->name = 'bulkgate_sms_module_for_prestashop';
 		$this->tab = 'emailing';
 		$this->version = BulkGateModuleVersion;
 		$this->author = BulkGateWhiteLabel;
@@ -394,6 +394,7 @@ class Bg_PrestaSms extends Module
 			->getByClass(Plugin\Event\Loader::class)
 			->load($variables = new Plugin\Event\Variables([
 				'order_id' => $order->id,
+				'shop_id' => $order->id_shop,
 				'customer_id' => $order->id_customer,
 				'lang_id' => $order->id_lang,
 				'order_status_id' => $order->current_state,

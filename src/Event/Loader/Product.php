@@ -32,9 +32,12 @@ class Product implements DataLoader
         }
 
         $product = isset($parameters['product']) && $parameters['product'] instanceof \Product ? $parameters['product'] : new \Product((int) $variables['product_id'], false, null, (int) $variables['shop_id']);
+		$description_short = \is_array($product->description_short) ? $product->description_short[$variables['lang_id']] ?? "" : $product->description_short;
+		$description_long = \is_array($product->description) ? $product->description[$variables['lang_id']] ?? "" : $product->description;
 
         $variables['product_name'] = \Product::getProductName((int) $product->id);
-        $variables['product_description'] = \strip_tags(\is_array($product->description_short) ? $product->description_short[$variables['lang_id']] : $product->description);
+		/** @phpstan-ignore nullCoalesce.expr */
+        $variables['product_description'] = \strip_tags(($description_short ?: $description_long) ?? "");
         $variables['product_manufacturer'] = $product->manufacturer_name;
         $variables['product_price'] = $this->formatter->format('number', $product->price);
         $variables['product_price_locale'] = $this->formatter->format('price', $product->price, $variables['shop_currency']);
