@@ -32,8 +32,8 @@ class Product implements DataLoader
         }
 
         $product = isset($parameters['product']) && $parameters['product'] instanceof \Product ? $parameters['product'] : new \Product((int) $variables['product_id'], false, null, (int) $variables['shop_id']);
-		$description_short = \is_array($product->description_short) ? $product->description_short[$variables['lang_id']] ?? "" : $product->description_short;
-		$description_long = \is_array($product->description) ? $product->description[$variables['lang_id']] ?? "" : $product->description;
+		$description_short = \is_array($product->description_short) ? $product->description_short[(int) $variables['lang_id']] ?? "" : $product->description_short;
+		$description_long = \is_array($product->description) ? $product->description[(int) $variables['lang_id']] ?? "" : $product->description;
 
         $variables['product_name'] = \Product::getProductName((int) $product->id);
 		/** @phpstan-ignore nullCoalesce.expr */
