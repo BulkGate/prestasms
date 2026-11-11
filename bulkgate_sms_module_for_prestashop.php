@@ -580,7 +580,16 @@ class BulkGate_Sms_Module_For_Prestashop extends Module
 
 	private function asynchronousAsset(): string
 	{
-		$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
+		try
+		{
+			$settings = $this->getBulkGateContainer()->getByClass(Plugin\Settings\Settings::class);
+		}
+		catch (\PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException $e)
+		{
+			// The front office of PrestaShop 1.7.8 does not always provide a Symfony container (e.g. checkout form submissions).
+			// Skip the asynchronous asset for this request instead of failing the whole page with HTTP 500.
+			return '';
+		}
 
 		if (in_array($settings->load('main:dispatcher'), [Plugin\Event\Dispatcher::Asset, Plugin\Event\Dispatcher::Cron])) {
 			return '<script type="text/javascript" src="' . $this->context->link->getModuleLink($this->name, 'AsynchronousAsset') . '" async></script>';
